@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,8 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  themeColor: '#ff6a00',
+};
+
 export const metadata = {
-  title: "Kaevrix | Astrix Network's AI Powered Learning App",
+  applicationName: "Kaevrix",
+  title: "Kaevrix - AI Personalized Learning Platform",
   description: "Kaevrix by Astrix Network is the ultimate AI powered learning app and personalized study platform. Turn education into an RPG, build your skill tree, and level up in real life.",
   keywords: ["Kaevrix", "Astrix Network", "AI powered learning app", "personalized study platform", "AI study tools", "Kaevrix learning", "Astrix"],
   authors: [{ name: "Astrix Network" }],
@@ -22,8 +28,19 @@ export const metadata = {
   alternates: {
     canonical: '/',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    title: "Kaevrix | AI Powered Learning App",
+    title: "Kaevrix - AI Personalized Learning Platform",
     description: "Kaevrix is an AI powered learning app that turns education into an RPG. Build your skill tree, conquer quests, and level up in real life.",
     url: "https://astrixnetwork.com",
     siteName: "Kaevrix",
@@ -32,26 +49,40 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaevrix | AI Powered Learning App",
+    title: "Kaevrix - AI Personalized Learning Platform",
     description: "Turn education into an RPG. Build your skill tree, conquer quests, and level up in real life.",
   },
 };
 
 export default function RootLayout({ children }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Kaevrix",
-    "operatingSystem": "Web",
-    "applicationCategory": "EducationalApplication",
-    "description": "Kaevrix by Astrix Network is an AI powered learning app and personalized study platform that turns education into an RPG.",
-    "url": "https://astrixnetwork.com",
-    "publisher": {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Astrix Network",
+      "url": "https://astrixnetwork.com",
+      "logo": "https://astrixnetwork.com/icon.png"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Kaevrix",
+      "url": "https://astrixnetwork.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Astrix Network"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": ["SoftwareApplication", "EducationalApplication"],
+      "name": "Kaevrix - AI Personalized Learning Platform",
+      "operatingSystem": "Web",
+      "applicationCategory": "EducationalApplication",
+      "description": "Kaevrix by Astrix Network is an AI powered learning app and personalized study platform that turns education into an RPG.",
       "url": "https://astrixnetwork.com"
     }
-  };
+  ];
 
   return (
     <html
@@ -65,7 +96,10 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+        <GoogleAnalytics gaId="G-XXXXXXXXXX" />
+      </body>
     </html>
   );
 }

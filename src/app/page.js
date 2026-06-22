@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Lenis from '@studio-freight/lenis';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BrainCircuit, Play, Users, History, Zap, Shield, Infinity } from 'lucide-react';
@@ -312,7 +313,7 @@ export default function LandingPage({
         background: "linear-gradient(180deg, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px", cursor: "pointer" }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-          <img src="/logo.png" alt="Kaevrix" style={{ width: "32px", height: "32px", filter: "brightness(0) invert(1)" }} />
+          <Image src="/logo.png" alt="Kaevrix" width={32} height={32} style={{ filter: "brightness(0) invert(1)" }} />
           <span className="hide-mobile" style={{ fontSize: "20px", fontWeight: "800", letterSpacing: "2px" }}>KAEVRIX</span>
         </div>
       </header>
@@ -326,7 +327,7 @@ export default function LandingPage({
               <div style={{ padding: "0 32px" }}>
                  {/* Visually hidden H1 for absolute SEO domination */}
                  <h1 style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
-                   Kaevrix - Astrix Network's AI Powered Learning App & Personalized Study Platform
+                   Kaevrix - AI Personalized Learning Platform
                  </h1>
                  
                  <motion.h2 
@@ -377,7 +378,7 @@ export default function LandingPage({
              <motion.div style={{ scale: arCardScale, opacity: arOpacity }} className="responsive-card">
                  <div style={{ background: "rgba(59,130,246,0.05)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: "24px", padding: "40px", backdropFilter: "blur(12px)" }}>
                    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                     <div style={{ fontSize: "12px", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}>Today's Priorities</div>
+                     <div style={{ fontSize: "12px", textTransform: "uppercase", color: "rgba(255,255,255,0.6)" }}>Today's Priorities</div>
                      <div style={{ padding: "16px", background: "rgba(255,255,255,0.05)", borderRadius: "12px", borderLeft: "4px solid #3b82f6", display: "flex", alignItems: "center", gap: "16px" }}>
                        <div style={{ width: "24px", height: "24px", borderRadius: "50%", border: "2px solid #3b82f6" }} />
                        <span style={{ color: "#fff" }}>Master Thermodynamics</span>
@@ -447,7 +448,7 @@ export default function LandingPage({
                  <div style={{ display: "flex", gap: "8px" }}>
                    {[1,2,3,4,5].map(i => <div key={i} style={{ width: "32px", height: "32px", borderRadius: "50%", background: "rgba(139,92,246,0.2)", border: "1px solid #8b5cf6" }} />)}
                  </div>
-                 <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "16px" }}>WAITING FOR AI CHALLENGE...</div>
+                 <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", marginTop: "16px" }}>WAITING FOR AI CHALLENGE...</div>
               </motion.div>
               <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
                 <div style={{ width: "64px", height: "64px", borderRadius: "16px", background: "rgba(139,92,246,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#8b5cf6", marginBottom: "32px" }}>
@@ -503,7 +504,7 @@ export default function LandingPage({
                    <div style={{ position: "absolute", top: "-50%", left: "-50%", width: "200%", height: "200%", background: "radial-gradient(circle, rgba(234,179,8,0.1) 0%, transparent 50%)", animation: "spin 10s linear infinite" }} />
                    <div style={{ position: "relative", zIndex: 1, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                      <div style={{ width: "100px", height: "100px", borderRadius: "50%", background: "#111", border: "2px solid #eab308", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                       <img src="/logo.png" alt="Avatar" style={{ width: "40px", height: "40px", filter: "brightness(0) invert(1)" }} />
+                       <Image src="/logo.png" alt="Avatar" width={40} height={40} style={{ filter: "brightness(0) invert(1)" }} />
                      </div>
                      <div>
                        <div style={{ fontSize: "24px", fontWeight: "bold", color: "#fff" }}>Lvl 42 Historian</div>
@@ -538,7 +539,7 @@ export default function LandingPage({
               {/* Slide 1 */}
               <div className="horizontal-text-slide" style={{ background: "#050505" }}>
                  <h2 className="serif massive-horizontal-text" style={{ fontSize: "8vw", lineHeight: "1.1", margin: 0, fontWeight: 400 }}>
-                   Stop consuming<br/><span style={{ color: "rgba(255,255,255,0.2)" }}>endless tutorials.</span>
+                   Stop consuming<br/><span style={{ color: "rgba(255,255,255,0.5)" }}>endless tutorials.</span>
                  </h2>
               </div>
 
@@ -617,8 +618,12 @@ export default function LandingPage({
             </motion.div>
           </div>
 
-          <div className="grid-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "40px 32px", fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", color: "rgba(255,255,255,0.3)", flexWrap: "wrap", gap: "16px" }}>
-            <span>© 2026 KAEVRIX CORP.</span>
+          <div className="grid-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "40px 32px", fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", color: "rgba(255,255,255,0.5)", flexWrap: "wrap", gap: "16px" }}>
+            <span>© {new Date().getFullYear()} KAEVRIX CORP.</span>
+            <div style={{ display: "flex", gap: "24px" }}>
+              <a href="/privacy" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Privacy Policy</a>
+              <a href="/terms" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Terms of Service</a>
+            </div>
             <span>SYSTEMS ONLINE</span>
           </div>
         </section>
