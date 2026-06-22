@@ -52,6 +52,11 @@ export const metadata = {
     title: "Kaevrix - AI Personalized Learning Platform",
     description: "Turn education into an RPG. Build your skill tree, conquer quests, and level up in real life.",
   },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/apple-icon.png',
+  },
 };
 
 export default function RootLayout({ children }) {

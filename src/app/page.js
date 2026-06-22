@@ -313,7 +313,7 @@ export default function LandingPage({
         background: "linear-gradient(180deg, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px", cursor: "pointer" }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-          <Image src="/logo.png" alt="Kaevrix" width={32} height={32} style={{ filter: "brightness(0) invert(1)" }} />
+          <Image src="/logo.png" alt="Kaevrix - AI Powered Learning Platform Logo" width={32} height={32} style={{ filter: "brightness(0) invert(1)" }} />
           <span className="hide-mobile" style={{ fontSize: "20px", fontWeight: "800", letterSpacing: "2px" }}>KAEVRIX</span>
         </div>
       </header>
@@ -325,13 +325,16 @@ export default function LandingPage({
           <div className="grid-container" style={{ width: "100%", borderTop: "1px solid rgba(255,255,255,0.08)", marginTop: "100px" }}>
             <div style={{ minHeight: "calc(100vh - 100px)", display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: "80px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
               <div style={{ padding: "0 32px" }}>
-                 {/* Visually hidden H1 for absolute SEO domination */}
-                 <h1 style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
+                 {/* Visible H1 for Semantic SEO Dominance */}
+                 <motion.h1 
+                   initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} 
+                   style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "4px", color: "#ff6a00", marginBottom: "24px", fontWeight: "600" }}
+                 >
                    Kaevrix - AI Personalized Learning Platform
-                 </h1>
+                 </motion.h1>
                  
                  <motion.h2 
-                   initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} 
+                   initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }} 
                    className="serif responsive-hero-text" 
                    style={{ fontSize: "9vw", fontWeight: "400", margin: 0, lineHeight: "1.1", letterSpacing: "-0.02em" }}
                  >
@@ -358,7 +361,7 @@ export default function LandingPage({
                   <BrainCircuit size={32} />
                 </div>
                 <div style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "4px", color: "#10b981", marginBottom: "16px" }}>01 // The Setup</div>
-                <h3 className="serif responsive-h3" style={{ fontSize: "56px", fontWeight: "400", margin: "0 0 24px 0", lineHeight: "1.1" }}>Unlock your<br/>Skill Tree.</h3>
+                <h3 className="serif responsive-h3" style={{ fontSize: "56px", fontWeight: "400", margin: "0 0 24px 0", lineHeight: "1.1" }}>Unlock your<br/>AI Learning Roadmap.</h3>
                 <p style={{ fontSize: "18px", color: "rgba(255,255,255,0.6)", lineHeight: "1.6", marginBottom: "16px" }}>
                   Don't blindly search YouTube and end up watching 3 hours of "Top 10 Productivity Hacks" instead of actually studying.
                 </p>
@@ -477,7 +480,7 @@ export default function LandingPage({
                 <div style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "4px", color: "rgba(255,255,255,0.5)", marginBottom: "16px" }}>05 // The Accountability</div>
                 <h3 className="serif responsive-h3" style={{ fontSize: "56px", fontWeight: "400", margin: "0 0 24px 0", lineHeight: "1.1" }}>Stats that<br/>actually matter.</h3>
                 <p style={{ fontSize: "18px", color: "rgba(255,255,255,0.6)", lineHeight: "1.6" }}>
-                  Most platforms tell you how many videos you watched. We track your momentum. Chronos calculates your study velocity, tracks your streaks, and estimates completion dates. And history perfectly parses everything you've learned into beautifully formatted PDFs. Build your own textbook as you play.
+                  Most platforms tell you how many videos you watched. As a true personalized study platform, we track your momentum. Chronos calculates your study velocity, tracks your streaks, and estimates completion dates. And history perfectly parses everything you've learned into beautifully formatted PDFs. Build your own textbook as you play.
                 </p>
              </motion.div>
              <motion.div style={{ x: chCardX, opacity: chOpacity }} className="responsive-card">
@@ -504,7 +507,7 @@ export default function LandingPage({
                    <div style={{ position: "absolute", top: "-50%", left: "-50%", width: "200%", height: "200%", background: "radial-gradient(circle, rgba(234,179,8,0.1) 0%, transparent 50%)", animation: "spin 10s linear infinite" }} />
                    <div style={{ position: "relative", zIndex: 1, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                      <div style={{ width: "100px", height: "100px", borderRadius: "50%", background: "#111", border: "2px solid #eab308", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                       <Image src="/logo.png" alt="Avatar" width={40} height={40} style={{ filter: "brightness(0) invert(1)" }} />
+                       <Image src="/logo.png" alt="Kaevrix Personalized Learning Avatar" width={40} height={40} style={{ filter: "brightness(0) invert(1)" }} />
                      </div>
                      <div>
                        <div style={{ fontSize: "24px", fontWeight: "bold", color: "#fff" }}>Lvl 42 Historian</div>
