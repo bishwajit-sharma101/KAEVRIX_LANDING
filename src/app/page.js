@@ -538,14 +538,14 @@ export default function LandingPage({
               {/* Slide 1 */}
               <div className="horizontal-text-slide" style={{ background: "#050505" }}>
                  <h2 className="serif massive-horizontal-text" style={{ fontSize: "8vw", lineHeight: "1.1", margin: 0, fontWeight: 400 }}>
-                   They built systems<br/><span style={{ color: "rgba(255,255,255,0.2)" }}>for consumption.</span>
+                   Stop consuming<br/><span style={{ color: "rgba(255,255,255,0.2)" }}>endless tutorials.</span>
                  </h2>
               </div>
 
               {/* Slide 2 */}
               <div className="horizontal-text-slide" style={{ background: "#050505" }}>
                  <h2 className="serif massive-horizontal-text" style={{ fontSize: "8vw", lineHeight: "1.1", margin: 0, fontWeight: 400 }}>
-                   We built an ecosystem<br/><span style={{ color: "#ff6a00" }}>for capability.</span>
+                   Start building<br/><span style={{ color: "#ff6a00" }}>true capability.</span>
                  </h2>
               </div>
 
