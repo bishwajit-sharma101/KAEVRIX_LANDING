@@ -107,6 +107,7 @@ export default function LandingPage({
   cycleMusic
 }) {
   const [email, setEmail] = useState("");
+  const [gotcha, setGotcha] = useState(""); // Honeypot state for bot protection
   const [status, setStatus] = useState("idle");
 
   const handleJoinWaitlist = async (e) => {
@@ -117,7 +118,7 @@ export default function LandingPage({
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, _gotcha: gotcha })
       });
       if (res.ok) {
         setStatus("success");
@@ -313,14 +314,6 @@ export default function LandingPage({
         <div style={{ display: "flex", alignItems: "center", gap: "16px", cursor: "pointer" }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <img src="/logo.png" alt="Kaevrix" style={{ width: "32px", height: "32px", filter: "brightness(0) invert(1)" }} />
           <span className="hide-mobile" style={{ fontSize: "20px", fontWeight: "800", letterSpacing: "2px" }}>KAEVRIX</span>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-          <button className="hide-mobile" onClick={cycleMusic} aria-label={isMusicMuted ? "Unmute music" : "Mute music"} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: "18px" }}>
-            {isMusicMuted ? "🔇" : "🔊"}
-          </button>
-          <span className="hide-mobile" style={{ cursor: "pointer", fontSize: "12px", fontWeight: "600", letterSpacing: "2px", textTransform: "uppercase" }} onClick={onStartSignIn}>Sign In</span>
-          <button className="editorial-btn editorial-btn-primary hide-mobile" onClick={onStartSignUp}>Initialize</button>
         </div>
       </header>
 
@@ -599,8 +592,13 @@ export default function LandingPage({
               ) : (
                 <form onSubmit={handleJoinWaitlist} style={{ display: "flex", flexDirection: "column", gap: "24px", justifyContent: "center", width: "100%", maxWidth: "420px", margin: "0 auto" }}>
                   <div style={{ position: "relative" }}>
+                    
+                    {/* Honeypot field to trap bots silently */}
+                    <input type="text" name="_gotcha" style={{ display: 'none' }} value={gotcha} onChange={(e) => setGotcha(e.target.value)} tabIndex="-1" autoComplete="off" />
+                    
                     <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "3px", background: "linear-gradient(90deg, transparent, #ff6a00, transparent)" }} />
                     <input 
+                      name="email"
                       type="email" 
                       placeholder="ENTER YOUR EMAIL" 
                       value={email}
