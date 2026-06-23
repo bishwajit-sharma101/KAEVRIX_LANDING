@@ -209,11 +209,9 @@ export default function LandingPage({
       background: "#050505", 
       color: "#ffffff",
       position: "relative",
-      fontFamily: "'Outfit', sans-serif"
+      fontFamily: "var(--font-outfit), sans-serif"
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&display=swap');
-        
         body { margin: 0; background: #050505; }
 
         .grid-container { max-width: 1400px; margin: 0 auto; position: relative; width: 100%; }
@@ -235,13 +233,13 @@ export default function LandingPage({
           background: rgba(255, 255, 255, 0.04);
         }
 
-        .serif { font-family: 'Playfair Display', serif; }
+        .serif { font-family: var(--font-playfair), serif; }
 
         .editorial-btn {
           background: transparent; color: #ffffff;
           border: 1px solid rgba(255,255,255,0.2);
           padding: 16px 32px;
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-outfit), sans-serif;
           font-size: 13px; font-weight: 600;
           letter-spacing: 2px; text-transform: uppercase;
           cursor: pointer; transition: all 0.3s ease;
@@ -313,7 +311,7 @@ export default function LandingPage({
         background: "linear-gradient(180deg, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px", cursor: "pointer" }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-          <Image src="/logo.png" alt="Kaevrix - AI Powered Learning Platform Logo" width={32} height={32} style={{ filter: "brightness(0) invert(1)" }} />
+          <Image src="/logo.png" alt="Kaevrix - AI Powered Learning Platform Logo" width={26} height={32} style={{ filter: "brightness(0) invert(1)" }} priority />
           <span className="hide-mobile" style={{ fontSize: "20px", fontWeight: "800", letterSpacing: "2px" }}>KAEVRIX</span>
         </div>
       </header>
@@ -507,7 +505,7 @@ export default function LandingPage({
                    <div style={{ position: "absolute", top: "-50%", left: "-50%", width: "200%", height: "200%", background: "radial-gradient(circle, rgba(234,179,8,0.1) 0%, transparent 50%)", animation: "spin 10s linear infinite" }} />
                    <div style={{ position: "relative", zIndex: 1, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                      <div style={{ width: "100px", height: "100px", borderRadius: "50%", background: "#111", border: "2px solid #eab308", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                       <Image src="/logo.png" alt="Kaevrix Personalized Learning Avatar" width={40} height={40} style={{ filter: "brightness(0) invert(1)" }} />
+                       <Image src="/logo.png" alt="Kaevrix Personalized Learning Avatar" width={32} height={40} style={{ filter: "brightness(0) invert(1)" }} />
                      </div>
                      <div>
                        <div style={{ fontSize: "24px", fontWeight: "bold", color: "#fff" }}>Lvl 42 Historian</div>
@@ -609,7 +607,7 @@ export default function LandingPage({
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={status === "loading"}
-                      style={{ width: "100%", padding: "24px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderTop: "none", borderRadius: "0 0 16px 16px", color: "#fff", fontFamily: "'Outfit', sans-serif", fontSize: "15px", outline: "none", letterSpacing: "2px", textAlign: "center", boxShadow: "inset 0 20px 40px rgba(255,106,0,0.04)" }}
+                      style={{ width: "100%", padding: "24px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderTop: "none", borderRadius: "0 0 16px 16px", color: "#fff", fontFamily: "var(--font-outfit), sans-serif", fontSize: "15px", outline: "none", letterSpacing: "2px", textAlign: "center", boxShadow: "inset 0 20px 40px rgba(255,106,0,0.04)" }}
                     />
                   </div>
                   <button type="submit" disabled={status === "loading"} className="editorial-btn editorial-btn-primary" style={{ borderRadius: "100px", padding: "20px", fontSize: "14px", width: "100%" }}>
