@@ -1,4 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { Disc } from "lucide-react";
 import { fetchWithJobPolling } from "../../utils/asyncJob";
 import * as sound from "../../utils/audio";
 import { CHARACTER_CLASSES } from "../../utils/characterClasses";
@@ -126,6 +127,15 @@ export default function WelcomeScreen({
   // Using opacity-based overlay background layers to completely avoid browser gradient rendering bugs
 
   // Sign In States
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 900);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [loginUsername, setLoginUsername] = useState("TuringScholar");
   const [loginPassword, setLoginPassword] = useState("KaevrixDemoToken2026");
   const [loginError, setLoginError] = useState("");
@@ -605,125 +615,167 @@ export default function WelcomeScreen({
         zIndex: 1
       }} />
 
-      {/* Theme Toggle (Right) */}
-      <button 
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        style={{ position: "absolute", top: "20px", right: "20px", zIndex: 9999, background: isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.8)", border: `1px solid ${cardBorder}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", fontSize: "20px", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}
-        title="Toggle Light/Dark Theme"
-      >
-        {isDarkMode ? "🌙" : "☀️"}
-      </button>
+      {/* Top Header Controls (Track, Music, Theme) */}
+      <div style={{
+        position: "absolute",
+        top: isMobile ? "14px" : "20px",
+        right: isMobile ? "14px" : "24px",
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        gap: isMobile ? "8px" : "10px",
+      }}>
+        {/* Soundscape Console Container */}
+        <div style={{ position: "relative" }}>
+          <button 
+            onClick={() => { sound.playClockTick(); setShowMusicSettings(!showMusicSettings); }}
+            style={{
+              background: isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: `1px solid ${cardBorder}`,
+              borderRadius: "50%",
+              width: isMobile ? "36px" : "40px",
+              height: isMobile ? "36px" : "40px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: isDarkMode ? "#ffffff" : textColor,
+              transition: "all 0.2s",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.06)"
+            }}
+            title="Soundscape Console"
+            aria-label="Soundscape Console"
+          >
+            <Disc size={isMobile ? 16 : 18} />
+          </button>
 
-      {/* Music Toggle (Right) */}
-      <button 
-        onClick={() => {
-          sound.playClockTick();
-          const nextMuted = !isMusicMuted;
-          setIsMusicMuted(nextMuted);
-          localStorage.setItem("kaevrix_music_muted", String(nextMuted));
-        }}
-        style={{ position: "absolute", top: "20px", right: "70px", zIndex: 9999, background: isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.8)", border: `1px solid ${cardBorder}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", fontSize: "20px", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}
-        title={isMusicMuted ? "Unmute Ambient Music" : "Mute Ambient Music"}
-      >
-        {isMusicMuted ? "🔇" : "🎵"}
-      </button>
+          {showMusicSettings && (
+            <div style={{
+              position: "absolute", top: isMobile ? "44px" : "50px", right: 0, zIndex: 10000,
+              width: isMobile ? "260px" : "280px", background: isDarkMode ? "#111827" : "#ffffff",
+              border: "1px solid var(--neon-orange)", borderRadius: "16px",
+              padding: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+              display: "flex", flexDirection: "column", gap: "12px",
+              fontFamily: "var(--font-sans)",
+              color: textColor
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--glass-border)", paddingBottom: "8px" }}>
+                <span style={{ fontFamily: "var(--font-gamer)", fontSize: "12px", fontWeight: "900", color: "var(--neon-orange)", letterSpacing: "1px" }}>SOUNDSCAPE CONSOLE</span>
+                <button 
+                  onClick={() => { sound.playClockTick(); setShowMusicSettings(false); }}
+                  style={{ background: "transparent", border: "none", color: textMuted, cursor: "pointer", fontSize: "14px" }}
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <span style={{ fontSize: "11px", fontWeight: "bold", color: textMuted, letterSpacing: "0.5px" }}>SELECT STATION:</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: "150px", overflowY: "auto", paddingRight: "4px" }}>
+                  {sound.MUSIC_PROFILES.map((p, idx) => {
+                    const isActive = musicProfile === idx;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          sound.playClockTick();
+                          setMusicProfile(idx);
+                          localStorage.setItem("kaevrix_music_profile", String(idx));
+                        }}
+                        style={{
+                          textAlign: "left", padding: "8px 12px", borderRadius: "8px",
+                          background: isActive ? "var(--accent-gradient)" : "transparent",
+                          border: `1px solid ${isActive ? "transparent" : "var(--glass-border)"}`,
+                          color: isActive ? "#ffffff" : textColor,
+                          cursor: "pointer", fontSize: "12px", transition: "all 0.2s"
+                        }}
+                      >
+                        <div style={{ fontWeight: "bold" }}>{p.name}</div>
+                        <div style={{ fontSize: "10px", opacity: isActive ? 0.9 : 0.6, marginTop: "2px" }}>{p.desc}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-      {/* Soundscape Console Container */}
-      <div style={{ position: "absolute", top: "20px", right: "120px", zIndex: 9999, display: "flex", gap: "8px", alignItems: "center" }}>
-        <button 
-          onClick={() => { sound.playClockTick(); setShowMusicSettings(!showMusicSettings); }}
-          style={{ background: isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.8)", border: `1px solid ${cardBorder}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", fontSize: "20px", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}
-          title="Soundscape Console"
-        >
-          [TRACK]
-        </button>
-
-        {showMusicSettings && (
-          <div style={{
-            position: "absolute", top: "50px", right: 0, zIndex: 10000,
-            width: "280px", background: isDarkMode ? "#111827" : "#ffffff",
-            border: "1px solid var(--neon-orange)", borderRadius: "16px",
-            padding: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-            display: "flex", flexDirection: "column", gap: "12px",
-            fontFamily: "var(--font-sans)",
-            color: textColor
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--glass-border)", paddingBottom: "8px" }}>
-              <span style={{ fontFamily: "var(--font-gamer)", fontSize: "12px", fontWeight: "900", color: "var(--neon-orange)", letterSpacing: "1px" }}>SOUNDSCAPE CONSOLE</span>
-              <button 
-                onClick={() => { sound.playClockTick(); setShowMusicSettings(false); }}
-                style={{ background: "transparent", border: "none", color: textMuted, cursor: "pointer", fontSize: "14px" }}
-              >
-                X
-              </button>
-            </div>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-              <span style={{ fontSize: "11px", fontWeight: "bold", color: textMuted, letterSpacing: "0.5px" }}>SELECT STATION:</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: "150px", overflowY: "auto", paddingRight: "4px" }}>
-                {sound.MUSIC_PROFILES.map((p, idx) => {
-                  const isActive = musicProfile === idx;
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        sound.playClockTick();
-                        setMusicProfile(idx);
-                        localStorage.setItem("kaevrix_music_profile", String(idx));
-                      }}
-                      style={{
-                        textAlign: "left", padding: "8px 12px", borderRadius: "8px",
-                        background: isActive ? "var(--accent-gradient)" : "transparent",
-                        border: `1px solid ${isActive ? "transparent" : "var(--glass-border)"}`,
-                        color: isActive ? "#ffffff" : textColor,
-                        cursor: "pointer", fontSize: "12px", transition: "all 0.2s"
-                      }}
-                    >
-                      <div style={{ fontWeight: "bold" }}>{p.name}</div>
-                      <div style={{ fontSize: "10px", opacity: isActive ? 0.9 : 0.6, marginTop: "2px" }}>{p.desc}</div>
-                    </button>
-                  );
-                })}
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", borderTop: "1px solid var(--glass-border)", paddingTop: "10px", marginTop: "4px" }}>
+                <input
+                  type="checkbox"
+                  id="keepMusicInGameWelcome"
+                  checked={keepMusicInGame}
+                  onChange={(e) => {
+                    sound.playClockTick();
+                    const val = e.target.checked;
+                    setKeepMusicInGame(val);
+                    localStorage.setItem("kaevrix_music_in_game", String(val));
+                  }}
+                  style={{ cursor: "pointer", accentColor: "var(--neon-orange)" }}
+                />
+                <label htmlFor="keepMusicInGameWelcome" style={{ fontSize: "11px", fontWeight: "600", color: textColor, cursor: "pointer" }}>
+                  Keep playing during matches
+                </label>
               </div>
             </div>
+          )}
+        </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", borderTop: "1px solid var(--glass-border)", paddingTop: "10px", marginTop: "4px" }}>
-              <input
-                type="checkbox"
-                id="keepMusicInGameWelcome"
-                checked={keepMusicInGame}
-                onChange={(e) => {
-                  sound.playClockTick();
-                  const val = e.target.checked;
-                  setKeepMusicInGame(val);
-                  localStorage.setItem("kaevrix_music_in_game", String(val));
-                }}
-                style={{ cursor: "pointer", accentColor: "var(--neon-orange)" }}
-              />
-              <label htmlFor="keepMusicInGameWelcome" style={{ fontSize: "11px", fontWeight: "600", color: textColor, cursor: "pointer" }}>
-                Keep playing during matches
-              </label>
-            </div>
-          </div>
-        )}
+        {/* Global Ambient Audio Controls */}
+        <button 
+          onClick={() => {
+            sound.playClockTick();
+            const nextMuted = !isMusicMuted;
+            setIsMusicMuted(nextMuted);
+            localStorage.setItem("kaevrix_music_muted", String(nextMuted));
+          }}
+          style={{
+            background: isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: `1px solid ${cardBorder}`,
+            borderRadius: "50%",
+            width: isMobile ? "36px" : "40px",
+            height: isMobile ? "36px" : "40px",
+            cursor: "pointer",
+            fontSize: isMobile ? "15px" : "18px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.2s",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)"
+          }}
+          title={isMusicMuted ? "Unmute Ambient Music" : "Mute Ambient Music"}
+          aria-label="Toggle Mute"
+        >
+          {isMusicMuted ? "🔇" : "🎵"}
+        </button>
+
+        {/* Theme Toggle */}
+        <button 
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          style={{
+            background: isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: `1px solid ${cardBorder}`,
+            borderRadius: "50%",
+            width: isMobile ? "36px" : "40px",
+            height: isMobile ? "36px" : "40px",
+            cursor: "pointer",
+            fontSize: isMobile ? "15px" : "18px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.2s",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)"
+          }}
+          title="Toggle Light/Dark Theme"
+          aria-label="Toggle Theme"
+        >
+          {isDarkMode ? "🌙" : "☀️"}
+        </button>
       </div>
-
-      {/* Dimensional Style Switcher (Left) */}
-      <button 
-        onClick={handleTogglePortalStyle}
-        className="dimensional-switch-btn"
-        style={{ 
-          position: "absolute", top: "20px", left: "20px", zIndex: 9999, 
-          background: isDarkMode ? "rgba(255,106,0,0.12)" : "rgba(255, 255, 255, 0.9)", 
-          border: `2px solid ${currentThemeColor}`, 
-          color: textColor, display: "flex", alignItems: "center", gap: "8px", transition: "all 0.2s"
-        }}
-      >
-        <span className={`dimensional-switch-indicator ${portalStyle === "workspace" ? "workspace-active" : "retro-active"}`} />
-        <span style={{ fontFamily: "var(--font-gamer)", fontSize: "11px", fontWeight: "900", letterSpacing: "1px" }}>
-          SWITCH PORTAL DESIGN: <span style={{ color: currentThemeColor }}>{portalStyle === "workspace" ? "WORKSPACE" : "RETRO ARCADE"}</span>
-        </span>
-      </button>
 
       {/* STYLE 1: WORKSPACE — TRUE GAME INTERFACE */}
       {portalStyle === "workspace" && signUpStep === 4 && (
@@ -770,23 +822,28 @@ export default function WelcomeScreen({
         <div style={{
           flex: 1,
           display: "flex",
-          flexDirection: window.innerWidth < 900 ? "column" : "row",
+          flexDirection: isMobile ? "column" : "row",
           position: "relative",
           zIndex: 10,
           minHeight: 0,
+          overflowY: isMobile ? "auto" : "visible",
         }}>
 
           {/* ══════════════════════════════════════════════
               LEFT PANEL — GAME MENU + AUTH FORMS
           ══════════════════════════════════════════════ */}
           <div style={{
-            flex: "0 0 48%",
+            flex: isMobile ? "1 1 auto" : "0 0 48%",
+            width: "100%",
+            maxWidth: isMobile ? "540px" : "none",
+            margin: isMobile ? "0 auto" : "0",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            padding: "60px 60px 60px 80px",
+            padding: isMobile ? "40px 20px 24px" : "60px 60px 60px 80px",
             position: "relative",
             zIndex: 2,
+            boxSizing: "border-box",
           }}>
             {/* Kaevrix wordmark */}
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
@@ -885,12 +942,6 @@ export default function WelcomeScreen({
                     </div>
                   </button>
                 ))}
-
-                <div style={{ marginTop: "24px", borderTop: `1px solid ${isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}`, paddingTop: "20px" }}>
-                  <div style={{ fontSize: "10px", color: textMuted, letterSpacing: "2px", textTransform: "uppercase", fontWeight: "700" }}>
-                    Ranked Arena · Class-Based Combat · Real-Time Duels
-                  </div>
-                </div>
               </div>
             )}
 
@@ -1363,6 +1414,8 @@ export default function WelcomeScreen({
             alignItems: "center",
             justifyContent: "center",
             overflow: "hidden",
+            minHeight: isMobile ? "320px" : "auto",
+            padding: isMobile ? "20px 0 60px" : "0",
           }}>
             {/* Light Mode Panel Background */}
             <div style={{
@@ -1387,7 +1440,7 @@ export default function WelcomeScreen({
             {/* Decorative background orb (Light Mode) */}
             <div style={{
               position: "absolute",
-              width: "420px", height: "420px",
+              width: isMobile ? "280px" : "420px", height: isMobile ? "280px" : "420px",
               borderRadius: "50%",
               background: "radial-gradient(circle, rgba(255,106,0,0.07) 0%, transparent 70%)",
               filter: "blur(50px)",
@@ -1400,7 +1453,7 @@ export default function WelcomeScreen({
             {/* Decorative background orb (Dark Mode) */}
             <div style={{
               position: "absolute",
-              width: "420px", height: "420px",
+              width: isMobile ? "280px" : "420px", height: isMobile ? "280px" : "420px",
               borderRadius: "50%",
               background: `radial-gradient(circle, ${currentThemeColor}12 0%, transparent 70%)`,
               filter: "blur(50px)",
@@ -1413,7 +1466,7 @@ export default function WelcomeScreen({
             {/* Concentric ring decorations */}
             <div style={{
               position: "absolute",
-              width: "380px", height: "380px",
+              width: isMobile ? "260px" : "380px", height: isMobile ? "260px" : "380px",
               borderRadius: "50%",
               border: `1px solid ${ambientGlowColor}${isDarkMode ? "18" : "22"}`,
               animation: "portalOrbitalSpin 30s linear infinite",
@@ -1423,7 +1476,7 @@ export default function WelcomeScreen({
             }} />
             <div style={{
               position: "absolute",
-              width: "280px", height: "280px",
+              width: isMobile ? "190px" : "280px", height: isMobile ? "190px" : "280px",
               borderRadius: "50%",
               border: `1px dashed ${ambientGlowColor}${isDarkMode ? "22" : "18"}`,
               animation: "portalOrbitalSpin 20s linear infinite reverse",
@@ -1531,7 +1584,8 @@ export default function WelcomeScreen({
             <div className="retro-breathing-character" style={{
               position: "relative",
               zIndex: 3,
-              width: "260px", height: "260px",
+              width: isMobile ? "200px" : "260px",
+              height: isMobile ? "200px" : "260px",
               filter: `drop-shadow(0 0 40px ${ambientGlowColor}${isDarkMode ? "bb" : "88"})`,
               transition: "filter 0.4s ease",
               marginBottom: "20px",
@@ -1591,30 +1645,6 @@ export default function WelcomeScreen({
                 </div>
               )}
             </div>
-
-            {/* Stats mini display top-right corner — hide during class select (shown in left panel) */}
-            {authMode !== "signup" || signUpStep !== 1 ? (
-            <div style={{
-              position: "absolute", top: "30px", right: "30px",
-              display: "flex", flexDirection: "column", gap: "8px",
-              opacity: 0.6,
-              pointerEvents: "none",
-            }}>
-              {[
-                { label: "FOCUS", value: classStats.focus },
-                { label: "SPEED", value: classStats.speed },
-                { label: "CHAOS", value: classStats.chaos },
-              ].map(s => (
-                <div key={s.label} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span style={{ fontSize: "9px", color: textMuted, fontWeight: "800", letterSpacing: "1px", width: "40px" }}>{s.label}</span>
-                  <div style={{ width: "70px", height: "4px", background: isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(255,106,0,0.12)", borderRadius: "2px", overflow: "hidden" }}>
-                    <div style={{ width: `${s.value}%`, height: "100%", background: ambientGlowColor, borderRadius: "2px", transition: "width 0.4s ease" }} />
-                  </div>
-                  <span style={{ fontSize: "9px", color: ambientGlowColor, fontWeight: "800" }}>{s.value}</span>
-                </div>
-              ))}
-            </div>
-            ) : null}
 
             {/* Kaevrix watermark + tagline bottom left */}
             <div style={{
