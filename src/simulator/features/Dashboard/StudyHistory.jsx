@@ -631,6 +631,126 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
         .hist-bracket-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
         .hist-bracket-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
 
+        /* 3-Column Stats Grid (Topics, Decks, Date on the same line) */
+        .history-stats-grid {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 8px !important;
+          width: 100% !important;
+          max-width: 440px !important;
+          box-sizing: border-box !important;
+        }
+        .history-stat-card {
+          min-width: 0 !important;
+          padding: 8px 10px !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+          text-align: left !important;
+          box-sizing: border-box !important;
+        }
+        .history-stat-label {
+          font-size: 8.5px !important;
+          font-weight: 800 !important;
+          color: var(--text-muted) !important;
+          letter-spacing: 0.6px !important;
+          text-transform: uppercase !important;
+          white-space: nowrap !important;
+          line-height: 1 !important;
+          margin-bottom: 3px !important;
+        }
+        .history-stat-val {
+          font-size: 17px !important;
+          font-weight: 900 !important;
+          color: #ff6a00 !important;
+          line-height: 1.1 !important;
+          font-family: var(--font-outfit), sans-serif !important;
+          white-space: nowrap !important;
+        }
+        .history-stat-val.date-val {
+          font-size: 13.5px !important;
+          color: var(--text-light) !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+        }
+
+        /* Modern Action Buttons */
+        .history-action-buttons-wrap {
+          display: flex !important;
+          gap: 8px !important;
+          align-items: center !important;
+        }
+        .history-btn-primary, .history-btn-secondary {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          padding: 8px 16px !important;
+          border-radius: 10px !important;
+          font-size: 12px !important;
+          font-weight: 800 !important;
+          letter-spacing: 0.3px !important;
+          white-space: nowrap !important;
+          cursor: pointer !important;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+          box-sizing: border-box !important;
+        }
+        .history-btn-primary {
+          background: linear-gradient(135deg, #ff6a00 0%, #ff8533 100%) !important;
+          border: 1px solid rgba(255, 255, 255, 0.25) !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px rgba(255, 106, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+        }
+        .history-btn-primary:hover {
+          filter: brightness(1.08) !important;
+          transform: translateY(-1px) !important;
+          box-shadow: 0 6px 18px rgba(255, 106, 0, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+        }
+        .history-btn-secondary {
+          background: ${isDarkMode ? "rgba(255, 255, 255, 0.04)" : "#ffffff"} !important;
+          border: ${isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(255, 106, 0, 0.26)"} !important;
+          color: ${isDarkMode ? "#f8fafc" : "#1e293b"} !important;
+          box-shadow: ${isDarkMode ? "none" : "0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.6)"} !important;
+        }
+        .history-btn-secondary:hover {
+          background: ${isDarkMode ? "rgba(255, 255, 255, 0.08)" : "#f8fafc"} !important;
+          border-color: #ff6a00 !important;
+          transform: translateY(-1px) !important;
+          color: #ff6a00 !important;
+        }
+
+        @media (max-width: 600px) {
+          .history-stats-grid {
+            max-width: 100% !important;
+            gap: 6px !important;
+          }
+          .history-stat-card {
+            padding: 7px 8px !important;
+          }
+          .history-stat-label {
+            font-size: 8px !important;
+          }
+          .history-stat-val {
+            font-size: 15.5px !important;
+          }
+          .history-stat-val.date-val {
+            font-size: 12px !important;
+          }
+          .history-action-buttons-wrap {
+            width: 100% !important;
+            display: flex !important;
+            gap: 8px !important;
+            margin-top: 6px !important;
+          }
+          .history-btn-primary, .history-btn-secondary {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            padding: 9px 6px !important;
+            font-size: 11px !important;
+            white-space: nowrap !important;
+          }
+        }
+
         /* Typography for rendered markdown */
         .history-notes-document {
           font-family: 'Inter', sans-serif;
@@ -728,25 +848,25 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
           </p>
         </div>
 
-        {/* Telemetry Stats widgets */}
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-          <div className="history-hud-panel" style={{ position: "relative", padding: "8px 16px", minWidth: "100px", borderRadius: "10px", borderStyle: "dashed" }}>
+        {/* Telemetry Stats widgets (Always 3 columns on the same line) */}
+        <div className="history-stats-grid">
+          <div className="history-hud-panel history-stat-card" style={{ position: "relative", borderRadius: "10px", borderStyle: "dashed" }}>
             <div className="history-corner-bracket hist-bracket-tl" />
             <div className="history-corner-bracket hist-bracket-tr" />
-            <div style={{ fontSize: "9px", color: "var(--text-muted)" }}>TOPICS</div>
-            <div style={{ fontSize: "18px", fontWeight: "900", color: "#ff6a00", marginTop: "2px" }}>{stats.totalTopics}</div>
+            <div className="history-stat-label">TOPICS</div>
+            <div className="history-stat-val">{stats.totalTopics}</div>
           </div>
-          <div className="history-hud-panel" style={{ position: "relative", padding: "8px 16px", minWidth: "100px", borderRadius: "10px", borderStyle: "dashed" }}>
+          <div className="history-hud-panel history-stat-card" style={{ position: "relative", borderRadius: "10px", borderStyle: "dashed" }}>
             <div className="history-corner-bracket hist-bracket-tl" />
             <div className="history-corner-bracket hist-bracket-tr" />
-            <div style={{ fontSize: "9px", color: "var(--text-muted)" }}>DECKS SAVED</div>
-            <div style={{ fontSize: "18px", fontWeight: "900", color: "#ff6a00", marginTop: "2px" }}>{stats.totalVideos}</div>
+            <div className="history-stat-label">DECKS SAVED</div>
+            <div className="history-stat-val">{stats.totalVideos}</div>
           </div>
-          <div className="history-hud-panel" style={{ position: "relative", padding: "8px 16px", minWidth: "130px", borderRadius: "10px", borderStyle: "dashed" }}>
+          <div className="history-hud-panel history-stat-card" style={{ position: "relative", borderRadius: "10px", borderStyle: "dashed" }}>
             <div className="history-corner-bracket hist-bracket-tl" />
             <div className="history-corner-bracket hist-bracket-tr" />
-            <div style={{ fontSize: "9px", color: "var(--text-muted)" }}>LAST ACTIVE</div>
-            <div style={{ fontSize: "16px", fontWeight: "900", color: "var(--text-light)", marginTop: "4px" }}>{stats.lastStudyDate}</div>
+            <div className="history-stat-label">LAST ACTIVE</div>
+            <div className="history-stat-val date-val">{stats.lastStudyDate}</div>
           </div>
         </div>
       </div>
@@ -888,50 +1008,20 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
                     </h3>
                   </div>
 
-                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <div className="history-action-buttons-wrap">
                     <button
+                      className="history-btn-primary"
                       onClick={() => handleRevisitClick(selectedItem)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "7px",
-                        padding: "9px 18px",
-                        borderRadius: "10px",
-                        background: "linear-gradient(135deg, #ff6a00, #ea580c)",
-                        border: "none",
-                        color: "#fff",
-                        fontSize: "12px",
-                        fontWeight: "900",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 14px rgba(255, 106, 0, 0.28)",
-                        transition: "all 0.2s"
-                      }}
-                      onMouseOver={e => { e.currentTarget.style.filter = "brightness(1.1)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                      onMouseOut={e => { e.currentTarget.style.filter = "none"; e.currentTarget.style.transform = "none"; }}
+                      title="Replay this lesson"
                     >
-                      <RotateCcw size={14} /> Revisit Training
+                      <RotateCcw size={13} strokeWidth={2.4} /> Resume Study
                     </button>
                     <button
+                      className="history-btn-secondary"
                       onClick={() => handleDownloadNotes(selectedItem)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "7px",
-                        padding: "9px 18px",
-                        borderRadius: "10px",
-                        background: isDarkMode ? "rgba(255,255,255,0.04)" : "#ffffff",
-                        border: isDarkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid #cbd5e1",
-                        color: "var(--text-light)",
-                        fontSize: "12px",
-                        fontWeight: "800",
-                        cursor: "pointer",
-                        boxShadow: isDarkMode ? "none" : "0 2px 8px rgba(0,0,0,0.04)",
-                        transition: "all 0.2s"
-                      }}
-                      onMouseOver={e => { e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.08)" : "#f8fafc"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                      onMouseOut={e => { e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.04)" : "#ffffff"; e.currentTarget.style.transform = "none"; }}
+                      title="Export notes as PDF"
                     >
-                      <Download size={14} color="#ff6a00" /> Download Notes (.pdf)
+                      <Download size={13} color="#ff6a00" strokeWidth={2.4} /> Export PDF
                     </button>
                   </div>
                 </div>

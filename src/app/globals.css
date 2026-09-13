@@ -5364,6 +5364,53 @@ body.dark-theme .todo-task-item {
   }
 }
 
+/* Study History Stats & Action Buttons */
+.history-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  box-sizing: border-box !important;
+}
+.history-stat-card {
+  min-width: 0 !important;
+  padding: 8px 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+}
+.history-action-buttons-wrap {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+@media (max-width: 600px) {
+  .history-stats-grid {
+    max-width: 100% !important;
+    gap: 6px !important;
+  }
+  .history-stat-card {
+    padding: 7px 8px !important;
+  }
+  .history-action-buttons-wrap {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: 6px !important;
+  }
+  .history-btn-primary, .history-btn-secondary {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 9px 6px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+}
+
+
 
 
 

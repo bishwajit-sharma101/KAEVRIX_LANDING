@@ -1784,6 +1784,18 @@ export default function LandingPage() {
   const [gotcha, setGotcha] = useState("");
   const [status, setStatus] = useState("idle");
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Element && Element.prototype.releasePointerCapture) {
+      const origRelease = Element.prototype.releasePointerCapture;
+      Element.prototype.releasePointerCapture = function (pId) {
+        try {
+          if (this.hasPointerCapture && !this.hasPointerCapture(pId)) return;
+          origRelease.call(this, pId);
+        } catch (e) {}
+      };
+    }
+  }, []);
+
   const handleOpenDemo = (tab = "duels") => {
     if (typeof window !== "undefined") {
       if (tab === "sanctum") {

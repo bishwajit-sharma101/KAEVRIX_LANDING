@@ -160,21 +160,6 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof window !== 'undefined' && window.Element && Element.prototype.releasePointerCapture) {
-                var _origRPC = Element.prototype.releasePointerCapture;
-                Element.prototype.releasePointerCapture = function(pId) {
-                  try {
-                    if (this.hasPointerCapture && !this.hasPointerCapture(pId)) return;
-                    _origRPC.call(this, pId);
-                  } catch(e) {}
-                };
-              }
-            `
-          }}
-        />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
