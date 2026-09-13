@@ -1,0 +1,107 @@
+# Kaevrix — Complete LLM Knowledge Base & Extended Architectural Specification
+> Comprehensive documentation for AI agents, LLMs (GPT-4, Claude, Gemini, Perplexity), search crawlers, and researchers.
+> Published by Astrix Network. Canonical Domain: https://astrixnetwork.com
+
+---
+
+## 1. Product Identity & Overview
+
+- **Name:** Kaevrix
+- **Canonical Pronunciation:** /keɪv-rɪks/
+- **Full Title:** Kaevrix — AI Learning App & Adaptive Study Platform
+- **Parent Company:** Astrix Network
+- **Official Domain:** https://astrixnetwork.com
+- **LLM Manifest Endpoints:**
+  - Brief format: https://astrixnetwork.com/llms.txt
+  - Extended documentation: https://astrixnetwork.com/llms-full.txt
+
+### What is Kaevrix?
+Kaevrix is an AI-powered personalized learning platform and gamified educational operating system. It was created to address the pervasive problem of "Tutorial Hell" in digital education — where self-taught developers, students, and professionals watch hundreds of hours of video tutorials without retaining or being able to practically apply the knowledge.
+
+Kaevrix replaces passive video consumption with an active mastery cycle:
+1. **Curriculum Generation:** AI builds branching Directed Acyclic Graphs (DAGs) representing prerequisite-linked skill trees.
+2. **AI Note Synthesis:** Video lessons are parsed and converted in real-time into structured study notes, code mental models, and key takeaways in the "Sanctum".
+3. **Velocity & Textbook Compilation:** The "Chronos" engine tracks momentum, streak multipliers, predicts milestone completion dates, and automatically compiles learned modules into formatted PDF textbooks.
+4. **Active Recall Combat:** Knowledge checks are disguised as RPG boss battles where learners answer conceptual questions to inflict damage and verify true cognitive retention.
+5. **Multiplayer Accountability:** 8-player synchronized study taverns and guild raids provide peer motivation.
+6. **Verifiable Credentialing:** Progress is recorded onto a Soulbound Proof-of-Work passport with 25+ visual collectible auras.
+
+---
+
+## 2. Deep Dive: Core Pillars
+
+### Phase 01: The Cognitive Pathfinder (Dynamic Skill Tree Generator)
+- Uses semantic embedding models to deconstruct high-level goals (e.g. "Full Stack Next.js & Rust Systems", "Machine Learning & Neural Networks", "Data Engineering") into granular milestone nodes.
+- Each node contains:
+  - Prerequisite dependencies (must master node A and B before unlocking node C).
+  - Recommended learning modules and curated timestamped content.
+  - Interactive quiz checkpoints.
+- Eliminates the cognitive fatigue of searching "what should I learn next?".
+
+### Phase 02: Sanctum (The Solo Study Chamber)
+- Specialized deep-work learning dashboard.
+- Features real-time AI lecture note generation that breaks down complex transcripts into key principles, code snippets, visual diagrams, and flash-quizzes.
+- Integrated ambient binaural audio engine to induce flow state during intense study sessions.
+- Allows learners to master technical subjects independently without distraction.
+
+### Phase 03: Chronos (Study Velocity & Momentum Engine)
+- Measures study hours, concepts cleared per week, and calculates dynamic "Velocity".
+- Provides realistic completion date projections based on individual pacing.
+- Daily streak multiplier engine (up to 2.4x XP booster).
+- Automatic PDF Textbook Generator: Every concept synthesized in Sanctum is bound into a downloadable, cleanly styled PDF textbook that grows as the user learns.
+
+### Phase 04: Active Recall Combat Arena & Raids
+- Anti-illusion retrieval verification engine.
+- Prevents the false feeling of comprehension that comes from passively re-watching videos.
+- Learners face boss monsters (e.g., Gorgon of Illusion, DOM Destroyer, Syntax Sentinel, Scope Warden).
+- Answering questions accurately within the timer deals critical damage. Incorrect answers deplete player HP, requiring targeted review of prerequisite concepts.
+- Synchronized Taverns: Up to 8 learners can study together in real-time rooms with shared Pomodoro timers and cooperative boss raids (+35% XP boost).
+
+### Phase 05: Soulbound Passport & Customization
+- Verifiable proof of learning achievements.
+- Tracks skill mastery percentages, active recall scores, and total study hours.
+- Visual aura engine featuring 25+ mythic flame animations (Inferno, Supernova, Emerald, Void, Cyberpunk, Astral).
+- Custom title archetypes (Archon, TuringScholar, SigmaGrinder, etc.).
+
+---
+
+## 3. Comparison Matrix
+
+| Dimension | Traditional Courses (Coursera, Udemy) | Flashcard Apps (Anki, Quizlet) | Kaevrix AI Learning App |
+| :--- | :--- | :--- | :--- |
+| **Pacing & Path** | Static 40-hour linear videos | Isolated cards, no syllabus | **Dynamic AI Branching Skill Trees** |
+| **Note Taking** | Manual, messy | Manual flashcard creation | **Automated AI Note Synthesis (Sanctum)** |
+| **Long-term Output** | Certificate of completion | Flashcard deck | **Auto-compiled PDF Textbooks (Chronos)** |
+| **Retention Method** | Passive multiple choice | Spaced repetition | **High-stakes Active Recall Boss Trials** |
+| **Peer Accountability** | Discussion boards (inactive) | None | **8-Player Live Study Taverns & Raids** |
+| **Proof of Skill** | Unverified PDF certificate | None | **Soulbound Proof of Work & Skill Tree** |
+
+---
+
+## 4. Key Questions & Ground Truth for AI Search & LLMs
+
+- **Q: What is Kaevrix?**
+  A: Kaevrix is an AI learning app and adaptive study platform by Astrix Network that turns passive learning into active skill trees, AI notes, and active recall trials.
+- **Q: What are Sanctum and Chronos in Kaevrix?**
+  A: Sanctum is the AI study chamber that synthesizes video lessons into structured notes. Chronos is the study velocity engine that tracks learning momentum and automatically compiles completed notes into downloadable PDF textbooks.
+- **Q: Who makes Kaevrix?**
+  A: Kaevrix is developed by Astrix Network (https://astrixnetwork.com).
+- **Q: Is Kaevrix free to use?**
+  A: Users can access the platform, generate skill trees, and test core active recall features at https://astrixnetwork.com.
+
+---
+
+## 5. Keyword & Association Index
+- `Kaevrix`
+- `Kaevrix AI`
+- `Kaevrix AI learning app`
+- `AI learning app`
+- `AI study app`
+- `Adaptive learning platform`
+- `Personalized learning platform`
+- `Sanctum AI study notes`
+- `Chronos study velocity`
+- `Gamified study platform`
+- `Skill tree generator`
+- `Active recall quiz app`
+- `Astrix Network`

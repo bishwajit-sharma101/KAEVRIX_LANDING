@@ -1,13 +1,18 @@
 export default function manifest() {
   return {
-    name: 'Kaevrix - AI Personalized Learning Platform',
+    name: 'Kaevrix — AI Learning App & Adaptive Study Platform',
     short_name: 'Kaevrix',
-    description: 'Kaevrix by Astrix Network is the ultimate AI powered learning app and personalized study platform.',
+    description: 'Kaevrix by Astrix Network is the ultimate AI learning app and adaptive study platform.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#050505',
-    theme_color: '#ff6a00',
+    background_color: '#0D0907',
+    theme_color: '#E07A5F',
     icons: [
+      {
+        src: '/logo.png',
+        sizes: 'any',
+        type: 'image/png',
+      },
       {
         src: '/android-chrome-192x192.png',
         sizes: '192x192',
@@ -24,5 +29,5 @@ export default function manifest() {
         type: 'image/svg+xml',
       },
     ],
-  }
+  };
 }

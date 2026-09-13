@@ -1,0 +1,396 @@
+import { useState, useEffect } from "react";
+import * as sound from "../../utils/audio";
+import PathfinderOnboarding from "./PathfinderOnboarding";
+import PathfinderRoadmap from "./PathfinderRoadmap";
+import ManualPathConfig from "./ManualPathConfig";
+import { MOCK_APP_ROADMAP } from "../../utils/mockInterceptor";
+
+const BACKEND_URL = typeof window !== "undefined" && ["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname)
+  ? `http://${window.location.hostname === "localhost" ? "127.0.0.1" : window.location.hostname}:5000`
+  : "";
+
+function sanitizeRoadmap(rm) {
+  if (!rm) return rm;
+  const next = JSON.parse(JSON.stringify(rm));
+  const levelKeys = ["level1", "level2", "level3", "level4", "level5"];
+  for (const lk of levelKeys) {
+    const ms = next[lk]?.milestones;
+    if (Array.isArray(ms)) {
+      let activePassed = false;
+      let firstIncompleteIdx = -1;
+      for (let i = 0; i < ms.length; i++) {
+        if (ms[i].status !== "completed") {
+          firstIncompleteIdx = i;
+          break;
+        }
+      }
+      for (let i = 0; i < ms.length; i++) {
+        if (ms[i].status === "active") {
+          activePassed = true;
+        } else if (activePassed) {
+          if (ms[i].status !== "completed") {
+            ms[i].status = "locked";
+          }
+        } else if (firstIncompleteIdx !== -1 && i > firstIncompleteIdx && ms[i].status === "unlocked") {
+          ms[i].status = "locked";
+        }
+      }
+    }
+  }
+  return next;
+}
+
+export default function CognitivePathfinder({ username, onTriggerSearch, onStartSoloStudy, isDarkMode, featureGates = {}, setLockedFeatureAlert, setStatus, practiceContext, setPracticeContext }) {
+  const roadmapKey = `kaevrix_roadmap_progress_${username}`;
+  const answersKey = `kaevrix_roadmap_answers_${username}`;
+
+  const [roadmap, setRoadmap] = useState(() => {
+    const saved = localStorage.getItem(roadmapKey);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && (!parsed.version || parsed.version < 3 || parsed.level1?.milestones?.length !== 8)) {
+          localStorage.setItem(roadmapKey, JSON.stringify(MOCK_APP_ROADMAP));
+          return MOCK_APP_ROADMAP;
+        }
+        const sanitized = sanitizeRoadmap(parsed);
+        if (JSON.stringify(sanitized) !== saved) {
+          localStorage.setItem(roadmapKey, JSON.stringify(sanitized));
+        }
+        return sanitized;
+      } catch { return MOCK_APP_ROADMAP; }
+    }
+    localStorage.setItem(roadmapKey, JSON.stringify(MOCK_APP_ROADMAP));
+    return MOCK_APP_ROADMAP;
+  });
+
+  const [view, setView] = useState(roadmap ? "roadmap" : "landing");
+  const [initialTopic, setInitialTopic] = useState("");
+  const [inputVal, setInputVal] = useState("");
+  const [activeNode, setActiveNode] = useState(1);
+
+  const handleRoadmapReady = (newRoadmap) => {
+    sound.playCorrect();
+    localStorage.setItem(roadmapKey, JSON.stringify(newRoadmap));
+    setRoadmap(newRoadmap);
+    setView("roadmap");
+  };
+
+  const handleReset = () => {
+    if (window.confirm("This will clear your current roadmap and progress. Are you sure?")) {
+      sound.playClockTick();
+      localStorage.removeItem(roadmapKey);
+      localStorage.removeItem(answersKey);
+      setRoadmap(null);
+      setView("landing");
+    }
+  };
+
+  const handleSearchDuel = (milestone) => {
+    if (onTriggerSearch) {
+      onTriggerSearch(milestone.searchQuery || milestone.title);
+    }
+  };
+
+  // Landing page — shown if no roadmap yet
+  if (view === "landing") {
+    return (
+      <div className="pathfinder-empty-container">
+        <style>{`
+          .pathfinder-empty-container {
+            width: 100%;
+            max-width: 800px;
+            margin: -25px auto 0 auto;
+            min-height: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0px 20px;
+            text-align: center;
+            position: relative;
+            overflow: visible;
+            transition: all 0.4s ease;
+          }
+          .pathfinder-cta-btn {
+            position: relative;
+            background: linear-gradient(135deg, #ff6a00 0%, #ff4500 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff !important;
+            padding: 12px 32px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 800;
+            font-family: var(--font-outfit);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(255, 106, 0, 0.3);
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            z-index: 1;
+          }
+          .pathfinder-cta-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 30%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(30deg);
+            transition: all 0.6s ease;
+            pointer-events: none;
+          }
+          .pathfinder-cta-btn:hover {
+            transform: translateY(-2.5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 106, 0, 0.45);
+          }
+          .pathfinder-cta-btn:hover::after {
+            left: 140%;
+          }
+          .pathfinder-cta-btn:hover .btn-arrow {
+            transform: translateX(4px);
+          }
+          .pathfinder-cta-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(255, 106, 0, 0.2);
+          }
+          .pathfinder-manual-btn {
+            background: ${isDarkMode ? "rgba(255, 255, 255, 0.03)" : "#ffffff"};
+            border: 1px solid ${isDarkMode ? "rgba(255, 106, 0, 0.25)" : "#fed7aa"};
+            color: ${isDarkMode ? "#ffb300" : "#ea580c"} !important;
+            padding: 12px 32px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 800;
+            font-family: var(--font-outfit);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(255, 106, 0, 0.05);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1;
+          }
+          .pathfinder-manual-btn:hover {
+            transform: translateY(-2.5px) scale(1.02);
+            background: ${isDarkMode ? "rgba(255, 106, 0, 0.08)" : "#fff7ed"};
+            box-shadow: 0 8px 25px rgba(255, 106, 0, 0.15);
+          }
+          .pathfinder-manual-btn:active {
+            transform: translateY(1px);
+          }
+          @media (max-width: 640px) {
+            .steps-container {
+              flex-direction: column !important;
+              gap: 16px !important;
+            }
+          }
+        `}</style>
+
+        {/* Ambient glow */}
+        <div style={{
+          position: "absolute",
+          top: "40%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "500px",
+          height: "260px",
+          background: isDarkMode 
+            ? "radial-gradient(circle, rgba(255,106,0,0.04) 0%, transparent 60%)"
+            : "radial-gradient(circle, rgba(255,106,0,0.025) 0%, transparent 60%)",
+          zIndex: 0,
+          pointerEvents: "none"
+        }} />
+
+        {/* Pathfinder core visual illustration (feather blended background) */}
+        <div style={{ position: "relative", marginBottom: "8px", zIndex: 1 }}>
+          <img 
+            src="/pathfinder_orb.png" 
+            alt="Pathfinder Core Engine" 
+            style={{
+              width: "270px",
+              height: "auto",
+              display: "block",
+              mixBlendMode: isDarkMode ? "screen" : "multiply",
+              filter: isDarkMode 
+                ? "invert(0.92) hue-rotate(180deg) brightness(0.65) contrast(1.15)" 
+                : "brightness(1.06) contrast(1.03)",
+              WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 74%)",
+              maskImage: "radial-gradient(ellipse at center, black 50%, transparent 74%)"
+            }}
+          />
+        </div>
+
+        <h1 style={{
+          fontSize: "28px",
+          fontWeight: "800",
+          lineHeight: "1.3",
+          color: "var(--text-light)",
+          margin: "0 0 10px 0",
+          fontFamily: "var(--font-outfit)",
+          letterSpacing: "-0.5px",
+          zIndex: 1
+        }}>
+          Initialize your Pathfinder
+        </h1>
+
+        <p style={{
+          fontSize: "15px",
+          fontWeight: "500",
+          color: "var(--text-muted)",
+          maxWidth: "480px",
+          lineHeight: "1.6",
+          margin: "0 0 20px 0",
+          fontFamily: "var(--font-outfit)",
+          zIndex: 1
+        }}>
+          Your learning engine is ready, but it needs a destination.<br />
+          Generate your first pathway to unlock structured learning, quizzes, challenges, and XP rewards.
+        </p>
+
+        {/* Buttons Row */}
+        <div style={{ display: "flex", gap: "12px", zIndex: 1, flexWrap: "wrap", justifyContent: "center", marginBottom: "20px" }}>
+          {/* Generate Button */}
+          <button 
+            className="pathfinder-cta-btn" 
+            onClick={() => {
+              sound.playClockTick();
+              if (featureGates.ROADMAP_GEN_DISABLED) {
+                if (setLockedFeatureAlert) setLockedFeatureAlert("roadmap");
+                else alert("Roadmap generation is temporarily disabled for maintenance. Please try again later.");
+                return;
+              }
+              setView("onboarding");
+            }}
+            style={featureGates.ROADMAP_GEN_DISABLED ? { opacity: 0.5, filter: "grayscale(0.5)", marginBottom: 0 } : { marginBottom: 0 }}
+          >
+            <span style={{ fontWeight: "700" }}>{featureGates.ROADMAP_GEN_DISABLED ? "[LOCKED] Generation Locked" : "Generate Your First Pathway"}</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "transform 0.3s" }} className="btn-arrow">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
+
+          {/* Manual Path Button */}
+          <button 
+            className="pathfinder-manual-btn"
+            onClick={() => {
+              sound.playClockTick();
+              setView("manual-path");
+            }}
+          >
+            [CONFIG]️ Create Manual Path
+          </button>
+        </div>
+
+        {/* Guide Steps Panel (Optimized dense padding) */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "16px",
+          width: "100%",
+          maxWidth: "760px",
+          background: isDarkMode ? "rgba(255, 255, 255, 0.015)" : "#ffffff",
+          border: "1px solid var(--glass-border)",
+          borderRadius: "14px",
+          padding: "16px 20px",
+          boxShadow: isDarkMode ? "none" : "0 4px 20px rgba(0,0,0,0.02)",
+          zIndex: 1,
+          flexDirection: "row"
+        }} className="steps-container">
+          {/* Step 1 */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px", borderRadius: "50%", background: "rgba(255, 106, 0, 0.08)", flexShrink: 0 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6a00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontSize: "12.5px", fontWeight: "800", color: "var(--text-light)", marginBottom: "2px", fontFamily: "var(--font-outfit)" }}>Set your goal</div>
+              <div style={{ fontSize: "11px", fontWeight: "500", color: "var(--text-muted)", lineHeight: "1.35", fontFamily: "var(--font-outfit)" }}>Tell us what you want to master</div>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px", borderRadius: "50%", background: "rgba(255, 106, 0, 0.08)", flexShrink: 0 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6a00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontSize: "12.5px", fontWeight: "800", color: "var(--text-light)", marginBottom: "2px", fontFamily: "var(--font-outfit)" }}>Get your path</div>
+              <div style={{ fontSize: "11px", fontWeight: "500", color: "var(--text-muted)", lineHeight: "1.35", fontFamily: "var(--font-outfit)" }}>AI builds a personalized learning roadmap</div>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px", borderRadius: "50%", background: "rgba(255, 106, 0, 0.08)", flexShrink: 0 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6a00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontSize: "12.5px", fontWeight: "800", color: "var(--text-light)", marginBottom: "2px", fontFamily: "var(--font-outfit)" }}>Start progressing</div>
+              <div style={{ fontSize: "11px", fontWeight: "500", color: "var(--text-muted)", lineHeight: "1.35", fontFamily: "var(--font-outfit)" }}>Unlock rewards, quests and level up</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+
+  if (view === "onboarding") {
+    return (
+      <PathfinderOnboarding
+        username={username}
+        backendUrl={BACKEND_URL}
+        onRoadmapReady={handleRoadmapReady}
+        isDarkMode={isDarkMode}
+      />
+    );
+  }
+
+  if (view === "manual-path") {
+    return (
+      <ManualPathConfig
+        onRoadmapReady={handleRoadmapReady}
+        onBack={() => setView("landing")}
+        isDarkMode={isDarkMode}
+      />
+    );
+  }
+
+  if (view === "roadmap" && roadmap) {
+    return (
+      <PathfinderRoadmap
+        roadmap={roadmap}
+        username={username}
+        onSearchDuel={handleSearchDuel}
+        onReset={handleReset}
+        onStartSoloStudy={onStartSoloStudy}
+        isDarkMode={isDarkMode}
+        featureGates={featureGates}
+        setLockedFeatureAlert={setLockedFeatureAlert}
+        setStatus={setStatus}
+        practiceContext={practiceContext}
+        setPracticeContext={setPracticeContext}
+      />
+    );
+  }
+
+  return null;
+}

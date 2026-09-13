@@ -1,6 +1,7 @@
 import { Outfit, Playfair_Display } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
+import "./landing.css";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -18,20 +19,41 @@ const playfair = Playfair_Display({
 });
 
 export const viewport = {
-  themeColor: '#ff6a00',
+  themeColor: '#E07A5F',
 };
 
 export const metadata = {
   applicationName: "Kaevrix",
-  title: "Kaevrix | AI Powered Personalized Learning App by Astrix Network",
-  description: "Kaevrix by Astrix Network is the ultimate AI learning app and personalized study tool. Transform your education with AI-generated roadmaps, interactive video learning, and community gathering spaces.",
-  keywords: ["ai learning app", "personalized learning app", "ai study tool", "Astrix Network", "Kaevrix", "synchronized study", "education RPG", "AI powered learning app", "personalized study platform", "AI study tools", "Kaevrix learning", "Astrix"],
+  title: "Kaevrix — AI Learning App & Adaptive Study Platform",
+  description: "Kaevrix by Astrix Network is the ultimate AI learning app and adaptive study platform. Master complex skills with AI-generated branching skill trees, automated note synthesis in Sanctum, study velocity in Chronos, and active recall combat trials.",
+  keywords: [
+    "kaevrix",
+    "ai learning app",
+    "ai study app",
+    "kaevrix ai learning app",
+    "adaptive learning platform",
+    "personalized learning app",
+    "learning roadmap generator",
+    "sanctum ai study notes",
+    "chronos study velocity",
+    "active recall study app",
+    "ai education platform",
+    "astrix network",
+    "education rpg",
+    "gamified learning platform"
+  ],
   authors: [{ name: "Astrix Network" }],
   creator: "Astrix Network",
   publisher: "Astrix Network",
   metadataBase: new URL("https://astrixnetwork.com"),
   alternates: {
     canonical: '/',
+    types: {
+      'text/plain': [
+        { url: '/llms.txt', title: 'LLM Knowledge Base' },
+        { url: '/llms-full.txt', title: 'LLM Full Documentation' },
+      ],
+    },
   },
   robots: {
     index: true,
@@ -45,8 +67,8 @@ export const metadata = {
     },
   },
   openGraph: {
-    title: "Kaevrix | AI Powered Personalized Learning App by Astrix Network",
-    description: "Transform your education with AI-generated roadmaps and interactive video learning. Built by Astrix Network.",
+    title: "Kaevrix — AI Learning App & Adaptive Study Platform",
+    description: "Transform education from passive watching into active mastery with AI skill trees, Sanctum notes, and Chronos velocity tracking.",
     url: "https://astrixnetwork.com",
     siteName: "Kaevrix",
     locale: "en_US",
@@ -54,19 +76,20 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaevrix | AI Powered Personalized Learning App",
-    description: "Transform your education with AI-generated roadmaps and interactive video learning. Built by Astrix Network.",
+    title: "Kaevrix — AI Learning App & Adaptive Study Platform",
+    description: "Transform education from passive watching into active mastery with AI skill trees, Sanctum notes, and Chronos velocity tracking.",
   },
   icons: {
     icon: [
+      { url: '/logo.png', sizes: 'any', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
       { url: '/icon.png', sizes: '512x512', type: 'image/png' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: '/favicon.ico',
+    shortcut: '/logo.png',
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/logo.png', sizes: '180x180', type: 'image/png' },
     ],
   },
 };
@@ -93,31 +116,33 @@ export default function RootLayout({ children }) {
     {
       "@context": "https://schema.org",
       "@type": ["SoftwareApplication", "EducationalApplication"],
-      "name": "Kaevrix | AI-Powered Personalized Learning App",
+      "name": "Kaevrix — AI Learning App & Adaptive Study Platform",
       "operatingSystem": "Web",
       "applicationCategory": "EducationalApplication",
-      "description": "Kaevrix by Astrix Network is an AI powered learning app and personalized study platform that turns education into an RPG.",
-      "url": "https://astrixnetwork.com"
+      "description": "Kaevrix by Astrix Network is the ultimate AI learning app and adaptive study platform. It turns passive video tutorials into branching skill trees, automated AI note synthesis, study velocity tracking, and active recall trials.",
+      "url": "https://astrixnetwork.com",
+      "featureList": [
+        "Cognitive Pathfinder: AI-generated branching skill trees",
+        "Sanctum: Automated AI video note synthesis and code breakdown",
+        "Chronos: Study velocity tracking and auto-generated PDF textbooks",
+        "Active Recall Combat: Anti-illusion retrieval verification and quiz boss trials",
+        "Synchronized Taverns: 8-player co-op study rooms",
+        "Soulbound Proof of Work: Verifiable on-chain XP and 25+ mythic visual auras"
+      ]
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "What is Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Kaevrix is an adaptive learning platform by Astrix Network that transforms educational content into an interactive mastery journey using personalized skill trees and active recall." } },
-        { "@type": "Question", "name": "What is Astrix Network?", "acceptedAnswer": { "@type": "Answer", "text": "Astrix Network is the parent technology company behind Kaevrix, dedicated to building advanced, personalized study platforms and educational software." } },
-        { "@type": "Question", "name": "How does personalized learning work?", "acceptedAnswer": { "@type": "Answer", "text": "The platform analyzes your current knowledge base and automatically adapts quizzes, study materials, and pacing to perfectly match your cognitive needs." } },
-        { "@type": "Question", "name": "What is a learning roadmap?", "acceptedAnswer": { "@type": "Answer", "text": "A learning roadmap is a custom-generated curriculum. Kaevrix builds a dynamic path of milestones tailored specifically to your ultimate learning goal." } },
+        { "@type": "Question", "name": "What is Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Kaevrix is an AI learning app and adaptive study platform by Astrix Network that transforms educational tutorials into an interactive mastery journey using personalized skill trees, AI note synthesis, and active recall." } },
+        { "@type": "Question", "name": "What is Sanctum in Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Sanctum is Kaevrix's dedicated solo study chamber. It converts raw video tutorials into structured AI study guides, code breakdowns, and active recall trials so learners master complex topics at their own pace." } },
+        { "@type": "Question", "name": "What is Chronos in Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Chronos is Kaevrix's study velocity and momentum engine. It calculates learning pace, estimates completion dates, tracks streaks, and automatically compiles your study history into downloadable PDF textbooks." } },
+        { "@type": "Question", "name": "How does Kaevrix solve Tutorial Hell?", "acceptedAnswer": { "@type": "Answer", "text": "Kaevrix replaces passive video consumption with interactive branching skill trees, automated note generation, and mandatory active recall boss checkpoints to verify true retention." } },
+        { "@type": "Question", "name": "What is Astrix Network?", "acceptedAnswer": { "@type": "Answer", "text": "Astrix Network is the technology organization behind Kaevrix, dedicated to building advanced, personalized study platforms and educational software." } },
+        { "@type": "Question", "name": "What is a learning roadmap?", "acceptedAnswer": { "@type": "Answer", "text": "A learning roadmap is a custom-generated curriculum. Kaevrix builds a dynamic path of milestone nodes tailored specifically to your ultimate learning goal." } },
         { "@type": "Question", "name": "How are skill trees created?", "acceptedAnswer": { "@type": "Answer", "text": "Using semantic mapping, complex subjects are broken down into fundamental nodes. As you pass active recall tests, you visually unlock higher-tier skills." } },
-        { "@type": "Question", "name": "Is Kaevrix an AI study app?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Beyond curriculum generation, Kaevrix functions as a comprehensive study platform providing integrated tracking, notes, and automated assessments." } },
-        { "@type": "Question", "name": "Can it create personalized study plans?", "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. You input your target skill and deadline, and the algorithm generates a daily study plan optimized for maximum knowledge retention." } },
-        { "@type": "Question", "name": "What is an adaptive learning platform?", "acceptedAnswer": { "@type": "Answer", "text": "Adaptive learning means the system responds to you. If you struggle with a concept, the platform provides foundational material before letting you advance." } },
         { "@type": "Question", "name": "How does active recall improve learning?", "acceptedAnswer": { "@type": "Answer", "text": "Active recall forces your brain to retrieve information from memory rather than passively re-reading it, drastically improving long-term knowledge retention." } },
-        { "@type": "Question", "name": "Is it built for competitive learning?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, our educational gamification systems allow users to engage in synchronized study sessions and track their mastery against peers." } },
-        { "@type": "Question", "name": "Who is Kaevrix for?", "acceptedAnswer": { "@type": "Answer", "text": "It is built for autodidacts, students, and professionals who want a structured, mastery-based learning experience." } },
-        { "@type": "Question", "name": "How does mastery tracking work?", "acceptedAnswer": { "@type": "Answer", "text": "The system continuously evaluates your quiz performance and study consistency, assigning a measurable mastery level to every node on your skill tree." } },
-        { "@type": "Question", "name": "Are there career learning paths?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, our system can generate comprehensive roadmaps tailored to specific technical, academic, or creative careers." } },
-        { "@type": "Question", "name": "How does it differ from traditional LMS?", "acceptedAnswer": { "@type": "Answer", "text": "Unlike a standard Learning Management System that hosts static videos, Kaevrix is an interactive study platform that actively tests and maps your brain's progression." } },
-        { "@type": "Question", "name": "Does Astrix Network offer learning analytics?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, the platform provides deep analytics on your study habits, retention rates, and fastest-growing skill areas." } }
+        { "@type": "Question", "name": "How does mastery tracking work?", "acceptedAnswer": { "@type": "Answer", "text": "The system continuously evaluates your quiz performance and study consistency, assigning a measurable mastery level and cryptographic proof to every node on your skill tree." } }
       ]
     }
   ];
@@ -129,9 +154,26 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
+        <link rel="alternate" type="text/plain" title="LLM Knowledge Base" href="/llms.txt" />
+        <link rel="alternate" type="text/plain" title="LLM Full Documentation" href="/llms-full.txt" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && window.Element && Element.prototype.releasePointerCapture) {
+                var _origRPC = Element.prototype.releasePointerCapture;
+                Element.prototype.releasePointerCapture = function(pId) {
+                  try {
+                    if (this.hasPointerCapture && !this.hasPointerCapture(pId)) return;
+                    _origRPC.call(this, pId);
+                  } catch(e) {}
+                };
+              }
+            `
+          }}
         />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
