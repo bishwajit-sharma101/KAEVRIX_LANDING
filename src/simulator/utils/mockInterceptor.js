@@ -568,8 +568,8 @@ export const MOCK_CURATED_VIDEOS = [
 export const SUBTOPIC_VIDEOS = {
   garbage_collection: [
     {
-      id: "v8-gc-01",
-      videoId: "v8-gc-01",
+      id: "x9Jpx_M8yq4",
+      videoId: "x9Jpx_M8yq4",
       title: "Generational Garbage Collection: Young vs Old Generation Deep Dive",
       channel: "V8 Internals & Compilers",
       channelTitle: "V8 Internals & Compilers",
@@ -590,8 +590,8 @@ export const SUBTOPIC_VIDEOS = {
       ]
     },
     {
-      id: "v8-gc-02",
-      videoId: "v8-gc-02",
+      id: "8aGhZQkoFbQ",
+      videoId: "8aGhZQkoFbQ",
       title: "V8 Scavenger (Minor GC) vs Major GC: Mark-Sweep, Compact & Concurrent Sweeping",
       channel: "Node.js Core Diagnostics",
       channelTitle: "Node.js Core Diagnostics",
@@ -607,8 +607,8 @@ export const SUBTOPIC_VIDEOS = {
       ]
     },
     {
-      id: "v8-gc-03",
-      videoId: "v8-gc-03",
+      id: "Fd9EyG3J62U",
+      videoId: "Fd9EyG3J62U",
       title: "Chrome DevTools Heap Timelines: Catching Detached DOM & GC Spikes",
       channel: "Performance Lab",
       channelTitle: "Performance Lab",
@@ -624,8 +624,8 @@ export const SUBTOPIC_VIDEOS = {
       ]
     },
     {
-      id: "v8-gc-04",
-      videoId: "v8-gc-04",
+      id: "FU4GQnz8L68",
+      videoId: "FU4GQnz8L68",
       title: "WeakRef, FinalizationRegistry & Surviving Generation Shifts in V8",
       channel: "Advanced JS Architecture",
       channelTitle: "Advanced JS Architecture",
@@ -641,8 +641,8 @@ export const SUBTOPIC_VIDEOS = {
       ]
     },
     {
-      id: "v8-gc-05",
-      videoId: "v8-gc-05",
+      id: "s7v_0P_u9kY",
+      videoId: "s7v_0P_u9kY",
       title: "Eliminating GC Pauses & Stop-the-World Jank in High-Throughput Node Services",
       channel: "Systems Engineering HQ",
       channelTitle: "Systems Engineering HQ",

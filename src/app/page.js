@@ -33,6 +33,7 @@ import {
   XCircle
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 const AppClient = dynamic(() => import("../simulator/AppClient"), {
   ssr: false,
@@ -46,76 +47,76 @@ const journeyPhases = [
     phase: "Phase 01",
     numeral: "01",
     shortLabel: "01 Arena",
-    kicker: "PHASE 01 • CURATED LEARNING ARENA",
+    kicker: "PHASE 01 • SMART VIDEO FEED",
     titlePrefix: "Enter The ",
     titleHighlight: "Arena.",
-    subtitle: "Recommended video mastery targeted directly to your active quest.",
-    desc: "Stop wasting hours in tutorial hell. Your arena curates high-yield videos matched directly to your active quest directives, with a real-time side quest log to keep your progress laser-focused.",
-    metric: "🎯 Active Quest Directives • Curated Video Feed",
+    subtitle: "Watch the right videos, in the right order, for what you're learning right now.",
+    desc: "No more scrolling through hundreds of tutorials wondering where to start. The Arena picks the best videos for your current topic and gives you a simple checklist so you always know what to watch next.",
+    metric: "🎯 Matched to Your Topic • Smart Video Feed",
     icon: Compass,
     color: "var(--accent-sage)",
     colorHex: "#81B29A",
-    tags: ["🎯 Active Quest Alignment", "📺 Recommended Video Feed", "⚔️ Real-Time Quest Log"]
+    tags: ["🎯 Topic-Matched Videos", "📺 Smart Video Feed", "⚔️ Progress Checklist"]
   },
   {
     phase: "Phase 02",
     numeral: "02",
     shortLabel: "02 Map",
-    kicker: "PHASE 02 • PROCEDURAL SKILL TREES",
+    kicker: "PHASE 02 • AI SKILL TREES",
     titlePrefix: "Map Your ",
     titleHighlight: "Mastery.",
-    subtitle: "From scattered tutorials to an intelligent branching skill tree.",
-    desc: "Input any craft or ambition. Our AI constructs a semantic knowledge graph, charting the exact prerequisite nodes from novice to god-tier architect. Zero guesswork. Zero decision paralysis.",
-    metric: "⚡ +60 XP Per Node • Prerequisite Solver",
+    subtitle: "Tell us what you want to learn. We'll build your entire roadmap.",
+    desc: "Type in any skill or goal — like \"learn React\" or \"become a data scientist.\" Our AI breaks it down into a step-by-step skill tree, showing you exactly what to learn first and what comes next. No guesswork.",
+    metric: "⚡ +60 XP Per Topic • Step-by-Step Path",
     icon: MapIcon,
     color: "var(--accent-terracotta)",
     colorHex: "#E07A5F",
-    tags: ["✦ Semantic Node Graph", "🧭 Prerequisite Solver", "⚡ Instant Transmutation"]
+    tags: ["✦ Visual Skill Tree", "🧭 Step-by-Step Path", "⚡ AI-Powered Roadmap"]
   },
   {
     phase: "Phase 03",
     numeral: "03",
     shortLabel: "03 Chronos",
-    kicker: "PHASE 03 • CHRONOS VELOCITY & QUEST HUD",
-    titlePrefix: "Master Velocity with ",
+    kicker: "PHASE 03 • STUDY TRACKER & STREAKS",
+    titlePrefix: "Track Progress with ",
     titleHighlight: "Chronos.",
-    subtitle: "Calculate your study velocity, track streaks, and turn daily milestones into unstoppable progress.",
-    desc: "Looking at a 50-hour syllabus is terrifying. Powered by Chronos, your execution dashboard calculates your true learning velocity, predicts exact completion dates, and automatically compiles completed topics into beautifully formatted, downloadable PDF textbooks. Build your own textbook as you study.",
-    metric: "⏱️ Chronos Velocity • Auto-Generated PDF Notes",
+    subtitle: "See how fast you're learning, keep your streak alive, and know exactly when you'll finish.",
+    desc: "A 50-hour course feels overwhelming — until Chronos breaks it down. It tracks how much you study each day, predicts exactly when you'll finish, and keeps your streak alive with daily goals. Stay consistent and watch the progress add up.",
+    metric: "⏱️ Study Tracker • Finish Date Predictions",
     icon: Clock,
     color: "var(--accent-terracotta)",
     colorHex: "#E07A5F",
-    tags: ["⏱️ Chronos Study Velocity", "📜 Auto-Generated PDFs", "🔥 2.4x Streak Multiplier"]
+    tags: ["⏱️ Daily Study Tracker", "📅 Finish Date Predictions", "🔥 Streak Multiplier"]
   },
   {
     phase: "Phase 04",
     numeral: "04",
     shortLabel: "04 Sanctum",
-    kicker: "PHASE 04 • SANCTUM & ACTIVE RECALL TRIALS",
+    kicker: "PHASE 04 • STUDY & QUIZ",
     titlePrefix: "Enter The ",
     titleHighlight: "Sanctum.",
-    subtitle: "High-stakes active retrieval arena. Turn passive videos into synthesized mastery.",
-    desc: "Watching videos isn't learning. Inside Sanctum, our engine analyzes raw video tutorials, generates structured AI study guides, and triggers high-stakes active recall trials to prove you synthesized the knowledge before unlocking higher-tier nodes.",
-    metric: "🏛️ Sanctum Study Engine • 100% Retention Verified",
+    subtitle: "Turn any video into study notes and quiz yourself to make sure you actually learned it.",
+    desc: "Just watching a video isn't enough. Sanctum turns any tutorial into organized AI study notes, then quizzes you on the key concepts. If you can pass the quiz, you actually know it — not just \"I watched it\" know it.",
+    metric: "🏛️ AI Study Notes • Quiz to Prove You Know It",
     icon: BookOpen,
     color: "var(--accent-navy)",
     colorHex: "#3D405B",
-    tags: ["🏛️ Sanctum Solo Study", "📜 AI Study Guide Synthesis", "⚔️ Active Recall Trials"]
+    tags: ["🏛️ Solo Study Mode", "📜 AI Study Notes", "⚔️ Knowledge Quizzes"]
   },
   {
     phase: "Phase 05",
     numeral: "05",
     shortLabel: "05 Level Up",
-    kicker: "PHASE 05 • CRYPTOGRAPHIC PROOF",
+    kicker: "PHASE 05 • SHOW YOUR PROGRESS",
     titlePrefix: "Level Up ",
-    titleHighlight: "Reality.",
-    subtitle: "Earn real XP, bloom your visual aura, and build an undeniable public proof of work.",
-    desc: "Every trial passed and every video synthesized awards verifiable XP. Watch your skill tree bloom and unlock exclusive cosmetic auras. Your public profile becomes indisputable cryptographic proof of your mastery.",
-    metric: "✨ Mythic Cosmetic Auras • Astrix Soulbound Record",
+    titleHighlight: "For Real.",
+    subtitle: "Earn XP, unlock cool avatars, and build a profile that proves what you know.",
+    desc: "Every quiz you pass and every lesson you complete earns you real XP. Level up, unlock exclusive avatar cosmetics, and build a public profile that shows exactly what skills you've mastered — real proof, not just a certificate.",
+    metric: "✨ Unlockable Cosmetics • Verified Skill Profile",
     icon: Flame,
     color: "var(--text-ink)",
     colorHex: "#2D241F",
-    tags: ["✨ Mythic Cosmetic Auras", "🏆 Level 40+ Progression", "📜 Verifiable Proof of Mastery"]
+    tags: ["✨ Unlockable Cosmetics", "🏆 40+ Levels", "📜 Verified Skill Profile"]
   }
 ];
 
@@ -126,10 +127,10 @@ const floatyBadges = [
   {
     id: "sanctum",
     icon: BookOpen,
-    title: "Sanctum Study Chamber",
-    shortTitle: "Sanctum Study",
-    meta: "AI Study Guide • Synthesis Active",
-    shortMeta: "AI Synthesis",
+    title: "Study & Quiz Mode",
+    shortTitle: "Study & Quiz",
+    meta: "AI Notes • Auto-Generated",
+    shortMeta: "AI Notes",
     color: "var(--accent-terracotta)",
     colorHex: "#E07A5F",
     demoTab: "sanctum",
@@ -140,10 +141,10 @@ const floatyBadges = [
   {
     id: "chronos",
     icon: Clock,
-    title: "Chronos Velocity Tracker",
-    shortTitle: "Chronos Velocity",
-    meta: "1.8 hrs/day • .PDF Generated",
-    shortMeta: "2.4x Velocity",
+    title: "Study Progress Tracker",
+    shortTitle: "Progress Tracker",
+    meta: "1.8 hrs/day • PDF Notes",
+    shortMeta: "1.8 hrs/day",
     color: "#E76F51",
     colorHex: "#E76F51",
     demoTab: "chronos",
@@ -154,10 +155,10 @@ const floatyBadges = [
   {
     id: "tree",
     icon: BrainCircuit,
-    title: "Neural Skill Tree",
-    shortTitle: "Neural Skill Tree",
-    meta: "Tier IV • Dynamic Nodes",
-    shortMeta: "Tier IV Nodes",
+    title: "Your Skill Tree",
+    shortTitle: "Skill Tree",
+    meta: "12 Topics Unlocked",
+    shortMeta: "12 Unlocked",
     color: "var(--accent-sage)",
     colorHex: "#81B29A",
     demoTab: "pathfinder",
@@ -168,10 +169,10 @@ const floatyBadges = [
   {
     id: "tavern",
     icon: Users,
-    title: "Tavern Gathering",
-    shortTitle: "Tavern Gathering",
-    meta: "4 Adventurers in Co-Op",
-    shortMeta: "4 in Co-Op",
+    title: "Study Together",
+    shortTitle: "Study Together",
+    meta: "4 Friends Online",
+    shortMeta: "4 Online",
     color: "var(--accent-navy)",
     colorHex: "#3D405B",
     demoTab: "tavern",
@@ -397,7 +398,7 @@ function SkillTreeShowcase({ onOpenDemo }) {
             <span className="badge-pill sage">VERIFIED NODE</span>
             <span className="badge-pill terra">{nodeDetails[selectedNode].state.toUpperCase()}</span>
           </div>
-          <h4 className="v-card-title">{nodeDetails[selectedNode].title}</h4>
+          <h3 className="v-card-title">{nodeDetails[selectedNode].title}</h3>
           <div className="v-card-stats">
             <span className="v-stat-xp">{nodeDetails[selectedNode].xp}</span>
             <span className="v-stat-dur"><Clock size={11} /> {nodeDetails[selectedNode].dur}</span>
@@ -565,7 +566,7 @@ function ArenaShowcase({ onOpenDemo }) {
 
                 {/* Video Simple Title */}
                 <div className="simple-video-info">
-                  <h4 className="simple-video-title">{vid.title}</h4>
+                  <h3 className="simple-video-title">{vid.title}</h3>
                 </div>
               </motion.div>
             );
@@ -1039,9 +1040,9 @@ function TrialCombatShowcase({ onOpenDemo }) {
 
               {/* Title Neatly Placed Under The Video */}
               <div className="sanctum-video-title-box">
-                <h4 className="sanctum-video-headline">
+                <h3 className="sanctum-video-headline">
                   JavaScript Event Loop & Async Mastery
-                </h4>
+                </h3>
               </div>
 
               {/* Action Button: Easy English & Game-Like */}
@@ -1903,12 +1904,12 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="clean-nav">
         <div className="nav-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <img src="/logo.png" alt="Kaevrix Logo" style={{ width: "32px", height: "32px", objectFit: "contain", display: "block" }} />
+          <Image src="/logo.png" alt="Kaevrix Logo" width={32} height={32} priority style={{ width: "32px", height: "32px", objectFit: "contain", display: "block" }} />
           <span className="logo-text">Kaevrix</span>
         </div>
         <div className="nav-links">
-          <a className="nav-link" onClick={() => smoothScrollTo('#journey')}>The Journey</a>
-          <a className="nav-link" onClick={() => smoothScrollTo('#lore')}>Lore</a>
+          <a href="#journey" className="nav-link" onClick={(e) => { e.preventDefault(); smoothScrollTo('#journey'); }}>The Journey</a>
+          <a href="#lore" className="nav-link" onClick={(e) => { e.preventDefault(); smoothScrollTo('#lore'); }}>FAQ</a>
         </div>
         <button className="mobile-nav-demo-btn" onClick={() => handleOpenDemo("duels")}>
           <Sparkles size={13} />
@@ -1988,6 +1989,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
+              <span className="hero-kicker-text">AI Learning &amp; Personalized Study Platform</span>
               Level up in real life.
               <span className="hero-title-italic">The character is you.</span>
             </motion.h1>
@@ -1998,7 +2000,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              Kaevrix transforms any craft or subject into a <span className="hero-hl hl-terra">living RPG skill tree</span>. Conquer <span className="hero-hl hl-sage">active recall battles</span>, track your <span className="hero-hl hl-navy">learning velocity</span>, and turn scattered tutorials into permanent mastery.
+              Kaevrix is a personalized AI learning platform that turns anything you want to learn into a <span className="hero-hl hl-terra">visual skill tree</span>. Quiz yourself with <span className="hero-hl hl-sage">AI-powered study notes</span>, track your <span className="hero-hl hl-navy">daily progress</span>, and actually remember what you studied.
             </motion.p>
 
             <motion.div 
@@ -2031,7 +2033,7 @@ export default function LandingPage() {
                 <div className="avatar-mini" style={{ background: "var(--accent-sage)", color: "white" }}>⚡</div>
               </div>
               <div className="proof-text">
-                <span className="proof-highlight">2,400+ adventurers</span> enrolled for early realm access
+                <span className="proof-highlight">2,400+ learners</span> signed up for early access
               </div>
               <span className="proof-live-dot" title="Live roster" />
             </motion.div>
@@ -2045,7 +2047,7 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
-            <span className="scroll-prompt-text">Explore The Skill Tree</span>
+            <span className="scroll-prompt-text">See How It Works</span>
             <motion.div 
               animate={{ y: [0, 6, 0] }} 
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
@@ -2062,23 +2064,66 @@ export default function LandingPage() {
           <StickyScrollJourney onOpenDemo={handleOpenDemo} />
         </section>
 
+        {/* SEO: All feature descriptions as crawlable HTML for search engines */}
+        <section
+          aria-label="Kaevrix Features Overview"
+          style={{
+            position: 'absolute',
+            width: '1px',
+            height: '1px',
+            padding: 0,
+            margin: '-1px',
+            overflow: 'hidden',
+            clip: 'rect(0, 0, 0, 0)',
+            whiteSpace: 'nowrap',
+            borderWidth: 0,
+          }}
+        >
+          <h2>How Kaevrix Works — Your Personalized Learning Journey</h2>
+          <div>
+            <h3>Smart Video Feed — Enter The Arena</h3>
+            <p>Watch the right videos, in the right order, for what you are learning right now.</p>
+            <p>No more scrolling through hundreds of tutorials wondering where to start. The Arena picks the best videos for your current topic and gives you a simple checklist so you always know what to watch next.</p>
+          </div>
+          <div>
+            <h3>AI Skill Trees — Map Your Mastery</h3>
+            <p>Tell us what you want to learn. Kaevrix builds your entire personalized learning roadmap.</p>
+            <p>Type in any skill or goal, like learn React or become a data scientist. Our AI breaks it down into a step-by-step skill tree, showing you exactly what to learn first and what comes next. No guesswork.</p>
+          </div>
+          <div>
+            <h3>Study Progress Tracker — Chronos</h3>
+            <p>See how fast you are learning, keep your streak alive, and know exactly when you will finish.</p>
+            <p>A 50-hour course feels overwhelming until Chronos breaks it down. It tracks how much you study each day, predicts exactly when you will finish, and keeps your streak alive with daily goals. Stay consistent and watch the progress add up.</p>
+          </div>
+          <div>
+            <h3>AI Study Notes and Knowledge Quizzes — Enter The Sanctum</h3>
+            <p>Turn any video into study notes and quiz yourself to make sure you actually learned it.</p>
+            <p>Just watching a video is not enough. Sanctum turns any tutorial into organized AI study notes, then quizzes you on the key concepts. If you can pass the quiz, you actually know it.</p>
+          </div>
+          <div>
+            <h3>Gamified Progression and Skill Verification — Level Up For Real</h3>
+            <p>Earn XP, unlock cool avatars, and build a profile that proves what you know.</p>
+            <p>Every quiz you pass and every lesson you complete earns you real XP. Level up, unlock exclusive avatar cosmetics, and build a public profile that shows exactly what skills you have mastered.</p>
+          </div>
+        </section>
+
         {/* Lore / FAQ Clean */}
         <section id="lore" className="faq-section">
           <div className="faq-inner">
             <div className="faq-header">
-              <h2>Lore</h2>
-              <p className="hero-subtitle">Answers to the unknown.</p>
+              <h2>FAQ</h2>
+              <p className="hero-subtitle">Common questions, answered.</p>
             </div>
             
             <div className="faq-list">
               {[
-                { q: "What is Kaevrix?", a: "Kaevrix is an adaptive learning platform that transforms educational content into an interactive mastery journey using personalized skill trees, AI note synthesis, and active recall." },
-                { q: "What is Sanctum?", a: "Sanctum is Kaevrix's dedicated solo study chamber. It converts any tutorial or lecture into structured AI study guides, code breakdowns, and active recall trials so you master complex topics at your own pace." },
-                { q: "What is Chronos?", a: "Chronos is Kaevrix's study velocity and momentum engine. It calculates your daily learning pace, estimates milestone completion dates, tracks streaks, and automatically compiles your progress into downloadable, beautifully formatted PDF textbooks." },
-                { q: "What is a learning roadmap?", a: "A learning roadmap is a custom-generated curriculum. Kaevrix builds a dynamic path of milestones tailored specifically to your ultimate career or technical learning goal." },
-                { q: "How are skill trees created?", a: "Using semantic mapping, complex subjects are broken down into fundamental prerequisite nodes. As you pass active recall tests, you visually unlock higher-tier skills." },
-                { q: "How does active recall improve learning?", a: "Active recall forces your brain to retrieve information from memory rather than passively re-reading it, drastically improving long-term knowledge retention." },
-                { q: "How does mastery tracking work?", a: "The system continuously evaluates your quiz performance and study consistency, assigning a measurable mastery level and cryptographic proof to every node on your skill tree." }
+                { q: "What is Kaevrix?", a: "Kaevrix is a learning app that turns any subject into an interactive skill tree. It recommends the best videos, creates AI study notes, quizzes you to make sure you remember, and tracks your progress — all in one place." },
+                { q: "What is Sanctum?", a: "Sanctum is your personal study room. Pick any video tutorial, and Sanctum turns it into clean, organized study notes. Then it quizzes you on the key points so you actually retain what you learned, not just passively watch." },
+                { q: "What is Chronos?", a: "Chronos is your study dashboard. It tracks how much you study each day, shows when you'll finish your current topic, keeps your daily streak going, and automatically saves your notes as a downloadable PDF — like building your own textbook." },
+                { q: "What is a learning roadmap?", a: "It's a personalized study plan. Tell Kaevrix what you want to learn (like 'full-stack development'), and it creates a clear, step-by-step path from beginner to advanced." },
+                { q: "How are skill trees created?", a: "Our AI breaks any topic into smaller, logical steps. It figures out what you need to learn first, then maps out the whole path visually. As you complete quizzes, you unlock the next topics." },
+                { q: "How does quizzing help me learn?", a: "Quizzing (active recall) forces your brain to pull information from memory instead of just re-reading it. Research shows this is one of the most effective ways to actually remember what you study long-term." },
+                { q: "How does progress tracking work?", a: "Every quiz you pass and every lesson you finish earns XP. Your profile shows your level, your skill tree progress, and which topics you've mastered — a clear record of everything you've learned." }
               ].map((faq, i) => (
                 <details key={i} className="faq-item">
                   <summary>{faq.q} <ChevronDown size={20} color="var(--accent-terracotta)" /></summary>
@@ -2092,14 +2137,14 @@ export default function LandingPage() {
         {/* Save Point (Waitlist) Clean */}
         <section id="save-point" className="save-point-section">
           <div className="save-point-container">
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "56px", margin: "0 0 16px 0", fontWeight: 500 }}>Save Your Game</h2>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "56px", margin: "0 0 16px 0", fontWeight: 500 }}>Get Early Access</h2>
             <p style={{ fontSize: "20px", color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
-              Join the waitlist. Early adventurers receive founder cosmetics.
+              Join the waitlist. Early members get exclusive avatar cosmetics.
             </p>
 
             {status === "success" ? (
               <div style={{ marginTop: "48px", fontSize: "24px", fontFamily: "var(--font-display)", color: "var(--accent-sage)" }}>
-                ✨ Game Saved. You are on the roster.
+                ✨ You're in! We'll notify you when it's ready.
               </div>
             ) : (
               <form onSubmit={handleJoinWaitlist}>
@@ -2115,7 +2160,7 @@ export default function LandingPage() {
                   disabled={status === "loading"}
                 />
                 <button type="submit" disabled={status === "loading"} className="btn-save">
-                  {status === "loading" ? "Casting Spell..." : (
+                  {status === "loading" ? "Joining..." : (
                     <>Claim Early Access <Sparkles size={16} /></>
                   )}
                 </button>
@@ -2125,7 +2170,7 @@ export default function LandingPage() {
         </section>
 
         <footer style={{ textAlign: "center", padding: "60px 24px", color: "var(--text-muted)", fontSize: "14px", position: "relative", zIndex: 20 }}>
-          © {new Date().getFullYear()} Kaevrix by Astrix Network. | <a href="/privacy" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Privacy</a>
+          © {new Date().getFullYear()} Kaevrix by Astrix Network. | <a href="/privacy" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Privacy</a> | <a href="/terms" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Terms</a>
         </footer>
       </main>
     </div>

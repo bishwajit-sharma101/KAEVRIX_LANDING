@@ -1,7 +1,38 @@
 import { useEffect, useRef } from "react";
 import { trackTelemetry } from "../../utils/telemetry.js";
 
+export function getCleanYoutubeId(rawId) {
+  if (!rawId) return "x9Jpx_M8yq4";
+  const str = String(rawId).trim();
+  
+  // Check if it's already an 11-character YouTube video ID
+  if (/^[a-zA-Z0-9_-]{11}$/.test(str)) {
+    return str;
+  }
+  
+  // Check if it's a URL
+  const urlMatch = str.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  if (urlMatch && urlMatch[1]) {
+    return urlMatch[1];
+  }
+
+  // Common mock ID mappings to guarantee 100% valid playback
+  const fallbackMap = {
+    "v8-gc-01": "x9Jpx_M8yq4",
+    "v8-gc-02": "8aGhZQkoFbQ",
+    "v8-gc-03": "Fd9EyG3J62U",
+    "v8-gc-04": "FU4GQnz8L68",
+    "v8-gc-05": "s7v_0P_u9kY"
+  };
+  if (fallbackMap[str]) {
+    return fallbackMap[str];
+  }
+
+  return "x9Jpx_M8yq4";
+}
+
 export default function YoutubePlayer({ videoId, onProgress, onFinished, isFrozen, playbackRate = 1 }) {
+  const cleanVideoId = getCleanYoutubeId(videoId);
   const playerRef = useRef(null);
   const progressIntervalRef = useRef(null);
   const containerId = "youtube-iframe-player";
@@ -68,7 +99,7 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
               if (lastTimeRef.current > 0 && (timeDiff < -1.5 || timeDiff > 2.5)) {
                 trackTelemetry({
                   eventType: "VIDEO_SEEK",
-                  videoId: videoId,
+                  videoId: cleanVideoId,
                   metadata: {
                     from: lastTimeRef.current,
                     to: currentTime,
@@ -89,7 +120,7 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
             console.error("Error reading player times:", e);
           }
         }
-      }, 500);
+      }, 800);
     };
 
     const stopProgressTracking = () => {
@@ -102,12 +133,15 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
     // Function to initialize the player
     const initPlayer = () => {
       if (isDestroyed) return;
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (playerRef.current) return;
       
       try {
         player = new window.YT.Player(containerId, {
           height: "100%",
           width: "100%",
-          videoId: videoId,
+          videoId: cleanVideoId,
           playerVars: {
             autoplay: 1,      // Autoplay the video
             controls: 1,      // Show controls
@@ -118,12 +152,12 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
           events: {
             onReady: (event) => {
               if (isDestroyed) return;
-              console.log("[YT Player] Ready and playing:", videoId);
+              console.log("[YT Player] Ready and playing:", cleanVideoId);
               
               if (!hasOpenedRef.current) {
                 trackTelemetry({
                   eventType: "VIDEO_OPENED",
-                  videoId: videoId,
+                  videoId: cleanVideoId,
                   metadata: { playbackRate: playbackRateRef.current }
                 });
                 hasOpenedRef.current = true;
@@ -159,14 +193,14 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
                 if (!hasStartedRef.current) {
                   trackTelemetry({
                     eventType: "VIDEO_PLAYING",
-                    videoId: videoId,
+                    videoId: cleanVideoId,
                     metadata: { startAt: currentTime, playbackRate: playbackRateRef.current }
                   });
                   hasStartedRef.current = true;
                 } else {
                   trackTelemetry({
                     eventType: "VIDEO_RESUMED",
-                    videoId: videoId,
+                    videoId: cleanVideoId,
                     metadata: { resumeAt: currentTime }
                   });
                 }
@@ -199,7 +233,7 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
                   const currentTime = typeof event.target.getCurrentTime === "function" ? event.target.getCurrentTime() : 0;
                   trackTelemetry({
                     eventType: "VIDEO_PAUSED",
-                    videoId: videoId,
+                    videoId: cleanVideoId,
                     metadata: { pauseAt: currentTime }
                   });
                 }
@@ -217,55 +251,51 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
         });
         playerRef.current = player;
       } catch (err) {
-        console.error("Failed to initialize YT.Player:", err);
+        console.warn("[YT Player] Failed to initialize YT.Player with videoId:", cleanVideoId, err);
       }
     };
 
-    // Load YouTube API script if not present
-    if (typeof window !== "undefined" && !window.YT) {
-      const existingScript = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
-      if (!existingScript) {
-        const script = document.createElement("script");
-        script.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(script);
-      }
-    }
+    // Helper to initialize the player once API is ready
+    let checkInterval = null;
 
-    // Since script is preloaded or dynamically injected, we check if YT is ready
     if (window.YT && window.YT.Player) {
       initPlayer();
     } else {
-      // Fallback in case the script hasn't completed loading yet
-      const checkInterval = setInterval(() => {
+      // Ensure script tag exists
+      if (typeof window !== "undefined" && !document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+
+      checkInterval = setInterval(() => {
+        if (isDestroyed) {
+          if (checkInterval) clearInterval(checkInterval);
+          return;
+        }
         if (window.YT && window.YT.Player) {
-          clearInterval(checkInterval);
+          if (checkInterval) clearInterval(checkInterval);
+          checkInterval = null;
           initPlayer();
         }
-      }, 100);
-
-      // Also support the standard callback
-      const previousCallback = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (previousCallback) previousCallback();
-        clearInterval(checkInterval);
-        initPlayer();
-      };
-
-      return () => {
-        clearInterval(checkInterval);
-      };
+      }, 150);
     }
 
-    // Cleanup on unmount or videoId change
+    // Unified cleanup on unmount or cleanVideoId change
     return () => {
       isDestroyed = true;
+      if (checkInterval) {
+        clearInterval(checkInterval);
+        checkInterval = null;
+      }
       stopProgressTracking();
 
       // Check if video is abandoned (less than 95% complete)
       if (hasStartedRef.current && lastPercentageRef.current < 95) {
         trackTelemetry({
           eventType: "VIDEO_ABANDONED",
-          videoId: videoId,
+          videoId: cleanVideoId,
           metadata: {
             lastPercentage: lastPercentageRef.current,
             lastSecond: lastTimeRef.current
@@ -284,7 +314,7 @@ export default function YoutubePlayer({ videoId, onProgress, onFinished, isFroze
         playerRef.current = null;
       }
     };
-  }, [videoId]); // ONLY recreate when videoId changes!
+  }, [cleanVideoId]); // ONLY recreate when cleanVideoId changes!
 
   return (
     <div className="video-player-wrapper">

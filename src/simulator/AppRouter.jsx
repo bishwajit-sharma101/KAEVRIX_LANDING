@@ -302,10 +302,12 @@ export default function AppRouter(props) {
 
   const isProfileTab = activeTab === "profile";
 
+  const isPathfinderTab = activeTab === "pathfinder";
+
   // Header display
   const headerComponent = (
     <header 
-      className={`app-header ${isMobileSearchActive ? "mobile-search-active" : ""}`} 
+      className={`app-header ${isMobileSearchActive ? "mobile-search-active" : ""} ${isPathfinderTab ? "pathfinder-active-header" : ""}`} 
       style={{ 
         height: isMobileSearchActive ? "56px" : "60px", 
         padding: isMobileSearchActive ? "8px 12px" : "8px clamp(16px, 4vw, 24px)", 
@@ -433,7 +435,7 @@ export default function AppRouter(props) {
           </div>
 
           {/* Desktop Search Bar (shown only on large viewports) */}
-          {(activeTab !== "chronos") && (
+          {(activeTab !== "chronos" && !isPathfinderTab) && (
             <div className="header-search-container desktop-search-only">
             <form 
               onSubmit={handleLocalSearchSubmit} 
@@ -542,7 +544,7 @@ export default function AppRouter(props) {
               >
                 <Settings size={18} />
               </button>
-            ) : (
+            ) : !isPathfinderTab ? (
               <button 
                 className="mobile-search-trigger"
                 onClick={() => {
@@ -568,7 +570,7 @@ export default function AppRouter(props) {
                   <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               </button>
-            )}
+            ) : null}
 
             {/* Desktop-only Profile and Logout */}
             <div className="desktop-profile-only" style={{ display: "flex", alignItems: "center", gap: "10px" }}>

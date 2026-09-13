@@ -4071,22 +4071,6 @@ export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, o
       <div style={{ marginBottom: "32px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-              <span style={{ 
-                fontSize: "11px", 
-                fontWeight: "900", 
-                color: isDarkMode ? "#00f2fe" : "#ea580c", 
-                background: isDarkMode ? "rgba(0,242,254,0.06)" : "#fff7ed", 
-                padding: "4px 12px", 
-                borderRadius: "20px", 
-                border: isDarkMode ? "1px solid rgba(0,242,254,0.3)" : "1px solid #fed7aa", 
-                textTransform: "uppercase", 
-                letterSpacing: "1px", 
-                boxShadow: isDarkMode ? "0 0 10px rgba(0,242,254,0.15)" : "none" 
-              }}>
-                COGNITIVE PATHFINDER
-              </span>
-            </div>
             <h1 className="pathfinder-hero-title" style={{ 
               fontSize: "32px", 
               fontWeight: "900", 

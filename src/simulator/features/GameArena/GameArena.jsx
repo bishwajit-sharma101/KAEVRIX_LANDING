@@ -206,7 +206,7 @@ export default function GameArena({
         <div className="video-player-outer-wrapper">
           <div className={isBlurred ? "arena-viewport-blurred" : "arena-viewport-normal"}>
             <YoutubePlayer
-              videoId={room?.video.id}
+              videoId={room?.video?.videoId || room?.video?.id}
               onProgress={(progress, currentTime) => {
                 onVideoProgress(progress);
                 handleLocalProgress(currentTime);

@@ -1,4 +1,4 @@
-import { Outfit, Playfair_Display } from "next/font/google";
+import { Outfit, Playfair_Display, Orbitron, Inter } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 import "./landing.css";
@@ -18,29 +18,44 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "700", "900"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const viewport = {
   themeColor: '#E07A5F',
 };
 
 export const metadata = {
   applicationName: "Kaevrix",
-  title: "Kaevrix — AI Learning App & Adaptive Study Platform",
-  description: "Kaevrix by Astrix Network is the ultimate AI learning app and adaptive study platform. Master complex skills with AI-generated branching skill trees, automated note synthesis in Sanctum, study velocity in Chronos, and active recall combat trials.",
+  title: "Kaevrix — AI-Powered Personalized Learning Platform",
+  description: "Kaevrix is an AI-powered personalized learning platform that turns your goals into adaptive skill trees, interactive study sessions with AI-generated notes, and gamified progression. Track your learning, quiz yourself, and actually remember what you study.",
   keywords: [
     "kaevrix",
+    "personalized learning platform",
     "ai learning app",
     "ai study app",
-    "kaevrix ai learning app",
-    "adaptive learning platform",
     "personalized learning app",
+    "adaptive learning platform",
+    "gamified learning platform",
     "learning roadmap generator",
-    "sanctum ai study notes",
-    "chronos study velocity",
-    "active recall study app",
-    "ai education platform",
-    "astrix network",
-    "education rpg",
-    "gamified learning platform"
+    "ai learning paths",
+    "skill development platform",
+    "interactive learning platform",
+    "ai study notes",
+    "active recall app",
+    "personalized education",
+    "astrix network"
   ],
   authors: [{ name: "Astrix Network" }],
   creator: "Astrix Network",
@@ -66,9 +81,12 @@ export const metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
   openGraph: {
-    title: "Kaevrix — AI Learning App & Adaptive Study Platform",
-    description: "Transform education from passive watching into active mastery with AI skill trees, Sanctum notes, and Chronos velocity tracking.",
+    title: "Kaevrix — AI-Powered Personalized Learning Platform",
+    description: "Kaevrix turns anything you want to learn into a personalized skill tree. AI study notes, knowledge quizzes, progress tracking, and gamified progression — all in one platform.",
     url: "https://astrixnetwork.com",
     siteName: "Kaevrix",
     locale: "en_US",
@@ -76,8 +94,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaevrix — AI Learning App & Adaptive Study Platform",
-    description: "Transform education from passive watching into active mastery with AI skill trees, Sanctum notes, and Chronos velocity tracking.",
+    title: "Kaevrix — AI-Powered Personalized Learning Platform",
+    description: "Kaevrix turns anything you want to learn into a personalized skill tree. AI study notes, knowledge quizzes, progress tracking, and gamified progression — all in one platform.",
   },
   icons: {
     icon: [
@@ -116,33 +134,36 @@ export default function RootLayout({ children }) {
     {
       "@context": "https://schema.org",
       "@type": ["SoftwareApplication", "EducationalApplication"],
-      "name": "Kaevrix — AI Learning App & Adaptive Study Platform",
+      "name": "Kaevrix",
       "operatingSystem": "Web",
       "applicationCategory": "EducationalApplication",
-      "description": "Kaevrix by Astrix Network is the ultimate AI learning app and adaptive study platform. It turns passive video tutorials into branching skill trees, automated AI note synthesis, study velocity tracking, and active recall trials.",
+      "description": "Kaevrix is an AI-powered personalized learning platform that turns your learning goals into visual skill trees, AI study notes, knowledge quizzes, and gamified progression.",
       "url": "https://astrixnetwork.com",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "featureList": [
-        "Cognitive Pathfinder: AI-generated branching skill trees",
-        "Sanctum: Automated AI video note synthesis and code breakdown",
-        "Chronos: Study velocity tracking and auto-generated PDF textbooks",
-        "Active Recall Combat: Anti-illusion retrieval verification and quiz boss trials",
-        "Synchronized Taverns: 8-player co-op study rooms",
-        "Soulbound Proof of Work: Verifiable on-chain XP and 25+ mythic visual auras"
+        "AI-generated personalized skill trees and learning paths",
+        "Smart video feed matched to your current topic",
+        "Sanctum: AI study notes and knowledge quizzes from any video",
+        "Chronos: Study progress tracker with streak system and finish date predictions",
+        "Study together with friends in co-op rooms",
+        "XP, levels, unlockable avatar cosmetics, and verified skill profiles"
       ]
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "What is Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Kaevrix is an AI learning app and adaptive study platform by Astrix Network that transforms educational tutorials into an interactive mastery journey using personalized skill trees, AI note synthesis, and active recall." } },
-        { "@type": "Question", "name": "What is Sanctum in Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Sanctum is Kaevrix's dedicated solo study chamber. It converts raw video tutorials into structured AI study guides, code breakdowns, and active recall trials so learners master complex topics at their own pace." } },
-        { "@type": "Question", "name": "What is Chronos in Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Chronos is Kaevrix's study velocity and momentum engine. It calculates learning pace, estimates completion dates, tracks streaks, and automatically compiles your study history into downloadable PDF textbooks." } },
-        { "@type": "Question", "name": "How does Kaevrix solve Tutorial Hell?", "acceptedAnswer": { "@type": "Answer", "text": "Kaevrix replaces passive video consumption with interactive branching skill trees, automated note generation, and mandatory active recall boss checkpoints to verify true retention." } },
-        { "@type": "Question", "name": "What is Astrix Network?", "acceptedAnswer": { "@type": "Answer", "text": "Astrix Network is the technology organization behind Kaevrix, dedicated to building advanced, personalized study platforms and educational software." } },
-        { "@type": "Question", "name": "What is a learning roadmap?", "acceptedAnswer": { "@type": "Answer", "text": "A learning roadmap is a custom-generated curriculum. Kaevrix builds a dynamic path of milestone nodes tailored specifically to your ultimate learning goal." } },
-        { "@type": "Question", "name": "How are skill trees created?", "acceptedAnswer": { "@type": "Answer", "text": "Using semantic mapping, complex subjects are broken down into fundamental nodes. As you pass active recall tests, you visually unlock higher-tier skills." } },
-        { "@type": "Question", "name": "How does active recall improve learning?", "acceptedAnswer": { "@type": "Answer", "text": "Active recall forces your brain to retrieve information from memory rather than passively re-reading it, drastically improving long-term knowledge retention." } },
-        { "@type": "Question", "name": "How does mastery tracking work?", "acceptedAnswer": { "@type": "Answer", "text": "The system continuously evaluates your quiz performance and study consistency, assigning a measurable mastery level and cryptographic proof to every node on your skill tree." } }
+        { "@type": "Question", "name": "What is Kaevrix?", "acceptedAnswer": { "@type": "Answer", "text": "Kaevrix is a learning app that turns any subject into an interactive skill tree. It recommends the best videos, creates AI study notes, quizzes you to make sure you remember, and tracks your progress — all in one place." } },
+        { "@type": "Question", "name": "What is Sanctum?", "acceptedAnswer": { "@type": "Answer", "text": "Sanctum is your personal study room. Pick any video tutorial, and Sanctum turns it into clean, organized study notes. Then it quizzes you on the key points so you actually retain what you learned, not just passively watch." } },
+        { "@type": "Question", "name": "What is Chronos?", "acceptedAnswer": { "@type": "Answer", "text": "Chronos is your study dashboard. It tracks how much you study each day, shows when you'll finish your current topic, keeps your daily streak going, and automatically saves your notes as a downloadable PDF — like building your own textbook." } },
+        { "@type": "Question", "name": "What is a learning roadmap?", "acceptedAnswer": { "@type": "Answer", "text": "It's a personalized study plan. Tell Kaevrix what you want to learn (like full-stack development), and it creates a clear, step-by-step path from beginner to advanced." } },
+        { "@type": "Question", "name": "How are skill trees created?", "acceptedAnswer": { "@type": "Answer", "text": "Our AI breaks any topic into smaller, logical steps. It figures out what you need to learn first, then maps out the whole path visually. As you complete quizzes, you unlock the next topics." } },
+        { "@type": "Question", "name": "How does quizzing help me learn?", "acceptedAnswer": { "@type": "Answer", "text": "Quizzing (active recall) forces your brain to pull information from memory instead of just re-reading it. Research shows this is one of the most effective ways to actually remember what you study long-term." } },
+        { "@type": "Question", "name": "How does progress tracking work?", "acceptedAnswer": { "@type": "Answer", "text": "Every quiz you pass and every lesson you finish earns XP. Your profile shows your level, your skill tree progress, and which topics you've mastered — a clear record of everything you've learned." } }
       ]
     }
   ];
@@ -150,7 +171,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${playfair.variable} h-full antialiased`}
+      className={`${outfit.variable} ${playfair.variable} ${orbitron.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -163,7 +184,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
-        <GoogleAnalytics gaId="G-XXXXXXXXXX" />
+        {process.env.NEXT_PUBLIC_GA_ID && process.env.NEXT_PUBLIC_GA_ID !== "G-XXXXXXXXXX" && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );

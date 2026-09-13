@@ -1,8 +1,8 @@
 export default function manifest() {
   return {
-    name: 'Kaevrix — AI Learning App & Adaptive Study Platform',
+    name: 'Kaevrix — AI-Powered Personalized Learning Platform',
     short_name: 'Kaevrix',
-    description: 'Kaevrix by Astrix Network is the ultimate AI learning app and adaptive study platform.',
+    description: 'Kaevrix is an AI-powered personalized learning platform that turns your goals into adaptive skill trees, interactive study sessions, and gamified progression.',
     start_url: '/',
     display: 'standalone',
     background_color: '#0D0907',

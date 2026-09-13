@@ -278,6 +278,7 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
   const [studyCycles, setStudyCycles] = useState(0);
   const [isRecharging, setIsRecharging] = useState(false);
   const studyTimerRef = useRef(null);
+  const lastRechargedMilestoneRef = useRef(0);
 
   // Study timer — ticks every second, pauses during recharge
   useEffect(() => {
@@ -291,21 +292,22 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
     return () => { if (studyTimerRef.current) clearInterval(studyTimerRef.current); };
   }, [isRecharging]);
 
-  // Trigger recharge when threshold is reached
+  // Trigger recharge every 20 minutes (1200s/20m, 2400s/40m, 3600s/60m, etc.)
   useEffect(() => {
-    if (studyElapsedSec >= RECHARGE_THRESHOLD && !isRecharging) {
+    const currentMilestone = Math.floor(studyElapsedSec / RECHARGE_THRESHOLD);
+    if (studyElapsedSec > 0 && currentMilestone > lastRechargedMilestoneRef.current && !isRecharging) {
+      lastRechargedMilestoneRef.current = currentMilestone;
       if (focusAudioRef.current && isFocusPlaying) {
         focusAudioRef.current.pause();
         setIsFocusPlaying(false);
       }
       setIsRecharging(true);
     }
-  }, [studyElapsedSec, isRecharging, isFocusPlaying]);
+  }, [studyElapsedSec, isRecharging, isFocusPlaying, RECHARGE_THRESHOLD]);
 
-  // Recharge complete handler
+  // Recharge complete handler - do NOT reset studyElapsedSec to 0, keep counting upwards (20m -> 40m...)
   const handleRechargeComplete = useCallback(() => {
     setIsRecharging(false);
-    setStudyElapsedSec(0);
     setStudyCycles(prev => prev + 1);
     sound.playCorrect();
   }, []);
@@ -1190,22 +1192,22 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
           animation: skeletonShimmer 1.8s infinite linear;
         }
         
-        /* Custom scrollbars */
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
+        /* Completely remove vertical & horizontal scrollbars while preserving smooth scrolling */
+        .custom-scrollbar,
+        .custom-scrollbar *,
+        .solo-study-no-scrollbar,
+        .solo-study-no-scrollbar * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 106, 0, 0.25);
-          border-radius: 12px;
-          border: 2px solid transparent;
-          background-clip: content-box;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(255, 106, 0, 0.6);
+        .custom-scrollbar::-webkit-scrollbar,
+        .custom-scrollbar *::-webkit-scrollbar,
+        .solo-study-no-scrollbar::-webkit-scrollbar,
+        .solo-study-no-scrollbar *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          background: transparent !important;
         }
 
         /* High-Fidelity Markdown notes typography styling */
@@ -1414,6 +1416,49 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
           background: var(--bg-secondary);
           border-radius: 12px;
         }
+
+        /* Mobile Typography Tuning */
+        @media (max-width: 768px) {
+          .study-notes-document h1 {
+            font-size: 24px !important;
+            margin: 16px 0 12px 0 !important;
+            line-height: 1.3 !important;
+          }
+          .study-notes-document h2 {
+            font-size: 19px !important;
+            margin: 22px 0 12px 0 !important;
+          }
+          .study-notes-document h3 {
+            font-size: 16px !important;
+            margin: 18px 0 8px 0 !important;
+          }
+          .study-notes-document p {
+            font-size: 14.5px !important;
+            line-height: 1.65 !important;
+            margin-bottom: 14px !important;
+          }
+          .study-notes-document ul, .study-notes-document ol {
+            padding-left: 20px !important;
+            margin: 10px 0 16px 0 !important;
+          }
+          .study-notes-document li {
+            font-size: 14px !important;
+            margin-bottom: 8px !important;
+            line-height: 1.6 !important;
+          }
+          .study-notes-document code {
+            font-size: 13px !important;
+            word-break: break-word !important;
+          }
+          .study-notes-document pre {
+            padding: 12px 14px !important;
+            margin: 14px 0 !important;
+            border-radius: 10px !important;
+          }
+          .study-notes-document pre code {
+            font-size: 12.5px !important;
+          }
+        }
       `}</style>
 
       {/* Top Header Navigation */}
@@ -1507,38 +1552,17 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
             +5m
           </button>
 
-          {/* Cycle Counter Pill (Only shows if cycles > 0) */}
-          {studyCycles > 0 && (
-            <span style={{
-              fontSize: "12px",
-              fontWeight: "800",
-              padding: "6px 14px",
-              borderRadius: "20px",
-              background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-              color: isDarkMode ? "#94a3b8" : "#64748b",
-              border: isDarkMode ? "1.5px solid rgba(255,255,255,0.08)" : "1.5px solid #e2e8f0",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              fontFamily: "'Outfit', sans-serif",
-              letterSpacing: "0.5px",
-            }}>
-              <RotateCcw size={13} />
-              {studyCycles} {studyCycles === 1 ? "CYCLE" : "CYCLES"}
-            </span>
-          )}
-
           {/* Study Timer Pill */}
           <span style={{
             fontSize: "12px",
             fontWeight: "800",
             padding: "6px 14px",
             borderRadius: "20px",
-            background: studyElapsedSec >= RECHARGE_THRESHOLD - 60
+            background: (studyElapsedSec > 0 && (RECHARGE_THRESHOLD - (studyElapsedSec % RECHARGE_THRESHOLD)) <= 60)
               ? "rgba(124, 58, 237, 0.12)"
               : (isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"),
-            color: studyElapsedSec >= RECHARGE_THRESHOLD - 60 ? "#a78bfa" : (isDarkMode ? "#94a3b8" : "#64748b"),
-            border: studyElapsedSec >= RECHARGE_THRESHOLD - 60
+            color: (studyElapsedSec > 0 && (RECHARGE_THRESHOLD - (studyElapsedSec % RECHARGE_THRESHOLD)) <= 60) ? "#a78bfa" : (isDarkMode ? "#94a3b8" : "#64748b"),
+            border: (studyElapsedSec > 0 && (RECHARGE_THRESHOLD - (studyElapsedSec % RECHARGE_THRESHOLD)) <= 60)
               ? "1.5px solid rgba(124, 58, 237, 0.3)"
               : (isDarkMode ? "1.5px solid rgba(255,255,255,0.08)" : "1.5px solid #e2e8f0"),
             display: "flex",
@@ -1547,69 +1571,99 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
             fontFamily: "'Outfit', sans-serif",
             letterSpacing: "0.5px",
             transition: "all 0.5s ease",
-            animation: studyElapsedSec >= RECHARGE_THRESHOLD - 60 ? "auraPulse 2s ease-in-out infinite" : "none",
+            animation: (studyElapsedSec > 0 && (RECHARGE_THRESHOLD - (studyElapsedSec % RECHARGE_THRESHOLD)) <= 60) ? "auraPulse 2s ease-in-out infinite" : "none",
           }}>
             <Clock size={13} />
             {formatStudyTime(studyElapsedSec)}
           </span>
 
-          {/* Watched Percentage Pill */}
-          <span style={{
-            fontSize: "12px",
-            fontWeight: "800",
-            padding: "6px 14px",
-            borderRadius: "20px",
-            background: progress >= 90 ? "rgba(16,185,129,0.12)" : "rgba(255, 106, 0, 0.1)",
-            color: progress >= 90 ? "#10b981" : "#ff6a00",
-            border: `1.5px solid ${progress >= 90 ? "#10b981" : "#ff6a00"}`
-          }}>
-            {progress >= 90 ? "QUIZ AVAILABLE" : `${Math.round(progress)}% SEEN`}
-          </span>
+          {/* Watched Percentage Pill / Quiz Trigger */}
+          <button 
+            onClick={() => {
+              if (progress >= 90) {
+                sound.playClockTick();
+                setActiveTab("quiz");
+                if (quizState === "not_started") {
+                  handleStartQuiz();
+                }
+              }
+            }}
+            disabled={progress < 90}
+            title={progress >= 90 ? "Click to start Level Up Quiz" : `${Math.round(progress)}% watched`}
+            style={{
+              fontSize: "12px",
+              fontWeight: "800",
+              padding: "6px 14px",
+              borderRadius: "20px",
+              background: progress >= 90 
+                ? "linear-gradient(135deg, #10b981, #059669)" 
+                : (isDarkMode ? "rgba(255, 106, 0, 0.1)" : "rgba(255, 106, 0, 0.08)"),
+              color: progress >= 90 ? "#ffffff" : "#ff6a00",
+              border: progress >= 90 ? "none" : `1.5px solid ${isDarkMode ? "rgba(255, 106, 0, 0.4)" : "#ffedd5"}`,
+              cursor: progress >= 90 ? "pointer" : "default",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: progress >= 90 ? "0 4px 14px rgba(16,185,129,0.35)" : "none",
+              transition: "all 0.2s ease"
+            }}
+          >
+            {progress >= 90 ? (
+              <>
+                <Zap size={13} fill="#ffffff" />
+                <span>START QUIZ</span>
+              </>
+            ) : (
+              <span>{Math.round(progress)}% SEEN</span>
+            )}
+          </button>
         </div>
       </div>
  
-      {/* Main Splitscreen Layout */}
+      {/* Main Splitscreen Layout (Edge-to-edge on mobile like YouTube) */}
       <div style={{ 
         display: "flex", 
         flexDirection: isMobile ? "column" : "row", 
         flex: 1, 
         overflowY: isMobile ? "auto" : "hidden", 
         overflowX: "hidden",
-        padding: isMobile ? "12px" : "24px", 
-        gap: isMobile ? "16px" : "24px" 
-      }} className="custom-scrollbar">
+        padding: isMobile ? "0px" : "24px", 
+        gap: isMobile ? "0px" : "24px",
+        boxSizing: "border-box",
+        width: "100%"
+      }} className="solo-study-no-scrollbar">
         
-        {/* Left Side: Large Immersive Player */}
+        {/* Left Side: Large Immersive Player (100% full width on mobile) */}
         <div style={{
           width: isMobile ? "100%" : ((isNotesExpanded || isCodingChallenge) ? "0%" : "55%"),
           display: (isNotesExpanded || isCodingChallenge) ? "none" : "flex",
-          padding: isMobile ? "16px" : "32px",
+          padding: isMobile ? "0" : "32px",
           flexDirection: "column",
-          gap: isMobile ? "16px" : "32px",
-          background: isDarkMode ? "rgba(13, 8, 5, 0.6)" : "rgba(255, 255, 255, 0.6)",
-          backdropFilter: "blur(16px)",
-          borderRadius: isMobile ? "16px" : "24px",
-          border: isDarkMode ? "1px solid rgba(255, 106, 0, 0.15)" : "1px solid rgba(255, 106, 0, 0.1)",
-          boxShadow: isDarkMode ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.05)",
+          gap: isMobile ? "0" : "32px",
+          background: isMobile ? "#000000" : (isDarkMode ? "rgba(13, 8, 5, 0.6)" : "rgba(255, 255, 255, 0.6)"),
+          backdropFilter: isMobile ? "none" : "blur(16px)",
+          borderRadius: isMobile ? "0px" : "24px",
+          border: isMobile ? "none" : (isDarkMode ? "1px solid rgba(255, 106, 0, 0.15)" : "1px solid rgba(255, 106, 0, 0.1)"),
+          boxShadow: isMobile ? "0 4px 16px rgba(0,0,0,0.2)" : (isDarkMode ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.05)"),
           overflowY: isMobile ? "visible" : "auto",
           boxSizing: "border-box"
         }} className="custom-scrollbar">
           
-          {/* Theatre Player Wrapper */}
+          {/* Theatre Player Wrapper (100% full width, edge-to-edge on mobile like YouTube) */}
           <div style={{
             position: "relative",
             width: "100%",
             paddingTop: "56.25%", // 16:9 Aspect Ratio
             background: "#000000",
-            borderRadius: "20px",
+            borderRadius: isMobile ? "0px" : "20px",
             overflow: "hidden",
-            boxShadow: isDarkMode ? "0 20px 50px rgba(0,0,0,0.5)" : "0 10px 30px rgba(0,0,0,0.15)",
-            border: isDarkMode ? "2px solid rgba(255, 106, 0, 0.18)" : "2px solid #ffedd5",
-            animation: "progressGlow 4s infinite"
+            boxShadow: isMobile ? "none" : (isDarkMode ? "0 20px 50px rgba(0,0,0,0.5)" : "0 10px 30px rgba(0,0,0,0.15)"),
+            border: isMobile ? "none" : (isDarkMode ? "2px solid rgba(255, 106, 0, 0.18)" : "2px solid #ffedd5"),
+            animation: isMobile ? "none" : "progressGlow 4s infinite"
           }}>
             <div style={{ position: "absolute", inset: 0 }}>
               <YoutubePlayer 
-                videoId={video.id} 
+                videoId={video?.videoId || video?.id || (typeof video === "string" ? video : "")} 
                 onProgress={handleProgress} 
                 onFinished={handleFinished} 
                 isFrozen={isRecharging} 
@@ -1617,94 +1671,94 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
             </div>
           </div>
  
-          {/* Video Title & Action Row */}
-          <div style={{ 
-            display: "flex", 
-            flexDirection: isMobile ? "column" : "row", 
-            justifyContent: "space-between", 
-            alignItems: isMobile ? "flex-start" : "center",
-            gap: "16px",
-            marginTop: "8px"
-          }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", textAlign: "left", flex: 1 }}>
-              <div style={{ color: "var(--text-muted)", fontSize: "10px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "1px" }}>
-                Solo Training Theatre
+          {/* Video Title & Action Row (Desktop only - removed on mobile for clean YouTube look) */}
+          {!isMobile && (
+            <div style={{ 
+              display: "flex", 
+              flexDirection: "row", 
+              justifyContent: "space-between", 
+              alignItems: "center",
+              gap: "16px",
+              marginTop: "8px"
+            }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px", textAlign: "left", flex: 1 }}>
+                <div style={{ color: "var(--text-muted)", fontSize: "10px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "1px" }}>
+                  Solo Training Theatre
+                </div>
+                <h1 style={{ 
+                  fontSize: "20px", 
+                  fontWeight: "950", 
+                  color: isDarkMode ? "#ffffff" : "#0f172a", 
+                  margin: 0,
+                  lineHeight: "1.4"
+                }}>
+                  {video.title}
+                </h1>
               </div>
-              <h1 style={{ 
-                fontSize: isMobile ? "16px" : "20px", 
-                fontWeight: "950", 
-                color: isDarkMode ? "#ffffff" : "#0f172a", 
-                margin: 0,
-                lineHeight: "1.4"
-              }}>
-                {video.title}
-              </h1>
-            </div>
 
-            {/* Quiz Access Button */}
-            <div style={{ flexShrink: 0, alignSelf: isMobile ? "stretch" : "auto" }}>
-              {progress < 90 ? (
-                <button 
-                  disabled 
-                  style={{
-                    padding: "10px 20px",
-                    borderRadius: "10px",
-                    background: isDarkMode ? "rgba(255,255,255,0.02)" : "#f8fafc",
-                    border: isDarkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid #e2e8f0",
-                    color: "var(--text-muted)",
-                    fontSize: "12.5px",
-                    fontWeight: "750",
-                    cursor: "not-allowed",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    width: isMobile ? "100%" : "auto",
-                    justifyContent: "center"
-                  }}
-                >
-                  <span>Quiz Locked</span>
-                  <span style={{ fontSize: "11px", opacity: 0.8 }}>({Math.round(progress)}% / 90%)</span>
-                </button>
-              ) : (
-                <button 
-                  onClick={() => {
-                    sound.playClockTick();
-                    setActiveTab("quiz");
-                    if (quizState === "not_started") {
-                      handleStartQuiz();
-                    }
-                  }}
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: "12px",
-                    background: "linear-gradient(135deg, #10b981, #059669)",
-                    border: "none",
-                    color: "#ffffff",
-                    fontSize: "13px",
-                    fontWeight: "900",
-                    cursor: "pointer",
-                    boxShadow: "0 4px 15px rgba(16,185,129,0.3)",
-                    transition: "all 0.2s",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    width: isMobile ? "100%" : "auto",
-                    justifyContent: "center"
-                  }}
-                  onMouseOver={e => {
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                    e.currentTarget.style.boxShadow = "0 6px 18px rgba(16,185,129,0.45)";
-                  }}
-                  onMouseOut={e => {
-                    e.currentTarget.style.transform = "none";
-                    e.currentTarget.style.boxShadow = "0 4px 15px rgba(16,185,129,0.3)";
-                  }}
-                >
-                  <span>Start Level Up Quiz</span>
-                </button>
-              )}
+              {/* Quiz Access Button */}
+              <div style={{ flexShrink: 0, alignSelf: "auto" }}>
+                {progress < 90 ? (
+                  <button 
+                    disabled 
+                    style={{
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      background: isDarkMode ? "rgba(255,255,255,0.02)" : "#f8fafc",
+                      border: isDarkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid #e2e8f0",
+                      color: "var(--text-muted)",
+                      fontSize: "12.5px",
+                      fontWeight: "750",
+                      cursor: "not-allowed",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    <span>Quiz Locked</span>
+                    <span style={{ fontSize: "11px", opacity: 0.8 }}>({Math.round(progress)}% / 90%)</span>
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      sound.playClockTick();
+                      setActiveTab("quiz");
+                      if (quizState === "not_started") {
+                        handleStartQuiz();
+                      }
+                    }}
+                    style={{
+                      padding: "12px 24px",
+                      borderRadius: "12px",
+                      background: "linear-gradient(135deg, #10b981, #059669)",
+                      border: "none",
+                      color: "#ffffff",
+                      fontSize: "13px",
+                      fontWeight: "900",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 15px rgba(16,185,129,0.3)",
+                      transition: "all 0.2s",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      justifyContent: "center"
+                    }}
+                    onMouseOver={e => {
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                      e.currentTarget.style.boxShadow = "0 6px 18px rgba(16,185,129,0.45)";
+                    }}
+                    onMouseOut={e => {
+                      e.currentTarget.style.transform = "none";
+                      e.currentTarget.style.boxShadow = "0 4px 15px rgba(16,185,129,0.3)";
+                    }}
+                  >
+                    <span>Start Level Up Quiz</span>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
  
@@ -1714,13 +1768,15 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
           display: "flex",
           flexDirection: "column",
           height: isMobile ? "auto" : "100%",
-          background: isDarkMode ? "rgba(13, 8, 5, 0.85)" : "rgba(255, 255, 255, 0.85)",
-          backdropFilter: "blur(20px)",
-          borderRadius: isMobile ? "16px" : "24px",
-          border: isDarkMode ? "1px solid rgba(255, 106, 0, 0.2)" : "1px solid rgba(255, 106, 0, 0.15)",
-          boxShadow: isDarkMode ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.05)",
+          background: isMobile ? (isDarkMode ? "transparent" : "#ffffff") : (isDarkMode ? "rgba(13, 8, 5, 0.85)" : "rgba(255, 255, 255, 0.85)"),
+          backdropFilter: isMobile ? "none" : "blur(20px)",
+          borderRadius: isMobile ? "0px" : "24px",
+          border: isMobile ? "none" : (isDarkMode ? "1px solid rgba(255, 106, 0, 0.2)" : "1px solid rgba(255, 106, 0, 0.15)"),
+          boxShadow: isMobile ? "none" : (isDarkMode ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.05)"),
           overflow: isMobile ? "visible" : "hidden",
-          transition: "width 0.3s ease"
+          transition: "width 0.3s ease",
+          margin: "0",
+          boxSizing: "border-box"
         }}>
           
           {/* Section Header */}
@@ -1729,10 +1785,17 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
             alignItems: "center",
             justifyContent: "space-between",
             borderBottom: isDarkMode ? "1px solid rgba(255, 106, 0, 0.15)" : "1px solid #ffedd5",
-            padding: isMobile ? "12px 16px" : "16px 24px",
-            flexShrink: 0
+            padding: isMobile ? "14px 20px" : "16px 24px",
+            flexShrink: 0,
+            gap: "12px",
+            background: isMobile ? (isDarkMode ? "rgba(13, 8, 5, 0.95)" : "rgba(255, 255, 255, 0.95)") : "transparent",
+            backdropFilter: isMobile ? "blur(12px)" : "none",
+            WebkitBackdropFilter: isMobile ? "blur(12px)" : "none",
+            position: isMobile ? "sticky" : "static",
+            top: 0,
+            zIndex: 10
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
               <div style={{ 
                 display: "flex", 
                 alignItems: "center",
@@ -1742,16 +1805,17 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
                 borderRadius: "20px",
                 border: isDarkMode ? "1px solid rgba(255, 106, 0, 0.15)" : "1px solid #ffedd5",
               }}>
-                <span style={{ fontSize: "16px", filter: "drop-shadow(0 0 8px rgba(255, 106, 0, 0.5))" }}>
-                  {activeTab === "notes" ? <FileText size={16} /> : <Zap size={16} />}
+                <span style={{ fontSize: "15px", display: "flex", alignItems: "center", filter: "drop-shadow(0 0 8px rgba(255, 106, 0, 0.5))" }}>
+                  {activeTab === "notes" ? <FileText size={15} /> : <Zap size={15} />}
                 </span>
                 <span style={{ 
-                  fontSize: "13px", 
+                  fontSize: "12.5px", 
                   fontWeight: "900", 
                   color: isDarkMode ? "#ffb300" : "#ea580c",
                   fontFamily: "'Outfit', sans-serif",
                   letterSpacing: "0.5px",
-                  textTransform: "uppercase"
+                  textTransform: "uppercase",
+                  whiteSpace: "nowrap"
                 }}>
                   {activeTab === "notes" ? "AI Study Guide" : "Quest Quiz"}
                 </span>
@@ -1898,8 +1962,9 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
           <div style={{ 
             flex: isMobile ? "none" : 1, 
             overflowY: isMobile ? "visible" : "auto", 
-            padding: isMobile ? "16px" : "12px 24px 40px 24px", 
-            boxSizing: "border-box" 
+            padding: isMobile ? "20px 20px 100px 20px" : "12px 24px 40px 24px", 
+            boxSizing: "border-box",
+            width: "100%"
           }}>
             
             {/* 1. STUDY NOTES TAB */}
@@ -2163,7 +2228,80 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
                             </div>
                           </div>
                         ) : (
-                          <StudyNotesContent notes={notes} isDarkMode={isDarkMode} isFocusMode={isFocusPlaying} />
+                          <>
+                            <StudyNotesContent notes={notes} isDarkMode={isDarkMode} isFocusMode={isFocusPlaying} />
+
+                            {/* Level Up Quiz Banner at Bottom of Notes */}
+                            <div style={{
+                              marginTop: "32px",
+                              marginBottom: "16px",
+                              padding: isMobile ? "16px" : "20px",
+                              borderRadius: "16px",
+                              background: isDarkMode ? "rgba(255, 106, 0, 0.05)" : "#fff7ed",
+                              border: isDarkMode ? "1px solid rgba(255, 106, 0, 0.2)" : "1px solid #fed7aa",
+                              textAlign: "center",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: "10px"
+                            }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                {progress >= 90 ? (
+                                  <Zap size={18} color="#10b981" />
+                                ) : (
+                                  <Lock size={16} color={isDarkMode ? "#fb923c" : "#ea580c"} />
+                                )}
+                                <span style={{ fontSize: "14px", fontWeight: "900", color: isDarkMode ? "#ffffff" : "#0f172a" }}>
+                                  {progress >= 90 ? "Knowledge Verified! Level Up Quiz Unlocked" : `Level Up Quiz Locked (${Math.round(progress)}% / 90%)`}
+                                </span>
+                              </div>
+                              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0, maxWidth: "380px", lineHeight: "1.5" }}>
+                                {progress >= 90 
+                                  ? "You have completed the required video training. Prove your mastery to gain Solo XP!" 
+                                  : "Watch at least 90% of the video to unlock the mastery quiz and earn solo XP."}
+                              </p>
+                              {progress >= 90 ? (
+                                <button
+                                  onClick={() => {
+                                    sound.playClockTick();
+                                    setActiveTab("quiz");
+                                    if (quizState === "not_started") {
+                                      handleStartQuiz();
+                                    }
+                                  }}
+                                  style={{
+                                    padding: "10px 24px",
+                                    borderRadius: "12px",
+                                    background: "linear-gradient(135deg, #10b981, #059669)",
+                                    border: "none",
+                                    color: "#ffffff",
+                                    fontSize: "13px",
+                                    fontWeight: "900",
+                                    cursor: "pointer",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                    boxShadow: "0 4px 15px rgba(16,185,129,0.3)"
+                                  }}
+                                >
+                                  <Zap size={14} fill="#ffffff" />
+                                  <span>Start Level Up Quiz</span>
+                                </button>
+                              ) : (
+                                <div style={{
+                                  fontSize: "11.5px",
+                                  fontWeight: "750",
+                                  color: "var(--text-muted)",
+                                  padding: "6px 14px",
+                                  borderRadius: "10px",
+                                  background: isDarkMode ? "rgba(255,255,255,0.04)" : "#f1f5f9",
+                                  border: isDarkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e2e8f0"
+                                }}>
+                                  Keep Watching to Unlock ({Math.round(progress)}% / 90%)
+                                </div>
+                              )}
+                            </div>
+                          </>
                         )}
                       </div>
                     )}

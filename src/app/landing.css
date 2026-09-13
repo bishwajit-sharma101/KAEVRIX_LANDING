@@ -6,6 +6,7 @@
           
           /* Magical Accents */
           --accent-terracotta: #E07A5F;
+          --accent-terracotta-accessible: #943419;
           --accent-sage: #81B29A;
           --accent-gold: #F2CC8F;
           --accent-navy: #3D405B;
@@ -257,6 +258,18 @@
           box-sizing: border-box;
         }
 
+        .hero-kicker-text {
+          display: block;
+          font-family: var(--font-ui);
+          font-size: clamp(12px, 1.3vw, 15px);
+          font-weight: 800;
+          letter-spacing: 1.8px;
+          text-transform: uppercase;
+          color: #943419;
+          -webkit-text-fill-color: #943419;
+          margin-bottom: 14px;
+        }
+
         .hero-title {
           font-family: var(--font-display);
           font-size: clamp(36px, 5.8vw, 80px);
@@ -337,18 +350,18 @@
         .btn-shimmer-sweep {
           position: absolute;
           top: 0;
-          left: -100%;
+          left: 0;
           width: 50%;
           height: 100%;
           background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-          transform: skewX(-20deg);
+          transform: translateX(-150%) skewX(-20deg);
           animation: btnShimmer 4s infinite ease-in-out;
           pointer-events: none;
         }
 
         @keyframes btnShimmer {
-          0%, 35% { left: -100%; }
-          60%, 100% { left: 160%; }
+          0%, 35% { transform: translateX(-150%) skewX(-20deg); }
+          60%, 100% { transform: translateX(250%) skewX(-20deg); }
         }
 
         .btn-primary-large:hover {
@@ -850,12 +863,12 @@
           padding: 5px 12px;
           border-radius: 999px;
           background: #FCF9F2;
-          border: 1.5px solid rgba(224, 122, 95, 0.45);
-          color: var(--accent-terracotta);
+          border: 1.5px solid rgba(148, 52, 25, 0.45);
+          color: #943419;
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.3px;
-          box-shadow: 0 2px 8px rgba(224, 122, 95, 0.16);
+          box-shadow: 0 2px 8px rgba(148, 52, 25, 0.12);
           cursor: pointer;
           transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
           user-select: none;
@@ -865,10 +878,10 @@
 
         .arena-simple-corner-link:hover {
           transform: translateY(-1px);
-          background: var(--accent-terracotta);
+          background: #943419;
           color: #ffffff;
-          border-color: var(--accent-terracotta);
-          box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35);
+          border-color: #943419;
+          box-shadow: 0 4px 14px rgba(148, 52, 25, 0.35);
         }
 
         .arena-clean-split {
@@ -1223,12 +1236,12 @@
           padding: 5px 12px;
           border-radius: 999px;
           background: #FCF9F2;
-          border: 1.5px solid rgba(224, 122, 95, 0.45);
-          color: var(--accent-terracotta);
+          border: 1.5px solid rgba(148, 52, 25, 0.45);
+          color: #943419;
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.3px;
-          box-shadow: 0 2px 8px rgba(224, 122, 95, 0.16);
+          box-shadow: 0 2px 8px rgba(148, 52, 25, 0.12);
           cursor: pointer;
           transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
           user-select: none;
@@ -1238,10 +1251,10 @@
 
         .v-prompt-corner-link:hover {
           transform: translateY(-1px);
-          background: var(--accent-terracotta);
+          background: #943419;
           color: #ffffff;
-          border-color: var(--accent-terracotta);
-          box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35);
+          border-color: #943419;
+          box-shadow: 0 4px 14px rgba(148, 52, 25, 0.35);
         }
 
         .v-prompt-bar {
@@ -1637,12 +1650,12 @@
           padding: 5px 12px;
           border-radius: 999px;
           background: #FCF9F2;
-          border: 1.5px solid rgba(224, 122, 95, 0.45);
-          color: var(--accent-terracotta);
+          border: 1.5px solid rgba(148, 52, 25, 0.45);
+          color: #943419;
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.3px;
-          box-shadow: 0 2px 8px rgba(224, 122, 95, 0.16);
+          box-shadow: 0 2px 8px rgba(148, 52, 25, 0.12);
           cursor: pointer;
           transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
           user-select: none;
@@ -1652,10 +1665,10 @@
 
         .chronos-clean-corner-link:hover {
           transform: translateY(-1px);
-          background: var(--accent-terracotta);
+          background: #943419;
           color: #ffffff;
-          border-color: var(--accent-terracotta);
-          box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35);
+          border-color: #943419;
+          box-shadow: 0 4px 14px rgba(148, 52, 25, 0.35);
         }
 
         .chronos-streak-badge {
@@ -2001,12 +2014,12 @@
           padding: 5px 12px;
           border-radius: 999px;
           background: #FCF9F2;
-          border: 1.5px solid rgba(224, 122, 95, 0.45);
-          color: var(--accent-terracotta);
+          border: 1.5px solid rgba(148, 52, 25, 0.45);
+          color: #943419;
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.3px;
-          box-shadow: 0 2px 8px rgba(224, 122, 95, 0.16);
+          box-shadow: 0 2px 8px rgba(148, 52, 25, 0.12);
           cursor: pointer;
           transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
           user-select: none;
@@ -2016,10 +2029,10 @@
 
         .combat-corner-link:hover {
           transform: translateY(-1px);
-          background: var(--accent-terracotta);
+          background: #943419;
           color: #ffffff;
-          border-color: var(--accent-terracotta);
-          box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35);
+          border-color: #943419;
+          box-shadow: 0 4px 14px rgba(148, 52, 25, 0.35);
         }
 
         .corner-link-text {
@@ -2027,6 +2040,7 @@
           font-weight: 700;
           letter-spacing: 0.2px;
           line-height: 1;
+          color: inherit;
         }
 
         .combat-arena-box {

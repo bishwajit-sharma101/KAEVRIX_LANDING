@@ -10,6 +10,18 @@ export default function sitemap() {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/privacy`,
+      lastModified,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
       url: `${baseUrl}/llms.txt`,
       lastModified,
       changeFrequency: 'weekly',
