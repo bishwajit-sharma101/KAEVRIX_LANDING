@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Disc } from "lucide-react";
+import { Disc, User, KeyRound, Lock, CheckCircle2, AlertCircle, Zap, Lightbulb, Dice5 } from "lucide-react";
 import { fetchWithJobPolling } from "../../utils/asyncJob";
 import * as sound from "../../utils/audio";
 import { CHARACTER_CLASSES } from "../../utils/characterClasses";
@@ -971,17 +971,21 @@ export default function WelcomeScreen({
                       color: "#ef4444", padding: "12px 16px", borderRadius: "12px", fontSize: "13px",
                       fontWeight: "700", display: "flex", alignItems: "center", gap: "8px"
                     }}>
-                      [!] <span>{loginError}</span>
+                      <AlertCircle size={15} style={{ flexShrink: 0 }} /> <span>{loginError}</span>
                     </div>
                   )}
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <label style={{ fontSize: "11px", fontWeight: "800", color: labelColor, letterSpacing: "1px", textTransform: "uppercase" }}>Gamer Tag</label>
-                      <span style={{ fontSize: "10px", color: currentThemeColor, fontWeight: "700", letterSpacing: "0.5px" }}>[DEMO VERIFIED]</span>
+                      <span style={{ fontSize: "10px", color: currentThemeColor, fontWeight: "700", letterSpacing: "0.5px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        <CheckCircle2 size={12} /> DEMO VERIFIED
+                      </span>
                     </div>
                     <div style={{ position: "relative" }}>
-                      <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "14px", fontWeight: "700", color: textMuted }}>[ID]</span>
+                      <span style={{ position: "absolute", left: "18px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", color: textMuted, pointerEvents: "none" }}>
+                        <User size={16} />
+                      </span>
                       <input
                         type="text"
                         value={loginUsername}
@@ -993,7 +997,7 @@ export default function WelcomeScreen({
                         style={{
                           width: "100%", background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
                           border: `1.5px solid ${recognizedClass ? currentThemeColor : (isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)")}`,
-                          color: textColor, padding: "15px 20px 15px 52px", borderRadius: "14px",
+                          color: textColor, padding: "15px 20px 15px 48px", borderRadius: "14px",
                           fontSize: "15px", fontWeight: "700", outline: "none", transition: "all 0.25s",
                           boxSizing: "border-box", cursor: "default"
                         }}
@@ -1006,10 +1010,14 @@ export default function WelcomeScreen({
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <label style={{ fontSize: "11px", fontWeight: "800", color: labelColor, letterSpacing: "1px", textTransform: "uppercase" }}>Passkey</label>
-                      <span style={{ fontSize: "10px", color: currentThemeColor, fontWeight: "700", letterSpacing: "0.5px" }}>[LOCKED TOKEN]</span>
+                      <span style={{ fontSize: "10px", color: currentThemeColor, fontWeight: "700", letterSpacing: "0.5px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        <Lock size={12} /> LOCKED TOKEN
+                      </span>
                     </div>
                     <div style={{ position: "relative" }}>
-                      <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "14px", fontWeight: "700", color: textMuted }}>[KEY]</span>
+                      <span style={{ position: "absolute", left: "18px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", color: textMuted, pointerEvents: "none" }}>
+                        <KeyRound size={16} />
+                      </span>
                       <input
                         type="password"
                         value={loginPassword}
@@ -1020,7 +1028,7 @@ export default function WelcomeScreen({
                         style={{
                           width: "100%", background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
                           border: `1.5px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)"}`,
-                          color: textColor, padding: "15px 20px 15px 52px", borderRadius: "14px",
+                          color: textColor, padding: "15px 20px 15px 48px", borderRadius: "14px",
                           fontSize: "15px", fontWeight: "700", outline: "none", transition: "all 0.25s",
                           boxSizing: "border-box", cursor: "default"
                         }}
@@ -1120,7 +1128,9 @@ export default function WelcomeScreen({
 
                 {/* Unlock preview — first skill */}
                 <div style={{ marginBottom: "24px", display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: `${currentThemeColor}22`, border: `1px solid ${currentThemeColor}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>[XP]</div>
+                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: `${currentThemeColor}22`, border: `1px solid ${currentThemeColor}44`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Zap size={18} color={currentThemeColor} />
+                  </div>
                   <div>
                     <div style={{ fontSize: "10px", fontWeight: "800", color: textMuted, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "3px" }}>STARTER SKILL</div>
                     <div style={{ fontSize: "13px", fontWeight: "800", color: currentThemeColor }}>{activeClass.skills[0]?.name}</div>
@@ -1214,8 +1224,9 @@ export default function WelcomeScreen({
                       <span className="retro-arcade-blink" style={{ display: "inline-block", width: "2px", height: "20px", background: currentThemeColor, marginLeft: "2px", verticalAlign: "middle" }} />
                     )}
                   </h2>
-                  <p style={{ color: textMuted, fontSize: "12px", marginBottom: "18px", lineHeight: "1.5" }}>
-                    [TIP] {PATHFINDER_QUESTIONS[onboardingQ]?.hint}
+                  <p style={{ color: textMuted, fontSize: "12px", marginBottom: "18px", lineHeight: "1.5", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <Lightbulb size={13} color={currentThemeColor} style={{ flexShrink: 0 }} />
+                    <span>{PATHFINDER_QUESTIONS[onboardingQ]?.hint}</span>
                   </p>
 
                   <textarea
@@ -1306,8 +1317,8 @@ export default function WelcomeScreen({
 
                 <form onSubmit={handleRegisterSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
                   {signUpError && (
-                    <div style={{ background: "rgba(239,68,68,0.08)", border: "1.5px solid rgba(239,68,68,0.25)", color: "#ef4444", padding: "12px 16px", borderRadius: "12px", fontSize: "13px", fontWeight: "700" }}>
-                      [!] {signUpError}
+                    <div style={{ background: "rgba(239,68,68,0.08)", border: "1.5px solid rgba(239,68,68,0.25)", color: "#ef4444", padding: "12px 16px", borderRadius: "12px", fontSize: "13px", fontWeight: "700", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <AlertCircle size={15} style={{ flexShrink: 0 }} /> <span>{signUpError}</span>
                     </div>
                   )}
 
@@ -1318,8 +1329,8 @@ export default function WelcomeScreen({
                     </div>
                     <div>
                       <div style={{ fontSize: "10px", color: textMuted, fontWeight: "800", letterSpacing: "1px", textTransform: "uppercase" }}>Identity Matrix</div>
-                      <button type="button" onClick={handleShuffleAvatar} style={{ border: "none", background: "transparent", color: currentThemeColor, padding: 0, fontSize: "12px", fontWeight: "800", cursor: "pointer", marginTop: "2px" }}>
-                        [RNG] Re-Roll Avatar
+                      <button type="button" onClick={handleShuffleAvatar} style={{ border: "none", background: "transparent", color: currentThemeColor, padding: 0, fontSize: "12px", fontWeight: "800", cursor: "pointer", marginTop: "2px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <Dice5 size={14} /> Re-Roll Avatar
                       </button>
                     </div>
                     <div style={{ marginLeft: "auto", background: `${currentThemeColor}22`, borderRadius: "8px", padding: "4px 10px", fontSize: "10px", color: currentThemeColor, fontWeight: "800", letterSpacing: "1px" }}>
@@ -1330,7 +1341,9 @@ export default function WelcomeScreen({
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                     <label style={{ fontSize: "11px", fontWeight: "800", color: labelColor, letterSpacing: "1px", textTransform: "uppercase" }}>Gamer Tag</label>
                     <div style={{ position: "relative" }}>
-                      <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "16px", opacity: 0.5 }}>[ID]</span>
+                      <span style={{ position: "absolute", left: "18px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", color: textMuted, opacity: 0.6, pointerEvents: "none" }}>
+                        <User size={16} />
+                      </span>
                       <input
                         type="text"
                         value={signUpUsername}
@@ -1341,7 +1354,7 @@ export default function WelcomeScreen({
                         style={{
                           width: "100%", background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
                           border: `1.5px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)"}`,
-                          color: textColor, padding: "15px 20px 15px 46px", borderRadius: "14px",
+                          color: textColor, padding: "15px 20px 15px 48px", borderRadius: "14px",
                           fontSize: "15px", fontWeight: "700", outline: "none", transition: "all 0.25s", boxSizing: "border-box"
                         }}
                         onFocus={(e) => { e.currentTarget.style.borderColor = currentThemeColor; e.currentTarget.style.boxShadow = `0 0 0 3px ${currentThemeColor}18`; }}
@@ -1353,7 +1366,9 @@ export default function WelcomeScreen({
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                     <label style={{ fontSize: "11px", fontWeight: "800", color: labelColor, letterSpacing: "1px", textTransform: "uppercase" }}>Passkey</label>
                     <div style={{ position: "relative" }}>
-                      <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "16px", opacity: 0.5 }}>[KEY]</span>
+                      <span style={{ position: "absolute", left: "18px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", color: textMuted, opacity: 0.6, pointerEvents: "none" }}>
+                        <KeyRound size={16} />
+                      </span>
                       <input
                         type="password"
                         value={signUpPassword}
@@ -1364,7 +1379,7 @@ export default function WelcomeScreen({
                         style={{
                           width: "100%", background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
                           border: `1.5px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)"}`,
-                          color: textColor, padding: "15px 20px 15px 46px", borderRadius: "14px",
+                          color: textColor, padding: "15px 20px 15px 48px", borderRadius: "14px",
                           fontSize: "15px", fontWeight: "700", outline: "none", transition: "all 0.25s", boxSizing: "border-box"
                         }}
                         onFocus={(e) => { e.currentTarget.style.borderColor = currentThemeColor; e.currentTarget.style.boxShadow = `0 0 0 3px ${currentThemeColor}18`; }}
@@ -2243,9 +2258,9 @@ export default function WelcomeScreen({
                         <button 
                           type="button" 
                           onClick={handleShuffleAvatar}
-                          style={{ border: "none", background: "transparent", color: currentThemeColor, fontFamily: "var(--font-gamer)", fontSize: "12px", fontWeight: "900", cursor: "pointer", letterSpacing: "1px" }}
+                          style={{ border: "none", background: "transparent", color: currentThemeColor, fontFamily: "var(--font-gamer)", fontSize: "12px", fontWeight: "900", cursor: "pointer", letterSpacing: "1px", display: "inline-flex", alignItems: "center", gap: "6px" }}
                         >
-                          [RNG] RE-ROLL AVATAR MATRIX
+                          <Dice5 size={13} /> RE-ROLL AVATAR MATRIX
                         </button>
                       </div>
 
