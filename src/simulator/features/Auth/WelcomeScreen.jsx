@@ -1413,7 +1413,7 @@ export default function WelcomeScreen({
           <div style={{
             flex: 1,
             position: "relative",
-            display: "flex",
+            display: isMobile ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",

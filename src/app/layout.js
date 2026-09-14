@@ -38,23 +38,36 @@ export const viewport = {
 
 export const metadata = {
   applicationName: "Kaevrix",
-  title: "Kaevrix — AI-Powered Personalized Learning Platform",
-  description: "Kaevrix is an AI-powered personalized learning platform that turns your goals into adaptive skill trees, interactive study sessions with AI-generated notes, and gamified progression. Track your learning, quiz yourself, and actually remember what you study.",
+  title: "Kaevrix — AI Study App & Personalized Learning Platform",
+  description: "Kaevrix is a new AI study app that turns any topic into a personalized learning path, AI-generated study notes, and gamified skill trees. The smartest way to learn anything — track progress, quiz yourself, and actually remember what you study.",
   keywords: [
     "kaevrix",
-    "personalized learning platform",
-    "ai learning app",
     "ai study app",
+    "new ai study app",
+    "ai learning app",
+    "best ai apps for studying",
+    "ai apps for students",
+    "ai learning app 2025",
+    "ai study tool",
+    "personalized learning platform",
     "personalized learning app",
     "adaptive learning platform",
     "gamified learning platform",
     "learning roadmap generator",
-    "ai learning paths",
+    "ai generated learning paths",
     "skill development platform",
     "interactive learning platform",
-    "ai study notes",
+    "ai study notes generator",
+    "ai note taker for students",
     "active recall app",
-    "personalized education",
+    "spaced repetition app",
+    "personalized education app",
+    "study productivity app",
+    "learning rpg",
+    "rpg study app",
+    "gamified education",
+    "skill tree learning",
+    "ai upskilling platform",
     "astrix network"
   ],
   authors: [{ name: "Astrix Network" }],
@@ -85,8 +98,8 @@ export const metadata = {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
   openGraph: {
-    title: "Kaevrix — AI-Powered Personalized Learning Platform",
-    description: "Kaevrix turns anything you want to learn into a personalized skill tree. AI study notes, knowledge quizzes, progress tracking, and gamified progression — all in one platform.",
+    title: "Kaevrix — AI Study App & Personalized Learning Platform",
+    description: "The new AI study app that turns anything you want to learn into a personalized skill tree. AI study notes, knowledge quizzes, progress tracking, and gamified progression — all in one place.",
     url: "https://astrixnetwork.com",
     siteName: "Kaevrix",
     locale: "en_US",
@@ -94,8 +107,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaevrix — AI-Powered Personalized Learning Platform",
-    description: "Kaevrix turns anything you want to learn into a personalized skill tree. AI study notes, knowledge quizzes, progress tracking, and gamified progression — all in one platform.",
+    title: "Kaevrix — AI Study App & Personalized Learning Platform",
+    description: "The new AI study app that turns anything you want to learn into a personalized skill tree. AI study notes, knowledge quizzes, progress tracking, and gamified progression — all in one place.",
   },
   icons: {
     icon: [
@@ -135,22 +148,43 @@ export default function RootLayout({ children }) {
       "@context": "https://schema.org",
       "@type": ["SoftwareApplication", "EducationalApplication"],
       "name": "Kaevrix",
-      "operatingSystem": "Web",
+      "alternateName": ["Kaevrix AI", "Kaevrix Learning", "Kaevrix Study App"],
+      "operatingSystem": "Web, iOS, Android",
       "applicationCategory": "EducationalApplication",
-      "description": "Kaevrix is an AI-powered personalized learning platform that turns your learning goals into visual skill trees, AI study notes, knowledge quizzes, and gamified progression.",
+      "applicationSubCategory": "AI Study App",
+      "description": "Kaevrix is a new AI study app and personalized learning platform that turns your goals into adaptive skill trees, AI-generated study notes, and gamified progression. The smartest way to learn anything online.",
       "url": "https://astrixnetwork.com",
+      "sameAs": [
+        "https://astrixnetwork.com"
+      ],
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
       },
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student"
+      },
+      "learningResourceType": [
+        "AI study notes",
+        "interactive quiz",
+        "skill tree",
+        "learning roadmap",
+        "personalized learning path"
+      ],
+      "educationalLevel": "All levels",
+      "keywords": "ai study app, personalized learning, ai learning app, gamified learning, skill tree, study notes, active recall",
       "featureList": [
         "AI-generated personalized skill trees and learning paths",
         "Smart video feed matched to your current topic",
         "Sanctum: AI study notes and knowledge quizzes from any video",
         "Chronos: Study progress tracker with streak system and finish date predictions",
         "Study together with friends in co-op rooms",
-        "XP, levels, unlockable avatar cosmetics, and verified skill profiles"
+        "XP, levels, unlockable avatar cosmetics, and verified skill profiles",
+        "Gamified RPG progression system for learning",
+        "AI-powered adaptive learning that adjusts to your pace"
       ]
     },
     {
