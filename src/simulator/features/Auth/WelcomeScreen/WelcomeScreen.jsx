@@ -978,17 +978,6 @@ export default function WelcomeScreen({
                   >
                     {isLoggingIn ? "CONNECTING..." : "▶  ENTER ARENA"}
                   </button>
-
-                  <div style={{ textAlign: "center" }}>
-                    <span style={{ fontSize: "12px", color: textMuted }}>No account? </span>
-                    <button
-                      type="button"
-                      onClick={() => { sound.playClockTick(); setAuthMode("signup"); setSignUpStep(1); }}
-                      style={{ background: "transparent", border: "none", color: currentThemeColor, fontWeight: "800", cursor: "pointer", fontSize: "12px", padding: 0 }}
-                    >
-                      Start New Campaign →
-                    </button>
-                  </div>
                 </form>
               </div>
             )}

@@ -157,20 +157,7 @@ export default function SignInForm({
           }}
           onMouseOver={(e) => { if (!isLoggingIn) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 12px 35px ${currentThemeColor}55`; } }}
           onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 8px 30px ${currentThemeColor}40`; }}
-        >
-          {isLoggingIn ? "CONNECTING..." : "▶  ENTER ARENA"}
         </button>
-
-        <div style={{ textAlign: "center" }}>
-          <span style={{ fontSize: "12px", color: textMuted }}>No account? </span>
-          <button
-            type="button"
-            onClick={() => { sound.playClockTick(); setAuthMode("signup"); setSignUpStep(1); }}
-            style={{ background: "transparent", border: "none", color: currentThemeColor, fontWeight: "800", cursor: "pointer", fontSize: "12px", padding: 0 }}
-          >
-            Start New Campaign →
-          </button>
-        </div>
       </form>
     </div>
   );
