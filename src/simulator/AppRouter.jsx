@@ -16,10 +16,17 @@ import SoloStudyRoom from "./features/SoloStudy/SoloStudyRoom";
 import ModeSelection from "./features/GameArena/ModeSelection";
 import CommandCenter from "./features/Admin/CommandCenter";
 import PracticeSheetPage from "./features/Roadmap/PracticeSheetPage";
-import { Swords, Compass, Clock, History, Users, Trophy, User, Lock, Sun, Moon, LogOut, Settings } from "lucide-react";
+import { Swords, Compass, Clock, History, Users, Trophy, User, Lock, Sun, Moon, LogOut, Settings, Sparkles } from "lucide-react";
+import { 
+  startKaevrixTour, 
+  startPathfinderTour, 
+  startChronosTour, 
+  startCommunityTour, 
+  startProfileTour 
+} from "./utils/tourGuide";
 
 export default function AppRouter(props) {
-  const { username, setUsername, avatar, setAvatar, selectedClass, setSelectedClass, isRegistered, setIsRegistered, xp, setXp, level, setLevel, wins, setWins, losses, setLosses, isDarkMode, setIsDarkMode, token, setToken, isMusicMuted, setIsMusicMuted, musicProfile, setMusicProfile, keepMusicInGame, setKeepMusicInGame, showMusicSettings, setShowMusicSettings, showSurpassLimits, setShowSurpassLimits, isExitIntercept, setIsExitIntercept, interceptTrackIdx, setInterceptTrackIdx, showDailyModal, setShowDailyModal, journeyDay, setJourneyDay, energy, setEnergy, isFrozen, setIsFrozen, isBlurred, setIsBlurred, progressAtQuizEntry, setProgressAtQuizEntry, doubleDownQuestions, setDoubleDownQuestions, disabledOptions, setDisabledOptions, leaderboard, setLeaderboard, curatedVideos, setCuratedVideos, selectedVideo, setSelectedVideo, selectedSoloVideo, setSelectedSoloVideo, vsBot, setVsBot, searchQuery, setSearchQuery, activeSearchQuery, setActiveSearchQuery, searchResults, setSearchResults, isSearching, setIsSearching, socket, setSocket, status, setStatus, room, setRoom, opponent, setOpponent, countdown, setCountdown, myProgress, setMyProgress, opponentProgress, setOpponentProgress, opponentWaiting, setOpponentWaiting, opponentSubmitted, setOpponentSubmitted, chatMessages, setChatMessages, chatInput, setChatInput, questions, setQuestions, currentQuestionIdx, setCurrentQuestionIdx, selectedAnswers, setSelectedAnswers, quizTimer, setQuizTimer, gameResults, setGameResults, xpGained, setXpGained, leveledUp, setLeveledUp, handleLogout, cancelMatchmaking, handleSearchSubmit, clearSearch, resetToDashboard, startMatchmaking, handleReadyToPlay, handleSendChat, handleVideoProgress, handleVideoFinished, handleUsePowerup, handleSelectOption, handleDoubleDown, handleHackersClue, submitQuizAnswers, handleNextQuestion, handleStartSoloStudy, handleAddSoloXp, exitAttemptsRef, BACKEND_URL, getRankTitle, triggerSearch, initializeSocketAndRegister, practiceContext, setPracticeContext } = props;
+  const { username, setUsername, avatar, setAvatar, selectedClass, setSelectedClass, isRegistered, setIsRegistered, xp, setXp, level, setLevel, wins, setWins, losses, setLosses, isDarkMode, setIsDarkMode, token, setToken, isMusicMuted, setIsMusicMuted, musicProfile, setMusicProfile, keepMusicInGame, setKeepMusicInGame, showMusicSettings, setShowMusicSettings, showSurpassLimits, setShowSurpassLimits, isExitIntercept, setIsExitIntercept, interceptTrackIdx, setInterceptTrackIdx, showDailyModal, setShowDailyModal, journeyDay, setJourneyDay, energy, setEnergy, isFrozen, setIsFrozen, isBlurred, setIsBlurred, progressAtQuizEntry, setProgressAtQuizEntry, doubleDownQuestions, setDoubleDownQuestions, disabledOptions, setDisabledOptions, leaderboard, setLeaderboard, curatedVideos, setCuratedVideos, selectedVideo, setSelectedVideo, selectedSoloVideo, setSelectedSoloVideo, vsBot, setVsBot, searchQuery, setSearchQuery, activeSearchQuery, setActiveSearchQuery, searchResults, setSearchResults, isSearching, setIsSearching, socket, setSocket, status, setStatus, room, setRoom, opponent, setOpponent, countdown, setCountdown, myProgress, setMyProgress, opponentProgress, setOpponentProgress, opponentWaiting, setOpponentWaiting, opponentSubmitted, setOpponentSubmitted, chatMessages, setChatMessages, chatInput, setChatInput, questions, setQuestions, currentQuestionIdx, setCurrentQuestionIdx, selectedAnswers, setSelectedAnswers, quizTimer, setQuizTimer, gameResults, setGameResults, xpGained, setXpGained, leveledUp, setLeveledUp, handleLogout, cancelMatchmaking, handleSearchSubmit, clearSearch, resetToDashboard, startMatchmaking, handleReadyToPlay, handleSendChat, handleVideoProgress, handleVideoFinished, handleUsePowerup, handleSelectOption, handleDoubleDown, handleHackersClue, submitQuizAnswers, handleNextQuestion, handleStartSoloStudy, handleAddSoloXp, exitAttemptsRef, BACKEND_URL, getRankTitle, triggerSearch, initializeSocketAndRegister, practiceContext, setPracticeContext, isAppReady } = props;
 
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [isCodingMode, setIsCodingMode] = React.useState(false);
@@ -27,12 +34,64 @@ export default function AppRouter(props) {
   const [activeTab, setActiveTab] = React.useState(() => {
     if (typeof window === "undefined") return "duels";
     const saved = sessionStorage.getItem("kaevrix_current_tab");
+    if (saved === "study" || saved === "arena") return "duels";
+    if (saved === "tavern") return "community";
     return saved ? saved : "duels";
   });
 
   React.useEffect(() => {
     sessionStorage.setItem("kaevrix_current_tab", activeTab);
   }, [activeTab]);
+
+  // Guided Demo Tour Auto-Start Listener (Triggers the tour for each section the first time it is visited in demo mode on desktop)
+  React.useEffect(() => {
+    if (typeof window !== "undefined" && isAppReady && isRegistered && status === "idle") {
+      if (window.innerWidth < 768) return;
+      const isDemoMode = sessionStorage.getItem("kaevrix_demo_mode") === "true";
+      const shouldAutoStart = sessionStorage.getItem("kaevrix_autostart_tour") === "true";
+      const tourSeenKey = `kaevrix_seen_tour_${activeTab}`;
+      const hasSeenTabTour = sessionStorage.getItem(tourSeenKey) === "true";
+
+      if (isDemoMode && (!hasSeenTabTour || shouldAutoStart)) {
+        sessionStorage.setItem(tourSeenKey, "true");
+        sessionStorage.removeItem("kaevrix_autostart_tour");
+
+        const timer = setTimeout(() => {
+          if (window.innerWidth < 768) return;
+          if (activeTab === "pathfinder") {
+            startPathfinderTour({
+              isDarkMode,
+              onEnsureLevelOpen: () => {
+                const node = document.querySelector("#tour-pathfinder-level1");
+                if (node) node.click();
+              }
+            });
+          } else if (activeTab === "chronos") {
+            startChronosTour(isDarkMode);
+          } else if (activeTab === "community") {
+            startCommunityTour(isDarkMode);
+          } else if (activeTab === "profile") {
+            startProfileTour({ 
+              isDarkMode,
+              onThemeChange: (theme) => {
+                if (typeof window !== "undefined" && typeof window.__kaevrix_applyThemePreview === "function") {
+                  window.__kaevrix_applyThemePreview(theme);
+                }
+              },
+              onRevertTheme: () => {
+                if (typeof window !== "undefined" && typeof window.__kaevrix_revertThemePreview === "function") {
+                  window.__kaevrix_revertThemePreview();
+                }
+              }
+            });
+          } else if (activeTab === "duels" || activeTab === "study" || activeTab === "arena") {
+            startKaevrixTour(isDarkMode);
+          }
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isAppReady, isRegistered, status, activeTab, isDarkMode]);
 
   const [isMobileSearchActive, setIsMobileSearchActive] = React.useState(false);
   const [showSchedulerSettings, setShowSchedulerSettings] = React.useState(false);
@@ -419,7 +478,7 @@ export default function AppRouter(props) {
                 </svg>
               </button>
             )}
-            <div className="logo-container" onClick={resetToDashboard} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "10px" }}>
+            <div id="tour-header-logo" className="logo-container" onClick={resetToDashboard} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "10px" }}>
               <img src="/logo.png?v=2" alt="Kaevrix Logo" style={{ width: "40px", height: "40px", objectFit: "contain", display: "block" }} />
               <span 
                 className={`logo-text ${activeTab === "profile" ? "profile-active" : ""}`}
@@ -436,7 +495,7 @@ export default function AppRouter(props) {
 
           {/* Desktop Search Bar (shown only on large viewports) */}
           {(activeTab !== "chronos" && !isPathfinderTab) && (
-            <div className="header-search-container desktop-search-only">
+            <div id="tour-search-bar" className="header-search-container desktop-search-only">
             <form 
               onSubmit={handleLocalSearchSubmit} 
               className="header-search-form" 
@@ -508,16 +567,50 @@ export default function AppRouter(props) {
           )}
 
           <div className="header-right" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            {/* YouTube style search trigger button on mobile / Settings button when in chronos or profile */}
-            {(activeTab === "chronos" || activeTab === "profile") ? (
+            {/* Settings button when in chronos / Locked Settings button when in profile */}
+            {activeTab === "profile" ? (
+              <button
+                onClick={() => {
+                  sound.playError();
+                }}
+                style={{
+                  height: "34px",
+                  padding: "0 12px",
+                  borderRadius: "18px",
+                  background: isDarkMode ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.04)",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid rgba(0, 0, 0, 0.08)",
+                  color: isDarkMode ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  cursor: "not-allowed",
+                  fontSize: "12px",
+                  fontWeight: "700",
+                  fontFamily: "var(--font-outfit), sans-serif",
+                  opacity: 0.75,
+                }}
+                title="Profile Settings (Locked in Demo Mode)"
+              >
+                <Lock size={13} style={{ color: "#ef4444" }} />
+                <span>Settings</span>
+                <span style={{
+                  fontSize: "8.5px",
+                  background: "rgba(239, 68, 68, 0.15)",
+                  color: "#ef4444",
+                  border: "1px solid rgba(239, 68, 68, 0.35)",
+                  padding: "1px 5px",
+                  borderRadius: "4px",
+                  fontWeight: "900",
+                  letterSpacing: "0.5px"
+                }}>
+                  LOCKED
+                </span>
+              </button>
+            ) : activeTab === "chronos" ? (
               <button
                 onClick={() => {
                   sound.playClockTick();
-                  if (activeTab === "chronos") {
-                    setShowSchedulerSettings(prev => !prev);
-                  } else {
-                    setShowSystemSettings(prev => !prev);
-                  }
+                  setShowSchedulerSettings(prev => !prev);
                 }}
                 style={{
                   width: "36px",
@@ -540,7 +633,7 @@ export default function AppRouter(props) {
                   e.currentTarget.style.transform = "none";
                   e.currentTarget.style.background = isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.05)";
                 }}
-                title={activeTab === "chronos" ? "Open Scheduler System Settings" : "System Appearance Settings"}
+                title="Open Scheduler System Settings"
               >
                 <Settings size={18} />
               </button>
@@ -574,17 +667,26 @@ export default function AppRouter(props) {
 
             {/* Desktop-only Profile and Logout */}
             <div className="desktop-profile-only" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div className="header-profile" style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                gap: "12px", 
-                background: isDarkMode ? "#1e293b" : "#ffffff", 
-                padding: "6px 16px 6px 6px", 
-                borderRadius: "30px", 
-                border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.15)" : "1px solid var(--glass-border)", 
-                boxShadow: isDarkMode ? "0 4px 20px rgba(0,0,0,0.3)" : "0 4px 6px rgba(0,0,0,0.02)",
-                backdropFilter: isDarkMode ? "blur(8px)" : "none"
-              }}>
+              <div 
+                id="tour-profile-stats" 
+                className="header-profile" 
+                onClick={() => handleGatedTabChange("profile")}
+                style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: "12px", 
+                  background: isDarkMode ? "#1e293b" : "#ffffff", 
+                  padding: "6px 16px 6px 6px", 
+                  borderRadius: "30px", 
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.15)" : "1px solid var(--glass-border)", 
+                  boxShadow: isDarkMode ? "0 4px 20px rgba(0,0,0,0.3)" : "0 4px 6px rgba(0,0,0,0.02)",
+                  backdropFilter: isDarkMode ? "blur(8px)" : "none",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+                onMouseOver={e => e.currentTarget.style.transform = "scale(1.03)"}
+                onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+              >
                 <div className="profile-avatar" style={{ 
                   width: "36px", 
                   height: "36px", 
@@ -1030,6 +1132,7 @@ export default function AppRouter(props) {
           onAddSoloXp={handleAddSoloXp}
           onCodingModeChange={setIsCodingMode}
           featureGates={featureGates}
+          isAppReady={isAppReady}
         />
       )}
 

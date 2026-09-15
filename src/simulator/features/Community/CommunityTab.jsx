@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import * as sound from "../../utils/audio";
 import { Lock } from "lucide-react";
 import ProfilePanel from "../Dashboard/ProfilePanel";
+import { startCommunityTour } from "../../utils/tourGuide";
 
 export default function CommunityTab({ username, backendUrl, getRankTitle, isDarkMode, socket, featureGates = {} }) {
   const [friends, setFriends] = useState([]);
@@ -120,6 +121,8 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
   };
 
   useEffect(() => { loadAllData(); }, [username, backendUrl]);
+
+
 
   // Listen for real-time friend updates
   useEffect(() => {
@@ -1100,8 +1103,8 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
     return "var(--text-muted)";
   };
 
-  const Row = ({ user, action, index }) => (
-    <div className="cv4-row" onClick={() => { 
+  const Row = ({ user, action, index, id }) => (
+    <div id={id} className="cv4-row" onClick={() => { 
       sound.playClockTick(); 
       if (featureGates.PUBLIC_PROFILES_DISABLED) {
         alert("Viewing other profiles is temporarily disabled for maintenance. Please try again later.");
@@ -1114,7 +1117,7 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
           {index}
         </div>
       )}
-      <div className="cv4-avatar">
+      <div id={id ? "tour-community-pfp" : undefined} className="cv4-avatar">
         <div className="cv4-avatar-ring" />
         {user.avatar && user.avatar.includes('http') ? (
           <img src={user.avatar} alt="" /> 
@@ -1133,7 +1136,7 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
         </div>
       </div>
       {/* Mid section: Level badge + XP bar + Win Rate */}
-      <div className="cv4-row-mid">
+      <div id={id ? "tour-community-player-stats" : undefined} className="cv4-row-mid">
         {/* Level Badge */}
         <div style={{
           background: "var(--accent-gradient)", borderRadius: "6px", padding: "4px 12px",
@@ -1188,7 +1191,7 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
       <div style={{ padding: 0 }}>
         
         {/* Header */}
-        <div style={{ marginBottom: "36px" }}>
+        <div id="tour-community-header" style={{ marginBottom: "36px" }}>
           <div style={{ fontSize: "11px", fontWeight: "800", color: "var(--neon-orange)", letterSpacing: "4px", marginBottom: "10px", fontFamily: "var(--font-gamer)" }}>
             COMMUNITY
           </div>
@@ -1205,7 +1208,7 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
         </div>
 
         {/* Tab Bar */}
-        <div className="cv4-tab-bar">
+        <div id="tour-community-tabs" className="cv4-tab-bar">
           <button className={`cv4-tab ${activeView === "discover" ? "cv4-tab-active" : ""}`} onClick={() => { sound.playClockTick(); setActiveView("discover"); }}>
             Discover
           </button>
@@ -1455,7 +1458,7 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
             <div className="cv4-section-line" style={{ marginBottom: 0, flex: "none" }}>
               <span>DISCOVER PLAYERS</span>
             </div>
-            <div className="cv4-filter-bar">
+            <div id="tour-community-filter" className="cv4-filter-bar">
               <select className="cv4-filter-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                 <option value="level_high">↓ Highest Level</option>
                 <option value="level_low">↑ Lowest Level</option>
@@ -1471,12 +1474,13 @@ export default function CommunityTab({ username, backendUrl, getRankTitle, isDar
           {paginatedDiscover.map((user, idx) => (
             <Row 
               key={user.username} 
+              id={idx === 0 ? "tour-community-first-player" : undefined}
               user={user} 
               index={(currentPage - 1) * itemsPerPage + idx + 1}
               action={
                 sentThisSession.includes(user.username) 
                   ? <span className="cv4-sent-badge">SENT ✓</span>
-                  : <button className="cv4-add-btn" onClick={(e) => handleSendRequest(e, user.username)}>ADD</button>
+                  : <button id={idx === 0 ? "tour-community-add-btn" : undefined} className="cv4-add-btn" onClick={(e) => handleSendRequest(e, user.username)}>ADD</button>
               } 
             />
           ))}

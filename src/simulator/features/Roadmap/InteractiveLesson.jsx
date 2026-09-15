@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import ReactFlow, { Background, Controls, Handle, Position, MarkerType, ReactFlowProvider, useReactFlow } from "reactflow";
-import "reactflow/dist/style.css";
 import ELK from "elkjs/lib/elk.bundled.js";
 import { motion, AnimatePresence } from "framer-motion";
 import { 

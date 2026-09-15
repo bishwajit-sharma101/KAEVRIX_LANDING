@@ -6,6 +6,7 @@ import { trackTelemetry } from "../../utils/telemetry.js";
 import BossBattleModal from "./BossBattleModal";
 import CanvasRuneLoader from "../Shared/CanvasRuneLoader";
 import { Compass, Trophy, Play, Clock, Lock, Check } from "lucide-react";
+import { startPathfinderTour } from "../../utils/tourGuide";
 
 const BACKEND_URL = typeof window !== "undefined" && ["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname)
   ? `http://${window.location.hostname === "localhost" ? "127.0.0.1" : window.location.hostname}:5000`
@@ -130,7 +131,7 @@ const getConstellationLayoutDesktop = (n) => {
 };
 
 
-function MilestoneNode({ milestone, levelColor, onSelect, isSelected, isDarkMode, position }) {
+function MilestoneNode({ milestone, levelColor, onSelect, isSelected, isDarkMode, position, id }) {
   const statusConfig = getStatusConfig(isDarkMode);
   const cfg = statusConfig[milestone.status] || statusConfig.locked;
   const isClickable = milestone.status !== "locked";
@@ -183,16 +184,18 @@ function MilestoneNode({ milestone, levelColor, onSelect, isSelected, isDarkMode
     : "none";
 
   return (
-    <div style={{
-      position: "absolute",
-      left: `${position.x}%`,
-      top: `${position.y}%`,
-      transform: "translate(-50%, -50%)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      zIndex: 10,
-    }}>
+    <div
+      id={id}
+      style={{
+        position: "absolute",
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        transform: "translate(-50%, -50%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        zIndex: 10,
+      }}>
       {/* Premium Cyberpunk Diamond Node */}
       <div 
         className="node-medallion-container" 
@@ -3317,6 +3320,11 @@ function sanitizeRoadmap(rm) {
 export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, onSearchDuel, onReset, onStartSoloStudy, isDarkMode, featureGates = {}, setLockedFeatureAlert, setStatus, practiceContext, setPracticeContext }) {
   const storageKey = `kaevrix_roadmap_progress_${username}`;
 
+  // Expand Level 1 on mount so curriculum is readily visible
+  useEffect(() => {
+    setExpandedLevel(1);
+  }, []);
+
   const [showJsonModal, setShowJsonModal] = useState(false);
   const [copiedJson, setCopiedJson] = useState(false);
 
@@ -4068,7 +4076,7 @@ export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, o
       `}</style>
 
       {/* Top Header */}
-      <div style={{ marginBottom: "32px" }}>
+      <div id="tour-pathfinder-header" style={{ marginBottom: "32px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <h1 className="pathfinder-hero-title" style={{ 
@@ -4140,7 +4148,7 @@ export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, o
         {!isMobileView ? (
           <>
             {/* Desktop layout: original 4-card grid */}
-            <div className="pathfinder-stats-grid">
+            <div id="tour-pathfinder-stats" className="pathfinder-stats-grid">
               {[
                 { label: "Campaign Progress", value: `${completedCount} / ${totalCount}`, sub: "Milestones Cleared", color: "#ff6a00", icon: <Compass size={22} />, progress: true },
                 { label: "Bounty Reward", value: `+${totalXpEarned} XP`, sub: "Earned from milestones", color: "#eab308", icon: <Trophy size={22} /> },
@@ -4302,7 +4310,7 @@ export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, o
       </div>
 
       {/* Levels */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div id="tour-pathfinder-levels" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         {levels.map(({ key, num, color }) => {
           const data = getLevelData(key, num);
           if (!data) return null;
@@ -4406,7 +4414,7 @@ export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, o
                   : getConstellationLayoutMobile(data.milestones.length);
                 const isLevelComplete = data.completedInLevel === data.milestones.length;
                 return (
-                  <div className="pathfinder-constellation-container" style={{ 
+                  <div id="tour-pathfinder-nodes" className="pathfinder-constellation-container" style={{ 
                     padding: "32px 40px 40px 40px", 
                     background: "#09090b", // ALWAYS dark for gaming vibe
                     position: "relative",
@@ -4488,30 +4496,37 @@ export default function PathfinderRoadmap({ roadmap: initialRoadmap, username, o
                       )}
 
                       {/* Nodes */}
-                      {data.milestones.map((milestone, idx) => (
-                        <MilestoneNode
-                          key={milestone.id}
-                          milestone={milestone}
-                          levelColor={color}
-                          isSelected={selectedMilestone?.id === milestone.id}
-                          onSelect={(m) => {
-                            sound.playClockTick();
-                            trackTelemetry({
-                              eventType: "ROADMAP_NODE_OPENED",
-                              roadmapId: roadmap?._id || roadmap?.id,
-                              topic: roadmap?.topic,
-                              metadata: {
-                                milestoneId: m.id,
-                                milestoneTitle: m.title,
-                                status: m.status
-                              }
-                            });
-                            setSelectedMilestone(m);
-                          }}
-                          isDarkMode={isDarkMode}
-                          position={layout[idx]}
-                        />
-                      ))}
+                      {data.milestones.map((milestone, idx) => {
+                        const isTourTarget = milestone.status === "active" || 
+                          (!data.milestones.some(m => m.status === "active") && milestone.status === "unlocked") ||
+                          (!data.milestones.some(m => m.status === "active" || m.status === "unlocked") && idx === 0);
+
+                        return (
+                          <MilestoneNode
+                            key={milestone.id}
+                            id={isTourTarget ? "tour-pathfinder-active-node" : undefined}
+                            milestone={milestone}
+                            levelColor={color}
+                            isSelected={selectedMilestone?.id === milestone.id}
+                            onSelect={(m) => {
+                              sound.playClockTick();
+                              trackTelemetry({
+                                eventType: "ROADMAP_NODE_OPENED",
+                                roadmapId: roadmap?._id || roadmap?.id,
+                                topic: roadmap?.topic,
+                                metadata: {
+                                  milestoneId: m.id,
+                                  milestoneTitle: m.title,
+                                  status: m.status
+                                }
+                              });
+                              setSelectedMilestone(m);
+                            }}
+                            isDarkMode={isDarkMode}
+                            position={layout[idx]}
+                          />
+                        );
+                      })}
                     </div>
 
                     {/* Level completion or Decrypt Next Level message */}

@@ -282,7 +282,7 @@ body {
   border: 1px solid rgba(0, 242, 254, 0.15);
 }
 
-.hero-title {
+.hero-launcher .hero-title {
   font-family: var(--font-outfit);
   font-size: 32px;
   font-weight: 800;
@@ -292,7 +292,7 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.hero-subtitle {
+.hero-launcher .hero-subtitle {
   font-size: 15px;
   color: var(--text-muted);
   margin-bottom: 30px;

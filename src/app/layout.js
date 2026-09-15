@@ -2,6 +2,10 @@ import { Outfit, Playfair_Display, Orbitron, Inter } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 import "./landing.css";
+import "driver.js/dist/driver.css";
+import "reactflow/dist/style.css";
+import "../simulator/index.css";
+import "../simulator/features/Admin/CommandCenter.css";
 
 const outfit = Outfit({
   variable: "--font-outfit",

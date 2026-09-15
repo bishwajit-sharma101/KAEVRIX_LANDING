@@ -1,5 +1,3 @@
-import "./index.css";
-
 export const metadata = {
   title: "Kaevrix",
   description: "Multiplayer Video Matchmaking & Quiz Duel",

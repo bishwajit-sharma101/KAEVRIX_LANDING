@@ -753,7 +753,7 @@ export default function Dashboard({
     <div className="dashboard-wrapper">
 
       {/* Sidebar Navigation */}
-      <div className={`dashboard-sidebar ${isDarkMode ? "dark-theme" : "light-theme"}`}>
+      <div id="tour-sidebar-nav" className={`dashboard-sidebar ${isDarkMode ? "dark-theme" : "light-theme"}`}>
         <div style={{ marginBottom: "8px", padding: "0 12px" }} className="dashboard-sidebar-title">
           <span style={{ fontSize: "10px", fontWeight: "800", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "2px", fontFamily: "var(--font-gamer)" }}>NAVIGATION SYSTEM</span>
         </div>
@@ -837,7 +837,7 @@ export default function Dashboard({
           />
         )}
 
-        {activeTab === "duels" && (
+        {(activeTab === "duels" || activeTab === "study" || activeTab === "arena") && (
           <div style={{ padding: "0 clamp(16px, 4vw, 24px)", boxSizing: "border-box" }}>
             {/* Header Area */}
             {searchQuery ? (
@@ -991,7 +991,7 @@ export default function Dashboard({
               // Split Feeds: Recommended for Today & Explore
               <div style={{ display: "flex", flexDirection: "column", gap: "36px" }}>
                 {/* 1. Active Mission (Recommended) */}
-                <div>
+                <div id="tour-recommended-videos">
                   <div className="hud-feed-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <div className="hud-feed-header-line" />
@@ -1052,7 +1052,7 @@ export default function Dashboard({
               </div>
             ) : (
               // Arena Featured Combat Videos Grid
-              <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
+              <div id="tour-recommended-videos" style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "20px" }}>
                   {(filteredBattleVideos || []).map((video, idx) => (
                     <div
@@ -1335,7 +1335,7 @@ export default function Dashboard({
       </div>
 
       {/* Right Sidebar: Quest Tracker (Desktop Sticky + Mobile Floating FAB / Bottom Sheet) */}
-      {activeTab === "duels" && (() => {
+      {(activeTab === "duels" || activeTab === "study" || activeTab === "arena") && (() => {
         // Collect all subtopics for today
         const todaySubtopics = [];
         
@@ -1386,7 +1386,7 @@ export default function Dashboard({
         return (
           <>
             {/* Desktop Sticky Right Sidebar */}
-            <div className="dashboard-quest-sidebar" style={{ width: "290px", display: "flex", flexDirection: "column", gap: "14px", flexShrink: 0, position: "sticky", top: "20px" }}>
+            <div id="tour-quest-tracker" className="dashboard-quest-sidebar" style={{ width: "290px", display: "flex", flexDirection: "column", gap: "14px", flexShrink: 0, position: "sticky", top: "20px" }}>
               <div style={{
                 background: isDarkMode ? "#111116" : "#ffffff",
                 borderRadius: "20px",

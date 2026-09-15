@@ -7,10 +7,10 @@ import { HIGH_QUALITY_NOTE_1, HIGH_QUALITY_NOTE_2 } from "../../utils/studyNotes
 import RechargeOverlay from "./RechargeOverlay";
 import InteractiveLesson from "../Roadmap/InteractiveLesson";
 import { trackTelemetry } from "../../utils/telemetry.js";
-import { RotateCcw, Clock, Lock, Unlock, Trophy, Zap, FileText, Check, X as LucideX } from "lucide-react";
+import { RotateCcw, Clock, Lock, Unlock, Trophy, Zap, FileText, Check, X as LucideX, Sparkles } from "lucide-react";
+import { startSanctumTour } from "../../utils/tourGuide";
 
-
-export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl, onBack, onAddSoloXp, onCodingModeChange, featureGates = {} }) {
+export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl, onBack, onAddSoloXp, onCodingModeChange, featureGates = {}, isAppReady = true }) {
   const [progress, setProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
@@ -31,6 +31,34 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
   useEffect(() => {
     sessionStorage.setItem("kaevrix_solostudy_active_tab", activeTab);
   }, [activeTab]);
+
+  // Auto-start Guided Sanctum Tour on first visit in demo mode (after splash screen on desktop/tablet)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) return;
+
+    const hasSeenSanctumTour = sessionStorage.getItem("kaevrix_seen_tour_sanctum") === "true";
+    const shouldAutoStart = sessionStorage.getItem("kaevrix_autostart_tour") === "true";
+    const isDemoMode = sessionStorage.getItem("kaevrix_demo_mode") === "true" || !localStorage.getItem("kaevrix_token");
+
+    if (isDemoMode && (!hasSeenSanctumTour || shouldAutoStart)) {
+      sessionStorage.setItem("kaevrix_seen_tour_sanctum", "true");
+      sessionStorage.removeItem("kaevrix_autostart_tour");
+
+      const delay = (typeof isAppReady !== "undefined" && !isAppReady) ? 2800 : 500;
+      const timer = setTimeout(() => {
+        if (window.innerWidth < 768) return;
+        startSanctumTour({
+          isDarkMode,
+          onTriggerRecharge: () => {
+            setStudyElapsedSec(1200);
+            setIsRecharging(true);
+          }
+        });
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [isAppReady, isDarkMode]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -1525,35 +1553,8 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
           flexWrap: "wrap", 
           justifyContent: "flex-end" 
         }}>
-          {/* Dev Fast Forward Button (Hidden/Subtle) */}
-          <button
-            onClick={() => setStudyElapsedSec(prev => prev + 300)}
-            title="Dev: Add 5 minutes"
-            style={{
-              background: "transparent",
-              border: isDarkMode ? "1px dashed rgba(255,255,255,0.1)" : "1px dashed rgba(0,0,0,0.1)",
-              color: isDarkMode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)",
-              padding: "4px 8px",
-              borderRadius: "12px",
-              fontSize: "10px",
-              fontWeight: "800",
-              cursor: "pointer",
-              transition: "all 0.2s"
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.color = "#ff6a00";
-              e.currentTarget.style.borderColor = "#ff6a00";
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.color = isDarkMode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)";
-              e.currentTarget.style.borderColor = isDarkMode ? "1px dashed rgba(255,255,255,0.1)" : "1px dashed rgba(0,0,0,0.1)";
-            }}
-          >
-            +5m
-          </button>
-
           {/* Study Timer Pill */}
-          <span style={{
+          <span id="tour-sanctum-timer" style={{
             fontSize: "12px",
             fontWeight: "800",
             padding: "6px 14px",
@@ -1579,6 +1580,7 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
 
           {/* Watched Percentage Pill / Quiz Trigger */}
           <button 
+            id="tour-sanctum-quiz-btn"
             onClick={() => {
               if (progress >= 90) {
                 sound.playClockTick();
@@ -1617,6 +1619,42 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
               <span>{Math.round(progress)}% SEEN</span>
             )}
           </button>
+
+          {/* Guided Tour Trigger Button */}
+          <button
+            onClick={() => {
+              sound.playClockTick();
+              startSanctumTour({
+                isDarkMode,
+                force: true,
+                onTriggerRecharge: () => {
+                  setStudyElapsedSec(1200);
+                  setIsRecharging(true);
+                }
+              });
+            }}
+            style={{
+              fontSize: "12px",
+              fontWeight: "800",
+              padding: "6px 12px",
+              borderRadius: "20px",
+              background: isDarkMode ? "rgba(255, 106, 0, 0.1)" : "#fff7ed",
+              border: isDarkMode ? "1px solid rgba(255, 106, 0, 0.3)" : "1px solid #fed7aa",
+              color: "#ff6a00",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              cursor: "pointer",
+              fontFamily: "'Outfit', sans-serif",
+              transition: "all 0.2s ease"
+            }}
+            onMouseOver={e => e.currentTarget.style.background = isDarkMode ? "rgba(255, 106, 0, 0.2)" : "#ffedd5"}
+            onMouseOut={e => e.currentTarget.style.background = isDarkMode ? "rgba(255, 106, 0, 0.1)" : "#fff7ed"}
+            title="Start Sanctum Tour"
+          >
+            <Sparkles size={13} />
+            <span>Tour</span>
+          </button>
         </div>
       </div>
  
@@ -1634,7 +1672,7 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
       }} className="solo-study-no-scrollbar">
         
         {/* Left Side: Large Immersive Player (100% full width on mobile) */}
-        <div style={{
+        <div id="tour-sanctum-theatre" style={{
           width: isMobile ? "100%" : ((isNotesExpanded || isCodingChallenge) ? "0%" : "55%"),
           display: (isNotesExpanded || isCodingChallenge) ? "none" : "flex",
           padding: isMobile ? "0" : "32px",
@@ -1763,7 +1801,7 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
         </div>
  
         {/* Right Side: Interactive Notes & Quizzes */}
-        <div style={{
+        <div id="tour-sanctum-notes" style={{
           width: isMobile ? "100%" : ((isNotesExpanded || isCodingChallenge) ? "100%" : "45%"),
           display: "flex",
           flexDirection: "column",
@@ -1889,6 +1927,7 @@ export default function SoloStudyRoom({ video, username, isDarkMode, backendUrl,
 
               {/* Focus Audio Toggle Button */}
               <button
+                id="tour-sanctum-focus-btn"
                 onClick={() => {
                   sound.playClockTick();
                   if (focusAudioRef.current) {

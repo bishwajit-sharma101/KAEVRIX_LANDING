@@ -6,7 +6,7 @@ import * as sound from "./utils/audio";
 import AppRouter from "./AppRouter";
 import GlobalSplashScreen from "./features/Shared/GlobalSplashScreen";
 import { trackTelemetry } from "./utils/telemetry";
-import { installMockInterceptor, MOCK_LEADERBOARD, MOCK_CURATED_VIDEOS } from "./utils/mockInterceptor";
+import { installMockInterceptor, MOCK_LEADERBOARD, MOCK_CURATED_VIDEOS, MOCK_USER_PROFILE, MOCK_APP_ROADMAP } from "./utils/mockInterceptor";
 import { createMockSocket } from "./utils/mockSocket";
 
 const BACKEND_URL = typeof window !== "undefined" && ["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname)
@@ -41,19 +41,19 @@ export default function App({ onExit }) {
     installMockInterceptor();
   }, []);
   // Authentication / Profile
-  const [username, setUsername] = useState(() => localStorage.getItem("kaevrix_username") || "");
-  const [avatar, setAvatar] = useState(() => localStorage.getItem("kaevrix_avatar") || DEFAULT_AVATAR);
-  const [selectedClass, setSelectedClass] = useState(() => localStorage.getItem("kaevrix_class") || "doomscroller");
+  const [username, setUsername] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_username") || "" : ""));
+  const [avatar, setAvatar] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_avatar") || DEFAULT_AVATAR : DEFAULT_AVATAR));
+  const [selectedClass, setSelectedClass] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_class") || "doomscroller" : "doomscroller"));
   const [isRegistered, setIsRegistered] = useState(false);
   const [xp, setXp] = useState(0);
   const [level, setLevel] = useState(1);
   const [wins, setWins] = useState(0);
   const [losses, setLosses] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("kaevrix_theme") === "dark");
-  const [token, setToken] = useState(() => localStorage.getItem("kaevrix_token") || "");
-  const [isMusicMuted, setIsMusicMuted] = useState(() => localStorage.getItem("kaevrix_music_muted") === "true");
-  const [musicProfile, setMusicProfile] = useState(() => Number(localStorage.getItem("kaevrix_music_profile")) || 0);
-  const [keepMusicInGame, setKeepMusicInGame] = useState(() => localStorage.getItem("kaevrix_music_in_game") === "true");
+  const [isDarkMode, setIsDarkMode] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_theme") === "dark" : false));
+  const [token, setToken] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_token") || "" : ""));
+  const [isMusicMuted, setIsMusicMuted] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_music_muted") !== "false" : true));
+  const [musicProfile, setMusicProfile] = useState(() => (typeof window !== "undefined" ? Number(localStorage.getItem("kaevrix_music_profile")) || 0 : 0));
+  const [keepMusicInGame, setKeepMusicInGame] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("kaevrix_music_in_game") === "true" : false));
   const [showMusicSettings, setShowMusicSettings] = useState(false);
   const [showSurpassLimits, setShowSurpassLimits] = useState(false);
   const [isExitIntercept, setIsExitIntercept] = useState(false);
@@ -142,7 +142,29 @@ export default function App({ onExit }) {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("kaevrix_token");
-    if (!savedToken) return;
+    if (!savedToken) {
+      const isDemoMode = typeof window !== "undefined" && (
+        sessionStorage.getItem("kaevrix_demo_mode") === "true" || 
+        sessionStorage.getItem("kaevrix_autostart_tour") === "true"
+      );
+      if (isDemoMode) {
+        const demoUser = MOCK_USER_PROFILE;
+        setUsername(demoUser.username);
+        setAvatar(demoUser.avatar);
+        setSelectedClass(demoUser.selectedClass);
+        setXp(demoUser.xp);
+        setLevel(demoUser.level);
+        setWins(demoUser.wins || 0);
+        setLosses(demoUser.losses || 0);
+        setIsRegistered(true);
+
+        const roadmapKey = `kaevrix_roadmap_progress_${demoUser.username}`;
+        if (!localStorage.getItem(roadmapKey)) {
+          localStorage.setItem(roadmapKey, JSON.stringify(MOCK_APP_ROADMAP));
+        }
+      }
+      return;
+    }
 
     const restoreSession = async (accessToken) => {
       const res = await fetch(`${BACKEND_URL || ""}/api/auth/verify`, {
@@ -360,25 +382,17 @@ export default function App({ onExit }) {
     };
   }, [isDarkMode]);
 
-  // Global Procedural Background Music Player Effect
+  // Global Procedural Background Music Player Effect (Never auto-plays on entering app; only plays if user explicitly un-mutes)
   useEffect(() => {
-    const shouldPlay = !isMusicMuted && (!isRegistered || keepMusicInGame || status === "idle") && !showSurpassLimits;
+    if (isMusicMuted) {
+      sound.stopBackgroundMusic();
+      return;
+    }
     
+    const shouldPlay = !isMusicMuted && (!isRegistered || keepMusicInGame || status === "idle") && !showSurpassLimits;
     if (shouldPlay) {
-      const startMusicOnInteraction = () => {
-        sound.startBackgroundMusic(musicProfile);
-        document.removeEventListener("click", startMusicOnInteraction);
-        document.removeEventListener("keydown", startMusicOnInteraction);
-      };
-      
-      document.addEventListener("click", startMusicOnInteraction);
-      document.addEventListener("keydown", startMusicOnInteraction);
-      
       sound.startBackgroundMusic(musicProfile);
-      
       return () => {
-        document.removeEventListener("click", startMusicOnInteraction);
-        document.removeEventListener("keydown", startMusicOnInteraction);
         sound.stopBackgroundMusic();
       };
     } else {
@@ -884,7 +898,7 @@ export default function App({ onExit }) {
     setDisabledOptions(Array(5).fill([]));
   };
 
-  const appProps = { username, setUsername, avatar, setAvatar, selectedClass, setSelectedClass, isRegistered, setIsRegistered, xp, setXp, level, setLevel, wins, setWins, losses, setLosses, isDarkMode, setIsDarkMode, token, setToken, isMusicMuted, setIsMusicMuted, musicProfile, setMusicProfile, keepMusicInGame, setKeepMusicInGame, showMusicSettings, setShowMusicSettings, showSurpassLimits, setShowSurpassLimits, isExitIntercept, setIsExitIntercept, interceptTrackIdx, setInterceptTrackIdx, showDailyModal, setShowDailyModal, journeyDay, setJourneyDay, energy, setEnergy, isFrozen, setIsFrozen, isBlurred, setIsBlurred, progressAtQuizEntry, setProgressAtQuizEntry, doubleDownQuestions, setDoubleDownQuestions, disabledOptions, setDisabledOptions, leaderboard, setLeaderboard, curatedVideos, setCuratedVideos, selectedVideo, setSelectedVideo, selectedSoloVideo, setSelectedSoloVideo, vsBot, setVsBot, searchQuery, setSearchQuery, activeSearchQuery, setActiveSearchQuery, searchResults, setSearchResults, isSearching, setIsSearching, socket, setSocket, status, setStatus, room, setRoom, opponent, setOpponent, countdown, setCountdown, myProgress, setMyProgress, opponentProgress, setOpponentProgress, opponentWaiting, setOpponentWaiting, opponentSubmitted, setOpponentSubmitted, chatMessages, setChatMessages, chatInput, setChatInput, questions, setQuestions, currentQuestionIdx, setCurrentQuestionIdx, selectedAnswers, setSelectedAnswers, quizTimer, setQuizTimer, gameResults, setGameResults, xpGained, setXpGained, leveledUp, setLeveledUp, handleLogout, cancelMatchmaking, handleSearchSubmit, clearSearch, resetToDashboard, startMatchmaking, handleReadyToPlay, handleSendChat, handleVideoProgress, handleVideoFinished, handleUsePowerup, handleSelectOption, handleDoubleDown, handleHackersClue, submitQuizAnswers, handleNextQuestion, handleStartSoloStudy, handleAddSoloXp, exitAttemptsRef, BACKEND_URL, getRankTitle, triggerSearch, initializeSocketAndRegister, practiceContext, setPracticeContext };
+  const appProps = { username, setUsername, avatar, setAvatar, selectedClass, setSelectedClass, isRegistered, setIsRegistered, xp, setXp, level, setLevel, wins, setWins, losses, setLosses, isDarkMode, setIsDarkMode, token, setToken, isMusicMuted, setIsMusicMuted, musicProfile, setMusicProfile, keepMusicInGame, setKeepMusicInGame, showMusicSettings, setShowMusicSettings, showSurpassLimits, setShowSurpassLimits, isExitIntercept, setIsExitIntercept, interceptTrackIdx, setInterceptTrackIdx, showDailyModal, setShowDailyModal, journeyDay, setJourneyDay, energy, setEnergy, isFrozen, setIsFrozen, isBlurred, setIsBlurred, progressAtQuizEntry, setProgressAtQuizEntry, doubleDownQuestions, setDoubleDownQuestions, disabledOptions, setDisabledOptions, leaderboard, setLeaderboard, curatedVideos, setCuratedVideos, selectedVideo, setSelectedVideo, selectedSoloVideo, setSelectedSoloVideo, vsBot, setVsBot, searchQuery, setSearchQuery, activeSearchQuery, setActiveSearchQuery, searchResults, setSearchResults, isSearching, setIsSearching, socket, setSocket, status, setStatus, room, setRoom, opponent, setOpponent, countdown, setCountdown, myProgress, setMyProgress, opponentProgress, setOpponentProgress, opponentWaiting, setOpponentWaiting, opponentSubmitted, setOpponentSubmitted, chatMessages, setChatMessages, chatInput, setChatInput, questions, setQuestions, currentQuestionIdx, setCurrentQuestionIdx, selectedAnswers, setSelectedAnswers, quizTimer, setQuizTimer, gameResults, setGameResults, xpGained, setXpGained, leveledUp, setLeveledUp, handleLogout, cancelMatchmaking, handleSearchSubmit, clearSearch, resetToDashboard, startMatchmaking, handleReadyToPlay, handleSendChat, handleVideoProgress, handleVideoFinished, handleUsePowerup, handleSelectOption, handleDoubleDown, handleHackersClue, submitQuizAnswers, handleNextQuestion, handleStartSoloStudy, handleAddSoloXp, exitAttemptsRef, BACKEND_URL, getRankTitle, triggerSearch, initializeSocketAndRegister, practiceContext, setPracticeContext, isAppReady };
   return (
     <div
       className={isDarkMode ? "dark-theme" : "light-theme"}

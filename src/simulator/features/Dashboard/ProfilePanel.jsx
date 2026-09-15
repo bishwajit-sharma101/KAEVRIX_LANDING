@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import * as sound from "../../utils/audio";
 import CommunityTab from "../Community/CommunityTab";
 import { Settings, Moon, Sun, Palette, Volume2, VolumeX, LogOut, Flame } from "lucide-react";
+import { startProfileTour } from "../../utils/tourGuide";
 
 const TIER_COLORS = {
   "Novice": "#64748b",
@@ -1341,6 +1342,36 @@ export default function ProfilePanel({
     }
   };
 
+  // Live Theme Preview Callbacks for Profile Tour
+  const applyThemePreview = (themeName) => {
+    const cosmetic = PRESET_COSMETICS.find(c => c.profileEffect === themeName) || PRESET_COSMETICS[1];
+    setProfile(prev => (prev ? { ...prev, cosmetics: cosmetic } : { cosmetics: cosmetic }));
+    const idx = PRESET_COSMETICS.findIndex(c => c.profileEffect === themeName);
+    if (idx !== -1) setCosmeticIndex(idx);
+  };
+
+  const revertThemePreview = () => {
+    const defaultCosmetic = PRESET_COSMETICS[0];
+    setProfile(prev => (prev ? { ...prev, cosmetics: defaultCosmetic } : { cosmetics: defaultCosmetic }));
+    setCosmeticIndex(0);
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.__kaevrix_applyThemePreview = applyThemePreview;
+      window.__kaevrix_revertThemePreview = revertThemePreview;
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        delete window.__kaevrix_applyThemePreview;
+        delete window.__kaevrix_revertThemePreview;
+      }
+    };
+  }, []);
+
+
+
+
   // Companion state machine hooks
   const [companionState, setCompanionState] = useState("idle");
   const [companionX, setCompanionX] = useState(30); // percentage (15% to 85%)
@@ -2555,11 +2586,44 @@ export default function ProfilePanel({
   };
 
   const bannerUrl = profile?.cosmetics?.banner;
-  const bannerBackground = bannerUrl === "none"
-    ? "transparent"
-    : bannerUrl 
-      ? `url(${bannerUrl}) center/cover no-repeat` 
-      : "linear-gradient(135deg, rgba(255,106,0,0.8) 0%, rgba(255,59,48,0.4) 100%)";
+  const getBannerBackground = () => {
+    if (bannerUrl && bannerUrl !== "none") {
+      return `url(${bannerUrl}) center/cover no-repeat`;
+    }
+    switch (profileEffect) {
+      case "inferno":
+        return "linear-gradient(135deg, #1a0601 0%, #3e0e03 40%, #cc3700 75%, #ff7700 100%)";
+      case "rage":
+        return "linear-gradient(135deg, #1a0000 0%, #450000 50%, #a30000 100%)";
+      case "void":
+        return "linear-gradient(135deg, #0f001c 0%, #310859 50%, #7b1fa2 100%)";
+      case "cyberpunk-neon":
+        return "linear-gradient(135deg, #0b0017 0%, #250045 50%, #ff007f 100%)";
+      case "sakura-dream":
+        return "linear-gradient(135deg, #fff0f5 0%, #ffc0cb 50%, #ff69b4 100%)";
+      case "lofi-study":
+        return "linear-gradient(135deg, #1c1815 0%, #383029 50%, #63554b 100%)";
+      case "matrix-glitch":
+        return "linear-gradient(135deg, #020f04 0%, #07330e 50%, #00e676 100%)";
+      case "blizzard":
+        return "linear-gradient(135deg, #041224 0%, #0c2d54 50%, #00b0ff 100%)";
+      case "thunder-storm":
+        return "linear-gradient(135deg, #090c1a 0%, #1a203f 50%, #5c6bc0 100%)";
+      case "phoenix-aura":
+        return "linear-gradient(135deg, #1f0206 0%, #4a0810 50%, #ff1744 100%)";
+      case "glacial-frost":
+        return "linear-gradient(135deg, #031424 0%, #0a335c 50%, #00e5ff 100%)";
+      case "galaxy-nebula":
+        return "linear-gradient(135deg, #0a041f 0%, #280b59 50%, #8a2be2 100%)";
+      case "supernova-blast":
+        return "linear-gradient(135deg, #240a02 0%, #591b05 50%, #ff6d00 100%)";
+      default:
+        return isDarkMode 
+          ? "linear-gradient(135deg, rgba(255,106,0,0.85) 0%, rgba(255,59,48,0.5) 100%)"
+          : "linear-gradient(135deg, rgba(255,106,0,0.9) 0%, rgba(255,120,60,0.7) 100%)";
+    }
+  };
+  const bannerBackground = getBannerBackground();
 
   const getRootStyle = () => {
     return { 
@@ -2581,27 +2645,29 @@ export default function ProfilePanel({
     <div className="profile-root-wrapper" style={getRootStyle()}>
       <ProfileStyles />
 
-      {/* --- BANNER WITH BACKGROUND PROFILE EFFECTS --- */}
-      <div 
-        className="profile-banner-container"
-        style={{ 
-          width: "100%",
-          height: "240px",
-          background: bannerBackground,
-          position: "relative",
-          borderBottom: isDarkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
-          overflow: "hidden",
-          boxSizing: "border-box"
-        }}
-      >
-        {backgroundEffectsElement}
-      </div>
+      {/* --- HERO BANNER & IDENTITY SECTION --- */}
+      <div id="tour-profile-hero" style={{ width: "100%", position: "relative" }}>
+        {/* --- BANNER WITH BACKGROUND PROFILE EFFECTS --- */}
+        <div 
+          className="profile-banner-container"
+          style={{ 
+            width: "100%",
+            height: "240px",
+            background: bannerBackground,
+            position: "relative",
+            borderBottom: isDarkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
+            overflow: "hidden",
+            boxSizing: "border-box"
+          }}
+        >
+          {backgroundEffectsElement}
+        </div>
 
-      {/* 2. PROFILE BODY (No Boxes, Pure Layout) */}
-      <div className="profile-body-content">
-        
-        {/* Identity Row: Overlapping Avatar & Name */}
-        <div className="profile-identity-row">
+        {/* 2. PROFILE BODY (No Boxes, Pure Layout) */}
+        <div className="profile-body-content">
+          
+          {/* Identity Row: Overlapping Avatar & Name */}
+          <div id="tour-profile-header" className="profile-identity-row">
           
           {/* Avatar Container with Intense Decorations */}
           <div 
@@ -3510,7 +3576,11 @@ export default function ProfilePanel({
             {xp % 200} / 200 XP TO NEXT RANK
           </div>
         </div>
+      </div>
+    </div>
 
+    {/* 2. PROFILE BODY (Two-Column Stats & Skills) */}
+    <div className="profile-body-content" style={{ marginTop: "12px" }}>
         {/* 3. TWO COLUMN STATS & SKILLS (NO BOXES) */}
         <div className="profile-two-col">
           
@@ -3521,24 +3591,27 @@ export default function ProfilePanel({
             </h3>
             
             <div className="profile-combat-stats-row">
-              {/* Stat */}
-              <div className="profile-stat-box">
-                <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>Win Rate</div>
-                <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
-                  {winRate}<span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#64748b" }}>%</span>
+              {/* Stat: Win Rate + W/L Spread Highlight Container */}
+              <div id="tour-combat-winrate" style={{ display: "flex", gap: "clamp(20px, 4vw, 48px)", alignItems: "center" }}>
+                {/* Stat */}
+                <div className="profile-stat-box">
+                  <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>Win Rate</div>
+                  <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
+                    {winRate}<span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#64748b" }}>%</span>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Stat */}
-              <div className="profile-stat-box">
-                <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>W/L Spread</div>
-                <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
-                  <span style={{ color: "#10b981" }}>{profile?.wins || 0}</span> <span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#94a3b8" }}>/</span> <span style={{ color: "#ef4444" }}>{profile?.losses || 0}</span>
+                
+                {/* Stat */}
+                <div className="profile-stat-box">
+                  <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>W/L Spread</div>
+                  <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
+                    <span style={{ color: "#10b981" }}>{profile?.wins || 0}</span> <span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#94a3b8" }}>/</span> <span style={{ color: "#ef4444" }}>{profile?.losses || 0}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Stat */}
-              <div className="profile-stat-box">
+              {/* Stat: Watch Time */}
+              <div id="tour-study-watchtime" className="profile-stat-box">
                 <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>Watch Time</div>
                 <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
                   {watchTime} <span style={{ fontSize: "13px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Mins</span>
@@ -3548,13 +3621,13 @@ export default function ProfilePanel({
           </div>
 
           {/* Right Column: Skills */}
-          <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: "28px", minWidth: 0 }}>
+          <div id="tour-mastery-roles" style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: "28px", minWidth: 0 }}>
             <h3 style={{ margin: 0, fontSize: "12px", color: isDarkMode ? "var(--text-muted)" : "#64748b", fontWeight: "800", letterSpacing: "3px", textTransform: "uppercase", borderBottom: isDarkMode ? "1px solid rgba(128,128,128,0.2)" : "1px solid rgba(0,0,0,0.08)", paddingBottom: "10px" }}>
               Mastery Roles
             </h3>
 
             {skills.length > 0 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <div id="tour-mastery-xp-bars" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 {skills.sort((a, b) => b.xp - a.xp).map((skill, idx) => {
                   const tierColor = TIER_COLORS[skill.tier] || TIER_COLORS["Novice"];
                   return (

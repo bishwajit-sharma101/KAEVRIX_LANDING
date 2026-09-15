@@ -258,39 +258,52 @@
           box-sizing: border-box;
         }
 
+        .hero-kicker-wrap {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+
         .hero-kicker-text {
-          display: block;
-          font-family: var(--font-ui);
-          font-size: clamp(12px, 1.3vw, 15px);
+          display: inline-block;
+          font-family: var(--font-ui), var(--font-outfit), sans-serif;
+          font-size: clamp(11.5px, 1.05vw, 13.5px);
           font-weight: 800;
-          letter-spacing: 1.8px;
+          letter-spacing: 2px;
           text-transform: uppercase;
           color: #943419;
           -webkit-text-fill-color: #943419;
-          margin-bottom: 14px;
+          background: rgba(224, 122, 95, 0.08);
+          border: 1px solid rgba(224, 122, 95, 0.2);
+          padding: 6px 18px;
+          border-radius: 100px;
         }
 
+        .clean-game-root .hero-title,
         .hero-title {
-          font-family: var(--font-display);
-          font-size: clamp(36px, 5.8vw, 80px);
-          line-height: 1.08;
+          font-family: var(--font-display), Georgia, serif;
+          font-size: clamp(48px, 6.2vw, 88px);
+          line-height: 1.04;
           color: var(--text-ink);
           -webkit-text-fill-color: var(--text-ink);
-          margin: 0 auto 20px auto;
-          max-width: 860px;
-          font-weight: 600;
-          letter-spacing: -0.5px;
+          margin: 0 auto 22px auto;
+          max-width: 960px;
+          font-weight: 700;
+          letter-spacing: -1.2px;
           word-break: break-word;
           overflow-wrap: break-word;
         }
 
+        .clean-game-root .hero-title-italic,
         .hero-title-italic {
           display: block;
           font-style: italic;
+          font-family: var(--font-display), Georgia, serif;
           color: var(--accent-terracotta);
           -webkit-text-fill-color: var(--accent-terracotta);
-          margin-top: clamp(4px, 1vw, 8px);
-          text-shadow: 0 0 24px rgba(224, 122, 95, 0.22);
+          margin-top: clamp(6px, 1.2vw, 12px);
+          text-shadow: 0 0 32px rgba(224, 122, 95, 0.28);
         }
 
         .hero-subtitle {

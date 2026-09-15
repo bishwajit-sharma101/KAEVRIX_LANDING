@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./CommandCenter.css";
 
 export default function CommandCenter({ backendUrl, onExit }) {
   const [loading, setLoading] = useState(true);

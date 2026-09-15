@@ -32,12 +32,8 @@ import {
   CheckCircle2,
   XCircle
 } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
-
-const AppClient = dynamic(() => import("../simulator/AppClient"), {
-  ssr: false,
-});
+import AppClient from "../simulator/AppClient";
 
 // =========================================================================
 // JOURNEY PHASES DATA WITH EDITORIAL HIERARCHY & RICH METRICS
@@ -175,7 +171,7 @@ const floatyBadges = [
     shortMeta: "4 Online",
     color: "var(--accent-navy)",
     colorHex: "#3D405B",
-    demoTab: "tavern",
+    demoTab: "community",
     animate: { y: [0, 10, 0], x: [0, -4, 0] },
     duration: 6.5,
     delay: 1.8,
@@ -502,7 +498,7 @@ function ArenaShowcase({ onOpenDemo }) {
           onClick={(e) => {
             e.stopPropagation();
             if (typeof onOpenDemo === "function") {
-              onOpenDemo("study");
+              onOpenDemo("duels");
             }
           }}
           title="Experience Demo"
@@ -653,7 +649,7 @@ function ChronosVelocityShowcase({ onOpenDemo }) {
           onClick={(e) => {
             e.stopPropagation();
             if (typeof onOpenDemo === "function") {
-              onOpenDemo("duels");
+              onOpenDemo("chronos");
             }
           }}
           title="Experience Demo"
@@ -1798,8 +1794,17 @@ export default function LandingPage() {
   }, []);
 
   const handleOpenDemo = (tab = "duels") => {
+    let normalizedTab = tab;
+    if (normalizedTab === "study" || normalizedTab === "arena") normalizedTab = "duels";
+    if (normalizedTab === "tavern") normalizedTab = "community";
+
     if (typeof window !== "undefined") {
-      if (tab === "sanctum") {
+      sessionStorage.setItem("kaevrix_demo_mode", "true");
+      sessionStorage.setItem("kaevrix_autostart_tour", "true");
+      ["duels", "pathfinder", "chronos", "community", "profile", "sanctum"].forEach(k => {
+        sessionStorage.removeItem(`kaevrix_seen_tour_${k}`);
+      });
+      if (normalizedTab === "sanctum") {
         sessionStorage.setItem("kaevrix_current_tab", "duels");
         sessionStorage.setItem("kaevrix_current_status", "solo_study");
         const defaultVideo = {
@@ -1815,7 +1820,7 @@ export default function LandingPage() {
         };
         sessionStorage.setItem("kaevrix_selected_solo_video", JSON.stringify(defaultVideo));
       } else {
-        sessionStorage.setItem("kaevrix_current_tab", tab);
+        sessionStorage.setItem("kaevrix_current_tab", normalizedTab);
         sessionStorage.setItem("kaevrix_current_status", "idle");
       }
     }
@@ -1983,13 +1988,21 @@ export default function LandingPage() {
 
           {/* Central Hero Column */}
           <div className="container hero-content">
+            <motion.div 
+              className="hero-kicker-wrap"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="hero-kicker-text">AI Learning &amp; Personalized Study Platform</span>
+            </motion.div>
+
             <motion.h1 
               className="hero-title"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              <span className="hero-kicker-text">AI Learning &amp; Personalized Study Platform</span>
               Level up in real life.
               <span className="hero-title-italic">The character is you.</span>
             </motion.h1>
@@ -2011,8 +2024,8 @@ export default function LandingPage() {
             >
               <button className="btn-primary-large" onClick={() => handleOpenDemo("duels")}>
                 <span className="btn-shimmer-sweep" />
-                <Swords size={18} />
-                <span>Start Adventure</span>
+                <Sparkles size={18} />
+                <span>Try Demo</span>
               </button>
               <button className="btn-secondary-large" onClick={() => smoothScrollTo("#save-point")}>
                 <Sparkles size={15} style={{ color: "var(--accent-terracotta)" }} />

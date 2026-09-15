@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as sound from "../../utils/audio";
 import { Clock, Shield, Swords, FileText, MapPin, FastForward, Check, Lock, Zap, Calendar, Target, Flame, Sparkles } from "lucide-react";
+import { startChronosTour } from "../../utils/tourGuide";
 
 export default function PathfinderScheduler({ 
   roadmap, 
@@ -14,6 +15,8 @@ export default function PathfinderScheduler({
 }) {
   const scheduleKey = `kaevrix_roadmap_schedule_${username}`;
   const todayProgressKey = `kaevrix_today_progress_${username}`;
+
+
 
   // YYYY-MM-DD helpers
   const getDateOffsetString = (offsetDays) => {
@@ -1113,11 +1116,11 @@ userVault.deposit(250); // { balance: 750, transactionCount: 1 }
       <div className="chronos-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "12px" }}>
         
         {/* Toggle between Daily / Weekly / Monthly charts */}
-        <div className="chronos-tab-selector" style={{ background: isDarkMode ? "rgba(255,255,255,0.02)" : "#f1f5f9" }}>
+        <div id="tour-chronos-tabs" className="chronos-tab-selector" style={{ background: isDarkMode ? "rgba(255,255,255,0.02)" : "#f1f5f9" }}>
           {[
-            { id: "daily", label: "Daily (7 Days)" },
-            { id: "weekly", label: "Weekly (4 Weeks)" },
-            { id: "monthly", label: "Monthly (3 Months)" }
+            { id: "daily", label: "Daily" },
+            { id: "weekly", label: "Weekly" },
+            { id: "monthly", label: "Monthly" }
           ].map(tab => (
             <button
               key={tab.id}
@@ -1138,7 +1141,7 @@ userVault.deposit(250); // { balance: 750, transactionCount: 1 }
 
         {/* Info Right Area */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{
+          <div id="tour-chronos-streak" style={{
             background: "linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(239, 68, 68, 0.15) 100%)",
             border: "1.5px solid #f59e0b",
             padding: "8px 18px",
@@ -1454,7 +1457,7 @@ userVault.deposit(250); // { balance: 750, transactionCount: 1 }
       <div className="scheduler-dashboard-grid">
         
         {/* Left/Center Area: Focus Bar Chart wrapped in HUD corners panel */}
-        <div className="hud-panel-wrapper" style={{ display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}>
+        <div id="tour-chronos-chart" className="hud-panel-wrapper" style={{ display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}>
           <div className="hud-corner-bracket hud-bracket-tl" />
           <div className="hud-corner-bracket hud-bracket-tr" />
           <div className="hud-corner-bracket hud-bracket-bl" />
@@ -1670,7 +1673,7 @@ userVault.deposit(250); // { balance: 750, transactionCount: 1 }
         }}>
 
 
-          <div className="telemetry-card" style={{ borderLeft: `3.5px solid ${speedBorderColor}`, borderTop: "none", borderRight: "none", borderBottom: "none" }}>
+          <div id="tour-chronos-speed" className="telemetry-card" style={{ borderLeft: `3.5px solid ${speedBorderColor}`, borderTop: "none", borderRight: "none", borderBottom: "none" }}>
             <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
               <Clock size={11} /> Study Speed
             </span>
@@ -1682,40 +1685,42 @@ userVault.deposit(250); // { balance: 750, transactionCount: 1 }
             </span>
           </div>
 
-          <div className="telemetry-card" style={{ borderLeft: "3.5px solid #a78bfa", borderTop: "none", borderRight: "none", borderBottom: "none" }}>
-            <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "5px" }}>
-              <Zap size={11} color="#a78bfa" /> Path Subtopics
-            </span>
-            <span style={{ fontSize: "20px", fontWeight: "900", color: "#a78bfa" }}>
-              {completedSubtopics} / {totalSubtopics}
-            </span>
-            <span style={{ fontSize: "10.5px", color: "var(--text-muted)", lineHeight: "1.3" }}>
-              {totalSubtopics - completedSubtopics} subtopics remaining to complete entire path.
-            </span>
-          </div>
+          <div id="tour-chronos-metrics" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="telemetry-card" style={{ borderLeft: "3.5px solid #a78bfa", borderTop: "none", borderRight: "none", borderBottom: "none" }}>
+              <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "5px" }}>
+                <Zap size={11} color="#a78bfa" /> Path Subtopics
+              </span>
+              <span style={{ fontSize: "20px", fontWeight: "900", color: "#a78bfa" }}>
+                {completedSubtopics} / {totalSubtopics}
+              </span>
+              <span style={{ fontSize: "10.5px", color: "var(--text-muted)", lineHeight: "1.3" }}>
+                {totalSubtopics - completedSubtopics} subtopics remaining to complete entire path.
+              </span>
+            </div>
 
-          <div className="telemetry-card" style={{ borderLeft: `3.5px solid ${daysToFinishBorder}`, borderTop: "none", borderRight: "none", borderBottom: "none" }}>
-            <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "5px" }}>
-              <Calendar size={11} color="#60a5fa" /> Days to Finish
-            </span>
-            <span style={{ fontSize: "20px", fontWeight: "900", color: daysToFinishColor }}>
-              {daysToFinishText}
-            </span>
-            <span style={{ fontSize: "10.5px", color: "var(--text-muted)", lineHeight: "1.3", display: "flex", alignItems: "center", gap: "4px" }}>
-              <Sparkles size={11} color="var(--neon-green)" /> {daysToFinishSubtext}
-            </span>
-          </div>
+            <div className="telemetry-card" style={{ borderLeft: `3.5px solid ${daysToFinishBorder}`, borderTop: "none", borderRight: "none", borderBottom: "none" }}>
+              <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "5px" }}>
+                <Calendar size={11} color="#60a5fa" /> Days to Finish
+              </span>
+              <span style={{ fontSize: "20px", fontWeight: "900", color: daysToFinishColor }}>
+                {daysToFinishText}
+              </span>
+              <span style={{ fontSize: "10.5px", color: "var(--text-muted)", lineHeight: "1.3", display: "flex", alignItems: "center", gap: "4px" }}>
+                <Sparkles size={11} color="var(--neon-green)" /> {daysToFinishSubtext}
+              </span>
+            </div>
 
-          <div className="telemetry-card" style={{ borderLeft: `3.5px solid ${goalMatchBorder}`, borderTop: "none", borderRight: "none", borderBottom: "none" }}>
-            <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "5px" }}>
-              <Target size={11} color="#10b981" /> Goal Match
-            </span>
-            <span style={{ fontSize: "20px", fontWeight: "900", color: goalMatchText }}>
-              {syncPercent}% Sync
-            </span>
-            <span style={{ fontSize: "10.5px", color: "var(--text-muted)", lineHeight: "1.3", display: "flex", alignItems: "center", gap: "4px" }}>
-              <Sparkles size={11} color="var(--neon-green)" /> {goalMatchSubtext}
-            </span>
+            <div className="telemetry-card" style={{ borderLeft: `3.5px solid ${goalMatchBorder}`, borderTop: "none", borderRight: "none", borderBottom: "none" }}>
+              <span style={{ fontSize: "10px", fontWeight: "850", color: "var(--text-muted)", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "5px" }}>
+                <Target size={11} color="#10b981" /> Goal Match
+              </span>
+              <span style={{ fontSize: "20px", fontWeight: "900", color: goalMatchText }}>
+                {syncPercent}% Sync
+              </span>
+              <span style={{ fontSize: "10.5px", color: "var(--text-muted)", lineHeight: "1.3", display: "flex", alignItems: "center", gap: "4px" }}>
+                <Sparkles size={11} color="var(--neon-green)" /> {goalMatchSubtext}
+              </span>
+            </div>
           </div>
 
         </div>
