@@ -574,37 +574,25 @@ export default function AppRouter(props) {
                   sound.playError();
                 }}
                 style={{
-                  height: "34px",
-                  padding: "0 12px",
-                  borderRadius: "18px",
+                  height: "32px",
+                  padding: "0 11px",
+                  borderRadius: "16px",
                   background: isDarkMode ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.04)",
-                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid rgba(0, 0, 0, 0.08)",
-                  color: isDarkMode ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.06)",
+                  color: isDarkMode ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
                   cursor: "not-allowed",
                   fontSize: "12px",
-                  fontWeight: "700",
+                  fontWeight: "600",
                   fontFamily: "var(--font-outfit), sans-serif",
-                  opacity: 0.75,
+                  opacity: 0.45,
                 }}
-                title="Profile Settings (Locked in Demo Mode)"
+                title="Settings"
               >
-                <Lock size={13} style={{ color: "#ef4444" }} />
+                <Settings size={13} style={{ opacity: 0.7 }} />
                 <span>Settings</span>
-                <span style={{
-                  fontSize: "8.5px",
-                  background: "rgba(239, 68, 68, 0.15)",
-                  color: "#ef4444",
-                  border: "1px solid rgba(239, 68, 68, 0.35)",
-                  padding: "1px 5px",
-                  borderRadius: "4px",
-                  fontWeight: "900",
-                  letterSpacing: "0.5px"
-                }}>
-                  LOCKED
-                </span>
               </button>
             ) : activeTab === "chronos" ? (
               <button
