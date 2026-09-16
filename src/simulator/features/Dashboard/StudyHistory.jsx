@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, memo } from "react";
 import * as sound from "../../utils/audio";
 import { parseMarkdownToHTML } from "../../utils/markdown";
 import { HIGH_QUALITY_NOTE_1, HIGH_QUALITY_NOTE_2 } from "../../utils/studyNotesData";
-import { RotateCcw, Download, BookOpen, Bookmark, Video } from "lucide-react";
+import { RotateCcw, Download, BookOpen, Bookmark, Video, Menu, X, ChevronRight } from "lucide-react";
 
 const getInitialHistory = () => {
   const d1Time = new Date(); d1Time.setDate(d1Time.getDate() - 2); d1Time.setHours(14, 30, 0, 0);
@@ -10,13 +10,13 @@ const getInitialHistory = () => {
 
   return [
     {
-      id: "sh-1",
+      id: "Fd9EyG3J62U",
       topic: "Execution Context & Call Stack",
       subtopicsCovered: 3,
       timestamp: d1Time.toISOString(),
       video: {
-        id: "sh-1",
-        videoId: "sh-1",
+        id: "Fd9EyG3J62U",
+        videoId: "Fd9EyG3J62U",
         title: "JavaScript Execution Context Call Stack In-Depth",
         duration: "32:15",
         channel: "Web Architecture Mastery"
@@ -44,13 +44,13 @@ const getInitialHistory = () => {
       ]
     },
     {
-      id: "sh-2",
+      id: "8aGhZQkoFbQ",
       topic: "Closures & Memory Encapsulation",
       subtopicsCovered: 3,
       timestamp: d2Time.toISOString(),
       video: {
-        id: "sh-2",
-        videoId: "sh-2",
+        id: "8aGhZQkoFbQ",
+        videoId: "8aGhZQkoFbQ",
         title: "Deep Dive into JS Closures & Memory Management",
         duration: "41:02",
         channel: "Engine Internals"
@@ -77,6 +77,39 @@ const getInitialHistory = () => {
 export default function StudyHistory({ username, isDarkMode, onStartSoloStudy }) {
   const [historyList, setHistoryList] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isDeckDrawerOpen, setIsDeckDrawerOpen] = useState(false);
+
+  // Listen for top header decks hamburger trigger
+  useEffect(() => {
+    const handleToggleDrawer = () => {
+      setIsDeckDrawerOpen(prev => !prev);
+    };
+    window.addEventListener("kaevrix-toggle-history-drawer", handleToggleDrawer);
+    return () => window.removeEventListener("kaevrix-toggle-history-drawer", handleToggleDrawer);
+  }, []);
+
+  // Close drawer on Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isDeckDrawerOpen) {
+        setIsDeckDrawerOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isDeckDrawerOpen]);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (isDeckDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isDeckDrawerOpen]);
 
   // Load history from localStorage on mount (ensures 2 curated items with high-quality note)
   useEffect(() => {
@@ -88,10 +121,12 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
       if (savedHistory) {
         let parsed = JSON.parse(savedHistory);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // If legacy data has != 2 items, outdated short notes, or missing video id, migrate to the 2 high quality items
+          // If legacy data has != 2 items, outdated short notes, or missing/dummy video id, migrate to the 2 high quality items
           const isLegacy = parsed.length !== 2 || 
             !parsed[0]?.video?.id || 
             !parsed[1]?.video?.id || 
+            parsed[0]?.video?.videoId === "sh-1" ||
+            parsed[1]?.video?.videoId === "sh-2" ||
             !parsed[0]?.notes || parsed[0].notes.length < 800 ||
             !parsed[1]?.notes || parsed[1].notes.length < 800;
           if (isLegacy) {
@@ -539,6 +574,64 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
     setSelectedItem(item);
   };
 
+  const renderDeckCards = (isDrawer = false) => (
+    historyList.map((item) => {
+      const isSelected = selectedItem?.id === item.id;
+      const dateStr = new Date(item.timestamp).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric"
+      });
+
+      return (
+        <div
+          key={item.id}
+          onClick={() => {
+            handleItemSelect(item);
+            if (isDrawer) {
+              setIsDeckDrawerOpen(false);
+            }
+          }}
+          className={`chrono-card ${isSelected ? "chrono-card-active" : ""}`}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
+            <span style={{
+              fontSize: "9px",
+              background: "rgba(255, 106, 0, 0.12)",
+              color: "#ff6a00",
+              padding: "2px 8px",
+              borderRadius: "10px",
+              fontWeight: "900",
+              letterSpacing: "0.5px"
+            }}>
+              {item.topic && item.topic.toUpperCase().substring(0, 16)}
+            </span>
+            <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: "600" }}>
+              {dateStr}
+            </span>
+          </div>
+
+          <h4 style={{
+            fontSize: "13px",
+            fontWeight: "800",
+            margin: "0 0 4px 0",
+            color: isSelected ? "#ff6a00" : "var(--text-light)",
+            lineHeight: "1.4",
+            fontFamily: "var(--font-outfit)",
+            display: "-webkit-box",
+            WebkitLineClamp: "2",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden"
+          }}>
+            {item.video.title}
+          </h4>
+          <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: "var(--text-muted)", marginTop: "3px" }}>
+            <Video size={12} color="#ff6a00" /> {item.video.channel}
+          </div>
+        </div>
+      );
+    })
+  );
+
   const handleRevisitClick = (item) => {
     if (onStartSoloStudy && item) {
       sound.playMatchFound();
@@ -674,18 +767,23 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
           text-overflow: ellipsis !important;
         }
 
-        /* Modern Action Buttons */
+        /* Modern Action Buttons - 50/50 balanced grid */
         .history-action-buttons-wrap {
-          display: flex !important;
-          gap: 8px !important;
-          align-items: center !important;
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 10px !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          margin-top: 8px !important;
         }
         .history-btn-primary, .history-btn-secondary {
-          display: inline-flex !important;
+          width: 100% !important;
+          min-width: 0 !important;
+          display: flex !important;
           align-items: center !important;
           justify-content: center !important;
           gap: 6px !important;
-          padding: 8px 16px !important;
+          padding: 10px 12px !important;
           border-radius: 10px !important;
           font-size: 12px !important;
           font-weight: 800 !important;
@@ -696,24 +794,24 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
           box-sizing: border-box !important;
         }
         .history-btn-primary {
-          background: linear-gradient(135deg, #ff6a00 0%, #ff8533 100%) !important;
+          background: linear-gradient(135deg, #ff6a00 0%, #ea580c 100%) !important;
           border: 1px solid rgba(255, 255, 255, 0.25) !important;
           color: #ffffff !important;
-          box-shadow: 0 4px 14px rgba(255, 106, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+          box-shadow: 0 4px 14px rgba(255, 106, 0, 0.28) !important;
         }
         .history-btn-primary:hover {
           filter: brightness(1.08) !important;
           transform: translateY(-1px) !important;
-          box-shadow: 0 6px 18px rgba(255, 106, 0, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+          box-shadow: 0 6px 18px rgba(255, 106, 0, 0.38) !important;
         }
         .history-btn-secondary {
           background: ${isDarkMode ? "rgba(255, 255, 255, 0.04)" : "#ffffff"} !important;
-          border: ${isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(255, 106, 0, 0.26)"} !important;
-          color: ${isDarkMode ? "#f8fafc" : "#1e293b"} !important;
-          box-shadow: ${isDarkMode ? "none" : "0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.6)"} !important;
+          border: 1.5px solid ${isDarkMode ? "rgba(255, 255, 255, 0.15)" : "#ea580c"} !important;
+          color: ${isDarkMode ? "#ffffff" : "#ea580c"} !important;
+          box-shadow: ${isDarkMode ? "none" : "0 2px 8px rgba(234, 88, 12, 0.1)"} !important;
         }
         .history-btn-secondary:hover {
-          background: ${isDarkMode ? "rgba(255, 255, 255, 0.08)" : "#f8fafc"} !important;
+          background: ${isDarkMode ? "rgba(255, 255, 255, 0.08)" : "#fff7ed"} !important;
           border-color: #ff6a00 !important;
           transform: translateY(-1px) !important;
           color: #ff6a00 !important;
@@ -737,23 +835,116 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
             font-size: 12px !important;
           }
           .history-action-buttons-wrap {
-            width: 100% !important;
-            display: flex !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
             gap: 8px !important;
+            width: 100% !important;
             margin-top: 6px !important;
           }
           .history-btn-primary, .history-btn-secondary {
-            flex: 1 1 0 !important;
+            width: 100% !important;
             min-width: 0 !important;
-            padding: 9px 6px !important;
+            padding: 10px 6px !important;
             font-size: 11px !important;
             white-space: nowrap !important;
+          }
+        }
+
+        /* Slide-over Side Panel Styles (opens from right) */
+        .history-deck-drawer-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.78);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          z-index: 99999;
+          display: flex;
+          justify-content: flex-end;
+          animation: drawerOverlayFadeIn 0.22s ease-out;
+        }
+        @keyframes drawerOverlayFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .history-deck-drawer-panel {
+          width: min(340px, 86vw);
+          height: 100%;
+          background: ${isDarkMode ? "#0d131f" : "#ffffff"};
+          border-left: 1px solid ${isDarkMode ? "rgba(255, 106, 0, 0.25)" : "#fed7aa"};
+          box-shadow: -12px 0 40px rgba(0, 0, 0, 0.55);
+          display: flex;
+          flex-direction: column;
+          padding: 20px 16px;
+          box-sizing: border-box;
+          animation: drawerSlideInRight 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes drawerSlideInRight {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        .history-drawer-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 14px;
+          margin-bottom: 12px;
+          border-bottom: 1px solid ${isDarkMode ? "rgba(255, 255, 255, 0.08)" : "#e2e8f0"};
+        }
+        .history-drawer-close-btn {
+          background: ${isDarkMode ? "rgba(255, 255, 255, 0.06)" : "#f1f5f9"};
+          border: 1px solid ${isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#cbd5e1"};
+          color: ${isDarkMode ? "#cbd5e1" : "#475569"};
+          border-radius: 8px;
+          width: 34px;
+          height: 34px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.18s ease;
+        }
+        .history-drawer-close-btn:hover {
+          background: #ff6a00;
+          border-color: #ff6a00;
+          color: #ffffff;
+        }
+        .history-drawer-cards-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          overflow-y: auto;
+          flex: 1;
+          padding-right: 4px;
+        }
+
+        @media (max-width: 768px) {
+          .study-history-sidebar-desktop {
+            display: none !important;
+          }
+          .history-detail-panel {
+            max-height: none !important;
+            overflow-y: visible !important;
+            padding: 16px 12px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .study-history-sidebar-desktop {
+            display: flex !important;
           }
         }
 
         /* Typography for rendered markdown */
         .history-notes-document {
           font-family: 'Inter', sans-serif;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+          word-break: break-word !important;
+          overflow-x: hidden !important;
         }
         .history-notes-document h1, .history-notes-document h2, .history-notes-document h3 {
           font-family: 'Outfit', sans-serif;
@@ -762,37 +953,50 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
           line-height: 1.2;
           color: #ff6a00;
         }
-        .history-notes-document h1 { font-size: 26px; margin: 30px 0 16px 0; border-bottom: 2px solid #ffedd5; padding-bottom: 8px; }
-        .history-notes-document h2 { font-size: 20px; margin: 24px 0 12px 0; border-bottom: 1px solid rgba(255, 106, 0, 0.15); padding-bottom: 6px; }
-        .history-notes-document h3 { font-size: 16px; margin: 20px 0 10px 0; }
-        .history-notes-document p { font-size: 14.5px; line-height: 1.75; margin-bottom: 16px; color: ${isDarkMode ? "rgba(255,255,255,0.85)" : "#334155"}; }
+        .history-notes-document h1 { font-size: 24px; margin: 26px 0 14px 0; border-bottom: 2px solid #ffedd5; padding-bottom: 8px; }
+        .history-notes-document h2 { font-size: 19px; margin: 22px 0 10px 0; border-bottom: 1px solid rgba(255, 106, 0, 0.15); padding-bottom: 6px; }
+        .history-notes-document h3 { font-size: 15.5px; margin: 18px 0 8px 0; }
+        .history-notes-document p { font-size: 14px; line-height: 1.7; margin-bottom: 14px; color: ${isDarkMode ? "rgba(255,255,255,0.85)" : "#334155"}; }
         .history-notes-document code {
           font-family: 'Fira Code', 'Courier New', monospace;
           background: ${isDarkMode ? "rgba(255, 106, 0, 0.1)" : "#fff7ed"};
           color: #ff6a00;
-          padding: 3px 6px;
+          padding: 2px 5px;
           border-radius: 4px;
-          font-size: 13.5px;
+          font-size: 13px;
         }
         .history-notes-document pre {
           background: #0f172a;
           color: #e2e8f0;
-          padding: 16px;
+          padding: 14px 16px;
           border-radius: 10px;
-          overflow-x: auto;
+          overflow-x: auto !important;
+          max-width: 100% !important;
           margin: 16px 0;
           border: 1px solid #1e293b;
+          box-sizing: border-box !important;
+          font-size: 12.5px;
+          line-height: 1.5;
         }
         .history-notes-document pre code {
           background: transparent !important;
           color: inherit !important;
           padding: 0 !important;
         }
+        .history-notes-document table {
+          display: block !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: auto !important;
+          box-sizing: border-box !important;
+          -webkit-overflow-scrolling: touch;
+          margin: 16px 0;
+        }
         .history-notes-document blockquote {
           border-left: 4px solid #ff6a00;
           background: ${isDarkMode ? "rgba(255,106,0,0.05)" : "#fff7ed"};
           margin: 1.5em 0;
-          padding: 12px 20px;
+          padding: 12px 18px;
           border-radius: 0 8px 8px 0;
           font-style: italic;
           color: ${isDarkMode ? "#fb923c" : "#c2410c"};
@@ -815,23 +1019,28 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
         borderBottom: isDarkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.08)",
         paddingBottom: "16px",
         flexWrap: "wrap",
-        gap: "16px"
+        gap: "16px",
+        width: "100%",
+        boxSizing: "border-box"
       }}>
-        <div>
-          <span style={{ 
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "11px",
-            fontWeight: "900",
-            color: "#ff6a00",
-            letterSpacing: "2px",
-            textTransform: "uppercase"
-          }}>
-            <BookOpen size={13} color="#ff6a00" /> QUEST ARCHIVES & STUDY CODEX
-          </span>
+        <div style={{ flex: "1 1 auto", minWidth: 0, width: "100%" }}>
+          <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+            <span style={{ 
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "11px",
+              fontWeight: "900",
+              color: "#ff6a00",
+              letterSpacing: "2px",
+              textTransform: "uppercase"
+            }}>
+              <BookOpen size={13} color="#ff6a00" /> QUEST ARCHIVES & STUDY CODEX
+            </span>
+          </div>
+
           <h2 style={{
-            fontSize: "36px",
+            fontSize: "34px",
             fontWeight: "900",
             margin: "6px 0 0 0",
             fontFamily: "var(--font-outfit)",
@@ -895,169 +1104,213 @@ export default function StudyHistory({ username, isDarkMode, onStartSoloStudy })
         </div>
       ) : (
         /* 2. Main Double-Panel HUD Layout */
-        <div className="study-history-grid">
-          {/* LEFT SIDEBAR: Timeline List */}
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-            maxHeight: "650px",
-            overflowY: "auto",
-            paddingRight: "6px"
-          }} className="custom-scrollbar">
-            {historyList.map((item) => {
-              const isSelected = selectedItem?.id === item.id;
-              const dateStr = new Date(item.timestamp).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric"
-              });
+        <>
+          <div className="study-history-grid" style={{ width: "100%", maxWidth: "100%", minWidth: 0 }}>
+            {/* LEFT SIDEBAR: Timeline List (Desktop only) */}
+            <div style={{
+              flexDirection: "column",
+              gap: "12px",
+              maxHeight: "650px",
+              overflowY: "auto",
+              paddingRight: "6px"
+            }} className="study-history-sidebar-desktop custom-scrollbar">
+              {renderDeckCards(false)}
+            </div>
 
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => handleItemSelect(item)}
-                  className={`chrono-card ${isSelected ? "chrono-card-active" : ""}`}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
-                    <span style={{
-                      fontSize: "9px",
-                      background: "rgba(255, 106, 0, 0.12)",
-                      color: "#ff6a00",
-                      padding: "2px 8px",
-                      borderRadius: "10px",
-                      fontWeight: "900",
-                      letterSpacing: "0.5px"
-                    }}>
-                      {item.topic && item.topic.toUpperCase().substring(0, 16)}
-                    </span>
-                    <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: "600" }}>
-                      {dateStr}
-                    </span>
-                  </div>
+            {/* RIGHT VIEWPORT: Content Detail View */}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              maxHeight: "650px",
+              overflowY: "auto",
+              boxSizing: "border-box",
+              width: "100%",
+              maxWidth: "100%",
+              minWidth: 0,
+              overflowX: "hidden"
+            }} className="history-detail-panel custom-scrollbar history-hud-panel">
+              <div className="history-corner-bracket hist-bracket-tl" />
+              <div className="history-corner-bracket hist-bracket-tr" />
+              <div className="history-corner-bracket hist-bracket-bl" />
+              <div className="history-corner-bracket hist-bracket-br" />
 
-                  <h4 style={{
-                    fontSize: "13px",
-                    fontWeight: "800",
-                    margin: "0 0 4px 0",
-                    color: isSelected ? "#ff6a00" : "var(--text-light)",
-                    lineHeight: "1.4",
-                    fontFamily: "var(--font-outfit)",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "2",
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden"
+              {selectedItem ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "20px", width: "100%", minWidth: 0 }}>
+                  
+                  {/* Header Action toolbar */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                    borderBottom: isDarkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
+                    paddingBottom: "16px",
+                    width: "100%",
+                    boxSizing: "border-box"
                   }}>
-                    {item.video.title}
-                  </h4>
-                  <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: "var(--text-muted)", marginTop: "3px" }}>
-                    <Video size={12} color="#ff6a00" /> {item.video.channel}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* RIGHT VIEWPORT: Content Detail View */}
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            maxHeight: "650px",
-            overflowY: "auto",
-            boxSizing: "border-box"
-          }} className="history-detail-panel custom-scrollbar history-hud-panel">
-            <div className="history-corner-bracket hist-bracket-tl" />
-            <div className="history-corner-bracket hist-bracket-tr" />
-            <div className="history-corner-bracket hist-bracket-bl" />
-            <div className="history-corner-bracket hist-bracket-br" />
-
-            {selectedItem ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-                
-                {/* Header Action toolbar */}
-                <div style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  borderBottom: isDarkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
-                  paddingBottom: "16px",
-                  flexWrap: "wrap",
-                  gap: "12px"
-                }}>
-                  <div>
-                    <span style={{ 
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "5px",
-                      fontSize: "10px",
-                      color: "#ff6a00",
-                      fontWeight: "900",
-                      letterSpacing: "1px",
-                      textTransform: "uppercase"
-                    }}>
-                      <Bookmark size={11} color="#ff6a00" /> ACTIVE STUDY CODEX
-                    </span>
-                    <h3 style={{
-                      fontSize: "18px",
-                      fontWeight: "900",
-                      margin: "4px 0 0 0",
-                      fontFamily: "var(--font-outfit)",
-                      color: "var(--text-light)"
-                    }}>
-                      {selectedItem.video.title}
-                    </h3>
-                  </div>
-
-                  <div className="history-action-buttons-wrap">
-                    <button
-                      className="history-btn-primary"
-                      onClick={() => handleRevisitClick(selectedItem)}
-                      title="Replay this lesson"
-                    >
-                      <RotateCcw size={13} strokeWidth={2.4} /> Resume Study
-                    </button>
-                    <button
-                      className="history-btn-secondary"
-                      onClick={() => handleDownloadNotes(selectedItem)}
-                      title="Export notes as PDF"
-                    >
-                      <Download size={13} color="#ff6a00" strokeWidth={2.4} /> Export PDF
-                    </button>
-                  </div>
-                </div>
-
-                {/* Split detail: Embedded Video + Markdown text */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-                  {selectedItem.video.videoId && (
-                    <div style={{ maxWidth: "560px", width: "100%", margin: "0 auto" }}>
-                      <iframe
-                        width="100%"
-                        height="315"
-                        src={`https://www.youtube.com/embed/${selectedItem.video.videoId}`}
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        style={{
-                          borderRadius: "16px",
-                          border: "1.5px solid rgba(255, 106, 0, 0.25)",
-                          boxShadow: "0 10px 25px rgba(0,0,0,0.15)"
-                        }}
-                      />
+                    <div>
+                      <span style={{ 
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        fontSize: "10px",
+                        color: "#ff6a00",
+                        fontWeight: "900",
+                        letterSpacing: "1px",
+                        textTransform: "uppercase"
+                      }}>
+                        <Bookmark size={11} color="#ff6a00" /> ACTIVE STUDY CODEX
+                      </span>
+                      <h3 style={{
+                        fontSize: "18px",
+                        fontWeight: "900",
+                        margin: "4px 0 0 0",
+                        fontFamily: "var(--font-outfit)",
+                        color: "var(--text-light)",
+                        lineHeight: "1.3"
+                      }}>
+                        {selectedItem.video.title}
+                      </h3>
                     </div>
-                  )}
 
-                  <StudyNotesContent notes={selectedItem.notes} isDarkMode={isDarkMode} />
+                    <div className="history-action-buttons-wrap">
+                      <button
+                        className="history-btn-primary"
+                        onClick={() => handleRevisitClick(selectedItem)}
+                        title="Replay this lesson"
+                      >
+                        <RotateCcw size={13} strokeWidth={2.4} /> Resume Study
+                      </button>
+                      <button
+                        className="history-btn-secondary"
+                        onClick={() => handleDownloadNotes(selectedItem)}
+                        title="Export notes as PDF"
+                      >
+                        <Download size={13} strokeWidth={2.4} /> Export PDF
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Split detail: Embedded Video + Markdown text */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "20px", width: "100%", minWidth: 0 }}>
+                    {selectedItem.video?.videoId && (
+                      <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", minWidth: 0 }}>
+                        <div style={{
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16 / 9",
+                          borderRadius: "14px",
+                          overflow: "hidden",
+                          border: isDarkMode ? "1.5px solid rgba(255, 106, 0, 0.35)" : "1.5px solid #fed7aa",
+                          boxShadow: isDarkMode ? "0 10px 30px rgba(0,0,0,0.5)" : "0 8px 24px rgba(255, 106, 0, 0.12)",
+                          background: "#000000"
+                        }}>
+                          <iframe
+                            width="100%"
+                            height="100%"
+                            src={`https://www.youtube.com/embed/${selectedItem.video.videoId}`}
+                            title={selectedItem.video.title || "YouTube video player"}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              border: "none"
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ width: "100%", minWidth: 0, boxSizing: "border-box" }}>
+                      <StudyNotesContent notes={selectedItem.notes} isDarkMode={isDarkMode} />
+                    </div>
+                  </div>
+
+                </div>
+              ) : (
+                <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", minHeight: "350px", color: "var(--text-muted)" }}>
+                  Select a completed study deck from the list to view its details.
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* SLIDE-OUT SIDE PANEL (Opens from right side) */}
+          {isDeckDrawerOpen && (
+            <div 
+              className="history-deck-drawer-overlay"
+              onClick={() => setIsDeckDrawerOpen(false)}
+            >
+              <div 
+                className="history-deck-drawer-panel"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className="history-drawer-header">
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "10px",
+                      background: "rgba(255, 106, 0, 0.15)",
+                      border: "1px solid rgba(255, 106, 0, 0.35)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <BookOpen size={18} color="#ff6a00" />
+                    </div>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "900", fontFamily: "var(--font-outfit)", color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
+                        History Decks
+                      </h3>
+                      <div style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: "600" }}>
+                        {historyList.length} completed guides
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="history-drawer-close-btn"
+                    onClick={() => setIsDeckDrawerOpen(false)}
+                    aria-label="Close History Panel"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
 
+                {/* Instruction Banner */}
+                <div style={{
+                  padding: "10px 12px",
+                  background: isDarkMode ? "rgba(255, 106, 0, 0.08)" : "#fff7ed",
+                  borderRadius: "10px",
+                  fontSize: "11.5px",
+                  color: isDarkMode ? "#fb923c" : "#c2410c",
+                  lineHeight: "1.4",
+                  marginBottom: "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  border: "1px solid rgba(255, 106, 0, 0.18)"
+                }}>
+                  <span style={{ fontSize: "14px" }}>📚</span>
+                  <span>Tap any history deck to load its lesson notes and video.</span>
+                </div>
+
+                {/* History Cards inside side panel */}
+                <div className="history-drawer-cards-wrap custom-scrollbar">
+                  {renderDeckCards(true)}
+                </div>
               </div>
-            ) : (
-              <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", minHeight: "350px", color: "var(--text-muted)" }}>
-                Select a completed study deck from the list to view its details.
-              </div>
-            )}
-          </div>
-        </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

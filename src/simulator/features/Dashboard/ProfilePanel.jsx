@@ -1090,11 +1090,12 @@ const ProfileStyles = () => (
           flex-wrap: wrap;
         }
         .profile-combat-stats-row {
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          gap: clamp(20px, 4vw, 48px);
-          align-items: center;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: clamp(16px, 3vw, 36px);
+          align-items: flex-start;
+          width: 100%;
+          box-sizing: border-box;
         }
         .profile-skill-row {
           display: flex;
@@ -1214,18 +1215,18 @@ const ProfileStyles = () => (
             min-width: 0 !important;
           }
           .profile-combat-stats-row {
-            display: flex !important;
-            justify-content: space-between !important;
-            gap: 8px !important;
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 12px !important;
             width: 100% !important;
             box-sizing: border-box !important;
           }
           .profile-stat-box {
-            flex: 1 !important;
             min-width: 0 !important;
           }
           .profile-stat-number {
-            font-size: 24px !important;
+            font-size: clamp(18px, 5.5vw, 24px) !important;
+            white-space: nowrap !important;
           }
           .profile-skill-row {
             gap: 6px !important;
@@ -3591,26 +3592,23 @@ export default function ProfilePanel({
             </h3>
             
             <div className="profile-combat-stats-row">
-              {/* Stat: Win Rate + W/L Spread Highlight Container */}
-              <div id="tour-combat-winrate" style={{ display: "flex", gap: "clamp(20px, 4vw, 48px)", alignItems: "center" }}>
-                {/* Stat */}
-                <div className="profile-stat-box">
-                  <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>Win Rate</div>
-                  <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
-                    {winRate}<span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#64748b" }}>%</span>
-                  </div>
+              {/* Stat 1: Win Rate */}
+              <div id="tour-combat-winrate" className="profile-stat-box">
+                <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>Win Rate</div>
+                <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
+                  {winRate}<span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#64748b" }}>%</span>
                 </div>
-                
-                {/* Stat */}
-                <div className="profile-stat-box">
-                  <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>W/L Spread</div>
-                  <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
-                    <span style={{ color: "#10b981" }}>{profile?.wins || 0}</span> <span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#94a3b8" }}>/</span> <span style={{ color: "#ef4444" }}>{profile?.losses || 0}</span>
-                  </div>
+              </div>
+              
+              {/* Stat 2: W/L Spread */}
+              <div className="profile-stat-box">
+                <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>W/L Spread</div>
+                <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>
+                  <span style={{ color: "#10b981" }}>{profile?.wins || 0}</span> <span style={{ fontSize: "16px", color: isDarkMode ? "var(--text-muted)" : "#94a3b8" }}>/</span> <span style={{ color: "#ef4444" }}>{profile?.losses || 0}</span>
                 </div>
               </div>
 
-              {/* Stat: Watch Time */}
+              {/* Stat 3: Watch Time */}
               <div id="tour-study-watchtime" className="profile-stat-box">
                 <div style={{ fontSize: "10px", color: isDarkMode ? "var(--text-muted)" : "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px", fontWeight: "700" }}>Watch Time</div>
                 <div className="profile-stat-number" style={{ color: isDarkMode ? "var(--text-light)" : "#0f172a" }}>

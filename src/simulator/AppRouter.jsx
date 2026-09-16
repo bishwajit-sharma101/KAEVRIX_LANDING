@@ -16,7 +16,7 @@ import SoloStudyRoom from "./features/SoloStudy/SoloStudyRoom";
 import ModeSelection from "./features/GameArena/ModeSelection";
 import CommandCenter from "./features/Admin/CommandCenter";
 import PracticeSheetPage from "./features/Roadmap/PracticeSheetPage";
-import { Swords, Compass, Clock, History, Users, Trophy, User, Lock, Sun, Moon, LogOut, Settings, Sparkles } from "lucide-react";
+import { Swords, Compass, Clock, History, Users, Trophy, User, Lock, Sun, Moon, LogOut, Settings, Sparkles, Menu } from "lucide-react";
 import { 
   startKaevrixTour, 
   startPathfinderTour, 
@@ -493,8 +493,8 @@ export default function AppRouter(props) {
             </div>
           </div>
 
-          {/* Desktop Search Bar (shown only on large viewports) */}
-          {(activeTab !== "chronos" && !isPathfinderTab) && (
+          {/* Desktop Search Bar (shown only on large viewports, hidden on chronos, pathfinder, and history) */}
+          {(activeTab !== "chronos" && !isPathfinderTab && activeTab !== "history") && (
             <div id="tour-search-bar" className="header-search-container desktop-search-only">
             <form 
               onSubmit={handleLocalSearchSubmit} 
@@ -624,6 +624,32 @@ export default function AppRouter(props) {
                 title="Open Scheduler System Settings"
               >
                 <Settings size={18} />
+              </button>
+            ) : activeTab === "history" ? (
+              <button 
+                className="header-history-hamburger-trigger"
+                onClick={() => {
+                  sound.playClockTick();
+                  window.dispatchEvent(new CustomEvent("kaevrix-toggle-history-drawer"));
+                }}
+                style={{
+                  height: "36px",
+                  padding: "0 12px",
+                  borderRadius: "18px",
+                  background: isDarkMode ? "rgba(255, 106, 0, 0.18)" : "#fff7ed",
+                  border: isDarkMode ? "1.5px solid rgba(255, 106, 0, 0.45)" : "1.5px solid #fed7aa",
+                  color: "#ff6a00",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+                title="Study History Decks"
+                aria-label="Open Study Decks Menu"
+              >
+                <Menu size={18} strokeWidth={2.5} />
+                <span style={{ fontSize: "11px", fontWeight: "800", letterSpacing: "0.5px", fontFamily: "var(--font-outfit), sans-serif" }}>DECKS</span>
               </button>
             ) : !isPathfinderTab ? (
               <button 
