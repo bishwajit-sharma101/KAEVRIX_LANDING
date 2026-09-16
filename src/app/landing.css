@@ -4262,10 +4262,10 @@
           .hero-title-main {
             display: block !important;
             white-space: nowrap !important;
-            font-size: clamp(33px, 8.6vw, 42px) !important;
-            line-height: 1.08 !important;
+            font-size: clamp(38px, 10.5vw, 50px) !important;
+            line-height: 1.06 !important;
             font-weight: 700 !important;
-            letter-spacing: -0.025em !important;
+            letter-spacing: -0.03em !important;
             color: var(--text-ink) !important;
             text-align: center !important;
             width: 100% !important;
@@ -4275,8 +4275,8 @@
             display: block !important;
             white-space: nowrap !important;
             font-style: italic !important;
-            font-size: clamp(24px, 6.6vw, 31px) !important;
-            line-height: 1.15 !important;
+            font-size: clamp(28px, 7.8vw, 36px) !important;
+            line-height: 1.12 !important;
             color: var(--accent-terracotta) !important;
             text-shadow: 0 0 24px rgba(224, 122, 95, 0.28) !important;
             margin-top: 4px !important;
@@ -4465,9 +4465,9 @@
             padding: 0 !important;
           }
           .hero-title-main {
-            font-size: clamp(31px, 8.6vw, 36px) !important;
-            line-height: 1.08 !important;
-            letter-spacing: -0.025em !important;
+            font-size: clamp(36px, 10.4vw, 45px) !important;
+            line-height: 1.06 !important;
+            letter-spacing: -0.03em !important;
             white-space: nowrap !important;
             display: block !important;
             width: 100% !important;
@@ -4475,8 +4475,8 @@
           }
           .clean-game-root .hero-title-italic,
           .hero-title-italic {
-            font-size: clamp(23px, 6.6vw, 28px) !important;
-            line-height: 1.15 !important;
+            font-size: clamp(26px, 7.6vw, 33px) !important;
+            line-height: 1.12 !important;
             display: block !important;
             white-space: nowrap !important;
             margin-top: 4px !important;
@@ -4572,8 +4572,9 @@
             padding: 0 !important;
           }
           .hero-title-main {
-            font-size: clamp(27px, 8.2vw, 31px) !important;
-            letter-spacing: -0.025em !important;
+            font-size: clamp(31px, 9.6vw, 35px) !important;
+            letter-spacing: -0.028em !important;
+            line-height: 1.06 !important;
             white-space: nowrap !important;
             display: block !important;
             width: 100% !important;
@@ -4581,7 +4582,8 @@
           }
           .clean-game-root .hero-title-italic,
           .hero-title-italic {
-            font-size: clamp(20px, 6.2vw, 24px) !important;
+            font-size: clamp(23px, 7.2vw, 27px) !important;
+            line-height: 1.12 !important;
             display: block !important;
             white-space: nowrap !important;
             margin-top: 3px !important;
