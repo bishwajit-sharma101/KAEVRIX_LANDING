@@ -1916,10 +1916,6 @@ export default function LandingPage() {
           <a href="#journey" className="nav-link" onClick={(e) => { e.preventDefault(); smoothScrollTo('#journey'); }}>The Journey</a>
           <a href="#lore" className="nav-link" onClick={(e) => { e.preventDefault(); smoothScrollTo('#lore'); }}>FAQ</a>
         </div>
-        <button className="mobile-nav-demo-btn" onClick={() => handleOpenDemo("duels")}>
-          <Sparkles size={13} />
-          <span>Demo</span>
-        </button>
       </nav>
 
       <main>
