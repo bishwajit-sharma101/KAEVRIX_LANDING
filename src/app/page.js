@@ -123,10 +123,10 @@ const floatyBadges = [
   {
     id: "sanctum",
     icon: BookOpen,
-    title: "Study & Quiz Mode",
-    shortTitle: "Study & Quiz",
-    meta: "AI Notes • Auto-Generated",
-    shortMeta: "AI Notes",
+    title: "Sanctum Study",
+    shortTitle: "Sanctum Study",
+    meta: "AI Synthesis",
+    shortMeta: "AI Synthesis",
     color: "var(--accent-terracotta)",
     colorHex: "#E07A5F",
     demoTab: "sanctum",
@@ -137,10 +137,10 @@ const floatyBadges = [
   {
     id: "chronos",
     icon: Clock,
-    title: "Study Progress Tracker",
-    shortTitle: "Progress Tracker",
-    meta: "1.8 hrs/day • PDF Notes",
-    shortMeta: "1.8 hrs/day",
+    title: "Chronos Velocity",
+    shortTitle: "Chronos Velocity",
+    meta: "2.4x Velocity",
+    shortMeta: "2.4x Velocity",
     color: "#E76F51",
     colorHex: "#E76F51",
     demoTab: "chronos",
@@ -151,10 +151,10 @@ const floatyBadges = [
   {
     id: "tree",
     icon: BrainCircuit,
-    title: "Your Skill Tree",
-    shortTitle: "Skill Tree",
-    meta: "12 Topics Unlocked",
-    shortMeta: "12 Unlocked",
+    title: "Neural Skill Tree",
+    shortTitle: "Neural Skill Tree",
+    meta: "Tier IV Nodes",
+    shortMeta: "Tier IV Nodes",
     color: "var(--accent-sage)",
     colorHex: "#81B29A",
     demoTab: "pathfinder",
@@ -165,10 +165,10 @@ const floatyBadges = [
   {
     id: "tavern",
     icon: Users,
-    title: "Study Together",
-    shortTitle: "Study Together",
-    meta: "4 Friends Online",
-    shortMeta: "4 Online",
+    title: "Tavern Gathering",
+    shortTitle: "Tavern Gathering",
+    meta: "4 in Co-Op",
+    shortMeta: "4 in Co-Op",
     color: "var(--accent-navy)",
     colorHex: "#3D405B",
     demoTab: "community",
@@ -2013,7 +2013,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              Kaevrix is a personalized AI learning platform that turns anything you want to learn into a <span className="hero-hl hl-terra">visual skill tree</span>. Quiz yourself with <span className="hero-hl hl-sage">AI-powered study notes</span>, track your <span className="hero-hl hl-navy">daily progress</span>, and actually remember what you studied.
+              Kaevrix transforms any craft or subject into a <span className="hero-hl hl-terra">living RPG skill tree</span>. Conquer <span className="hero-hl hl-sage">active recall battles</span>, embark on synchronized <span className="hero-hl hl-navy">tavern raids</span>, and turn scattered tutorials into permanent mastery.
             </motion.p>
 
             <motion.div 
@@ -2024,8 +2024,8 @@ export default function LandingPage() {
             >
               <button className="btn-primary-large" onClick={() => handleOpenDemo("duels")}>
                 <span className="btn-shimmer-sweep" />
-                <Sparkles size={18} />
-                <span>Try Demo</span>
+                <Swords size={18} />
+                <span>Start Adventure</span>
               </button>
               <button className="btn-secondary-large" onClick={() => smoothScrollTo("#save-point")}>
                 <Sparkles size={15} style={{ color: "var(--accent-terracotta)" }} />
@@ -2046,7 +2046,7 @@ export default function LandingPage() {
                 <div className="avatar-mini" style={{ background: "var(--accent-sage)", color: "white" }}>⚡</div>
               </div>
               <div className="proof-text">
-                <span className="proof-highlight">2,400+ learners</span> signed up for early access
+                <span className="proof-highlight">2,400+ adventurers</span> enrolled for early realm access
               </div>
               <span className="proof-live-dot" title="Live roster" />
             </motion.div>
@@ -2060,7 +2060,7 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
-            <span className="scroll-prompt-text">See How It Works</span>
+            <span className="scroll-prompt-text">Explore The Skill Tree</span>
             <motion.div 
               animate={{ y: [0, 6, 0] }} 
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}

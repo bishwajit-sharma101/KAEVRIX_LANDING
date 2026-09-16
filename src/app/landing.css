@@ -4230,8 +4230,11 @@
         }
 
         @media (max-width: 768px) {
+          .hero-kicker-wrap {
+            display: none !important;
+          }
           .clean-nav {
-            height: 60px;
+            height: 56px;
             padding: 0 16px;
           }
           .hero-section {
@@ -4242,7 +4245,7 @@
             min-height: 100svh;
             min-height: 100dvh;
             max-height: 100dvh;
-            padding: 64px 16px 42px 16px;
+            padding: 56px 16px 28px 16px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -4253,7 +4256,7 @@
           }
           .hero-content {
             width: 100%;
-            max-width: 480px;
+            max-width: 420px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -4261,53 +4264,56 @@
             justify-content: center;
             position: relative;
             z-index: 3;
-            padding: 0 6px;
+            padding: 0 8px;
+            box-sizing: border-box;
           }
           .hero-title {
-            font-size: clamp(34px, 9.2vw, 46px);
+            font-size: clamp(34px, 9vw, 44px);
             line-height: 1.05;
             margin: 0 auto 12px auto;
             letter-spacing: -0.6px;
             font-weight: 600;
             width: 100%;
+            text-align: center;
           }
           .hero-title-italic {
             display: block;
             font-style: italic;
             color: var(--accent-terracotta);
             text-shadow: 0 0 28px rgba(224, 122, 95, 0.32);
-            margin-top: 5px;
+            margin-top: 4px;
           }
           .hero-subtitle {
-            font-size: 14px;
-            line-height: 1.54;
-            max-width: 380px;
-            width: 96%;
-            margin: 0 auto 20px auto;
-            padding: 0 2px;
+            font-size: clamp(13px, 3.7vw, 14.5px);
+            line-height: 1.52;
+            max-width: 360px;
+            width: 100%;
+            margin: 0 auto 18px auto;
+            padding: 0 4px;
             color: var(--text-muted);
+            text-align: center;
           }
           .hero-actions {
             flex-direction: column;
-            gap: 10px;
+            gap: 9px;
             width: 100%;
-            max-width: 310px;
+            max-width: 290px;
             margin: 0 auto;
           }
           .btn-primary-large {
             width: 100%;
-            padding: 13.5px 22px;
-            font-size: 14px;
-            min-height: 48px;
+            padding: 13px 20px;
+            font-size: 13.5px;
+            min-height: 46px;
             justify-content: center;
             letter-spacing: 0.8px;
             box-shadow: 0 6px 22px rgba(224, 122, 95, 0.42), 0 2px 6px rgba(45, 36, 31, 0.08);
           }
           .btn-secondary-large {
             width: 100%;
-            padding: 12px 20px;
-            font-size: 13.5px;
-            min-height: 45px;
+            padding: 11.5px 18px;
+            font-size: 13px;
+            min-height: 43px;
             justify-content: center;
             letter-spacing: 0.8px;
             background: rgba(255, 255, 255, 0.88);
@@ -4320,29 +4326,31 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 15px;
+            margin-top: 13px;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(45, 36, 31, 0.09);
-            padding: 5px 15px 5px 9px;
+            padding: 4px 14px 4px 8px;
             border-radius: 999px;
             box-shadow: 0 4px 16px rgba(45, 36, 31, 0.05);
             text-align: center;
+            z-index: 3;
+            position: relative;
           }
           .avatar-mini {
-            width: 24px;
-            height: 24px;
-            font-size: 11px;
-            margin-left: -6px;
+            width: 22px;
+            height: 22px;
+            font-size: 10.5px;
+            margin-left: -5px;
           }
           .proof-text {
-            font-size: 12px;
+            font-size: 11.5px;
             line-height: 1.35;
           }
           .hero-scroll-prompt {
             position: absolute;
-            bottom: 14px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             margin-top: 0;
@@ -4350,11 +4358,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            z-index: 10;
+            gap: 3px;
+            z-index: 4;
           }
           .scroll-prompt-text {
-            font-size: 10px;
+            font-size: 9.5px;
             letter-spacing: 1.8px;
             font-weight: 800;
           }
@@ -4376,8 +4384,8 @@
             display: block;
           }
           .floaty-badge {
-            padding: 6px 13px 6px 8px;
-            gap: 7px;
+            padding: 5.5px 12px 5.5px 7px;
+            gap: 6px;
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
@@ -4386,15 +4394,15 @@
             border-radius: 999px;
           }
           .floaty-icon-box {
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
           }
           .floaty-icon-box svg {
-            width: 13px;
-            height: 13px;
+            width: 12px;
+            height: 12px;
           }
           .floaty-title {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 800;
             line-height: 1.15;
             white-space: nowrap;
@@ -4409,19 +4417,19 @@
             white-space: nowrap;
           }
           .floaty-badge-sanctum {
-            top: 13.5%;
+            top: clamp(62px, 9vh, 76px);
             left: 10px;
           }
           .floaty-badge-chronos {
-            top: 13.5%;
+            top: clamp(62px, 9vh, 76px);
             right: 10px;
           }
           .floaty-badge-tree {
-            bottom: 11.5%;
+            bottom: clamp(44px, 6.5vh, 58px);
             left: 10px;
           }
           .floaty-badge-tavern {
-            bottom: 11.5%;
+            bottom: clamp(44px, 6.5vh, 58px);
             right: 10px;
           }
           .floaty-runes-layer {
@@ -4430,151 +4438,161 @@
         }
 
         @media (max-width: 480px) {
+          .hero-kicker-wrap {
+            display: none !important;
+          }
           .clean-nav {
-            height: 54px;
+            height: 52px;
             padding: 0 14px;
           }
           .logo-text {
-            font-size: 19px;
+            font-size: 18px;
           }
           .hero-section {
-            padding: 58px 12px 38px 12px;
+            padding: 52px 10px 24px 10px;
           }
           .hero-content {
             max-width: 100%;
             padding: 0 2px;
           }
           .hero-title {
-            font-size: clamp(32px, 9.8vw, 42px);
+            font-size: clamp(30px, 8.6vw, 38px);
             line-height: 1.05;
             margin-bottom: 10px;
           }
           .hero-title-italic {
-            margin-top: 4px;
+            margin-top: 3px;
           }
           .hero-subtitle {
-            font-size: 13.5px;
-            line-height: 1.5;
-            margin-bottom: 18px;
-            max-width: 340px;
+            font-size: 13px;
+            line-height: 1.48;
+            margin-bottom: 15px;
+            max-width: 320px;
             width: 95%;
           }
           .hero-actions {
-            max-width: 295px;
-            gap: 9px;
+            max-width: 275px;
+            gap: 8px;
           }
           .btn-primary-large {
-            padding: 13px 18px;
-            font-size: 13.5px;
-            min-height: 46px;
+            padding: 12px 16px;
+            font-size: 13px;
+            min-height: 44px;
           }
           .btn-secondary-large {
-            padding: 11px 16px;
-            font-size: 12.5px;
-            min-height: 42px;
+            padding: 10.5px 14px;
+            font-size: 12px;
+            min-height: 40px;
           }
           .hero-social-proof {
-            margin-top: 12px;
-            padding: 5px 13px 5px 7px;
+            margin-top: 10px;
+            padding: 3.5px 12px 3.5px 6px;
           }
           .proof-text {
-            font-size: 11px;
+            font-size: 10.5px;
           }
           .hero-scroll-prompt {
-            bottom: 10px;
+            bottom: 8px;
           }
           .floaty-badge {
-            padding: 5px 11px 5px 6px;
-            gap: 6px;
+            padding: 4.5px 10px 4.5px 5.5px;
+            gap: 5px;
           }
           .floaty-icon-box {
-            width: 23px;
-            height: 23px;
+            width: 22px;
+            height: 22px;
           }
           .floaty-icon-box svg {
-            width: 11.5px;
-            height: 11.5px;
+            width: 11px;
+            height: 11px;
           }
           .floaty-title {
-            font-size: 10.5px;
+            font-size: 10px;
             font-weight: 800;
           }
           .floaty-meta {
-            font-size: 8.5px;
+            font-size: 8px;
             font-weight: 600;
           }
           .floaty-badge-sanctum {
-            top: 12.5%;
-            left: 8px;
+            top: clamp(58px, 8vh, 68px);
+            left: 6px;
           }
           .floaty-badge-chronos {
-            top: 12.5%;
-            right: 8px;
+            top: clamp(58px, 8vh, 68px);
+            right: 6px;
           }
           .floaty-badge-tree {
-            bottom: 10.5%;
-            left: 8px;
+            bottom: clamp(38px, 5.5vh, 50px);
+            left: 6px;
           }
           .floaty-badge-tavern {
-            bottom: 10.5%;
-            right: 8px;
+            bottom: clamp(38px, 5.5vh, 50px);
+            right: 6px;
           }
         }
 
         @media (max-width: 360px) {
+          .hero-kicker-wrap {
+            display: none !important;
+          }
           .clean-nav {
             padding: 0 10px;
             height: 48px;
           }
           .hero-section {
-            padding: 48px 6px 32px 6px;
+            padding: 48px 6px 20px 6px;
           }
           .hero-title {
-            font-size: 27px;
-            line-height: 1.1;
+            font-size: 26px;
+            line-height: 1.08;
           }
           .hero-subtitle {
-            font-size: 12px;
-            line-height: 1.42;
-            margin-bottom: 12px;
+            font-size: 11.5px;
+            line-height: 1.4;
+            margin-bottom: 11px;
           }
           .hero-actions {
-            max-width: 250px;
-            gap: 7px;
+            max-width: 240px;
+            gap: 6px;
           }
           .btn-primary-large {
             font-size: 12px;
-            padding: 10px 12px;
-            min-height: 40px;
-          }
-          .btn-secondary-large {
-            font-size: 11.5px;
-            padding: 9px 12px;
+            padding: 9.5px 12px;
             min-height: 38px;
           }
+          .btn-secondary-large {
+            font-size: 11px;
+            padding: 8.5px 12px;
+            min-height: 36px;
+          }
+          .hero-social-proof {
+            margin-top: 8px;
+            padding: 3px 10px 3px 5px;
+          }
           .proof-text {
-            font-size: 10.5px;
+            font-size: 9.5px;
           }
           .hero-scroll-prompt {
-            bottom: 6px;
+            bottom: 4px;
           }
           .floaty-meta {
             display: none;
           }
           .floaty-badge-sanctum {
-            top: 11.5%;
-            left: 5px;
+            top: clamp(52px, 7vh, 60px);
+            left: 4px;
           }
           .floaty-badge-chronos {
-            top: 11.5%;
-            right: 5px;
+            top: clamp(52px, 7vh, 60px);
+            right: 4px;
           }
           .floaty-badge-tree {
-            bottom: 9.5%;
-            left: 5px;
+            bottom: clamp(32px, 4.5vh, 42px);
+            left: 4px;
           }
           .floaty-badge-tavern {
-            bottom: 9.5%;
-            right: 5px;
+            bottom: clamp(32px, 4.5vh, 42px);
+            right: 4px;
           }
         }
