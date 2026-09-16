@@ -295,6 +295,11 @@
           overflow-wrap: break-word;
         }
 
+        .clean-game-root .hero-title-main,
+        .hero-title-main {
+          display: block;
+        }
+
         .clean-game-root .hero-title-italic,
         .hero-title-italic {
           display: block;
@@ -3300,17 +3305,6 @@
         }
 
         @media (max-width: 768px) {
-          .hero-title {
-            font-size: clamp(44px, 11vw, 58px);
-            line-height: 1.06;
-            margin-bottom: 20px;
-          }
-          .hero-subtitle {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 28px;
-            padding: 0 8px;
-          }
           .sticky-container {
             padding: 24px 14px 18px 14px;
           }
@@ -3791,16 +3785,6 @@
         }
 
         @media (max-width: 480px) {
-          .hero-title {
-            font-size: clamp(38px, 10.2vw, 48px);
-            line-height: 1.08;
-            margin-bottom: 16px;
-          }
-          .hero-subtitle {
-            font-size: 14.5px;
-            line-height: 1.55;
-            margin-bottom: 22px;
-          }
           .sticky-container {
             padding: 20px 12px 16px 12px;
           }
@@ -4229,7 +4213,7 @@
           }
         }
 
-        @media (max-width: 768px) {
+                @media (max-width: 768px) {
           .hero-kicker-wrap {
             display: none !important;
           }
@@ -4245,7 +4229,7 @@
             min-height: 100svh;
             min-height: 100dvh;
             max-height: 100dvh;
-            padding: 56px 16px 28px 16px;
+            padding: 56px 6px 24px 6px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -4255,8 +4239,8 @@
             overflow: hidden;
           }
           .hero-content {
-            width: 100%;
-            max-width: 420px;
+            width: 100% !important;
+            max-width: 100% !important;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -4264,56 +4248,72 @@
             justify-content: center;
             position: relative;
             z-index: 3;
-            padding: 0 8px;
+            padding: 0 3px !important;
             box-sizing: border-box;
           }
+          .clean-game-root .hero-title,
           .hero-title {
-            font-size: clamp(34px, 9vw, 44px);
-            line-height: 1.05;
-            margin: 0 auto 12px auto;
-            letter-spacing: -0.6px;
-            font-weight: 600;
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto 8px auto !important;
+            padding: 0 !important;
             text-align: center;
           }
+          .hero-title-main {
+            display: block !important;
+            white-space: nowrap !important;
+            font-size: clamp(38px, 11.8vw, 54px) !important;
+            line-height: 1.04 !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.035em !important;
+            color: var(--text-ink) !important;
+            text-align: center !important;
+            width: 100% !important;
+          }
+          .clean-game-root .hero-title-italic,
           .hero-title-italic {
-            display: block;
-            font-style: italic;
-            color: var(--accent-terracotta);
-            text-shadow: 0 0 28px rgba(224, 122, 95, 0.32);
-            margin-top: 4px;
+            display: block !important;
+            white-space: nowrap !important;
+            font-style: italic !important;
+            font-size: clamp(18px, 5.2vw, 24px) !important;
+            line-height: 1.15 !important;
+            color: var(--accent-terracotta) !important;
+            text-shadow: 0 0 24px rgba(224, 122, 95, 0.28) !important;
+            margin-top: 3px !important;
+            text-align: center !important;
           }
           .hero-subtitle {
-            font-size: clamp(13px, 3.7vw, 14.5px);
-            line-height: 1.52;
-            max-width: 360px;
-            width: 100%;
-            margin: 0 auto 18px auto;
-            padding: 0 4px;
-            color: var(--text-muted);
-            text-align: center;
+            font-size: clamp(11.5px, 3.1vw, 12.8px) !important;
+            line-height: 1.48 !important;
+            letter-spacing: -0.01em !important;
+            max-width: 98% !important;
+            width: 98% !important;
+            margin: 0 auto 16px auto !important;
+            padding: 0 2px !important;
+            color: var(--text-muted) !important;
+            text-align: center !important;
           }
           .hero-actions {
             flex-direction: column;
-            gap: 9px;
+            gap: 10px;
             width: 100%;
-            max-width: 290px;
+            max-width: 295px;
             margin: 0 auto;
           }
           .btn-primary-large {
             width: 100%;
-            padding: 13px 20px;
+            padding: 13.5px 22px;
             font-size: 13.5px;
-            min-height: 46px;
+            min-height: 48px;
             justify-content: center;
             letter-spacing: 0.8px;
             box-shadow: 0 6px 22px rgba(224, 122, 95, 0.42), 0 2px 6px rgba(45, 36, 31, 0.08);
           }
           .btn-secondary-large {
             width: 100%;
-            padding: 11.5px 18px;
+            padding: 12px 20px;
             font-size: 13px;
-            min-height: 43px;
+            min-height: 44px;
             justify-content: center;
             letter-spacing: 0.8px;
             background: rgba(255, 255, 255, 0.88);
@@ -4417,20 +4417,20 @@
             white-space: nowrap;
           }
           .floaty-badge-sanctum {
-            top: clamp(62px, 9vh, 76px);
-            left: 10px;
+            top: clamp(86px, 16vh, 125px);
+            left: clamp(12px, 3.5vw, 22px);
           }
           .floaty-badge-chronos {
-            top: clamp(62px, 9vh, 76px);
-            right: 10px;
+            top: clamp(100px, 18.5vh, 142px);
+            right: clamp(12px, 3.5vw, 22px);
           }
           .floaty-badge-tree {
-            bottom: clamp(44px, 6.5vh, 58px);
-            left: 10px;
+            bottom: clamp(78px, 14.5vh, 110px);
+            left: clamp(12px, 3.5vw, 22px);
           }
           .floaty-badge-tavern {
-            bottom: clamp(44px, 6.5vh, 58px);
-            right: 10px;
+            bottom: clamp(78px, 14.5vh, 110px);
+            right: clamp(12px, 3.5vw, 22px);
           }
           .floaty-runes-layer {
             opacity: 0.75;
@@ -4449,47 +4449,68 @@
             font-size: 18px;
           }
           .hero-section {
-            padding: 52px 10px 24px 10px;
+            padding: 52px 3px 20px 3px;
           }
           .hero-content {
-            max-width: 100%;
-            padding: 0 2px;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 2px !important;
+            box-sizing: border-box !important;
           }
+          .clean-game-root .hero-title,
           .hero-title {
-            font-size: clamp(30px, 8.6vw, 38px);
-            line-height: 1.05;
-            margin-bottom: 10px;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 8px !important;
+            padding: 0 !important;
           }
+          .hero-title-main {
+            font-size: clamp(38px, 11.8vw, 48px) !important;
+            line-height: 1.04 !important;
+            letter-spacing: -0.035em !important;
+            white-space: nowrap !important;
+            display: block !important;
+            width: 100% !important;
+            text-align: center !important;
+          }
+          .clean-game-root .hero-title-italic,
           .hero-title-italic {
-            margin-top: 3px;
+            font-size: clamp(17px, 5.0vw, 22px) !important;
+            line-height: 1.15 !important;
+            display: block !important;
+            white-space: nowrap !important;
+            margin-top: 2px !important;
           }
           .hero-subtitle {
-            font-size: 13px;
-            line-height: 1.48;
-            margin-bottom: 15px;
-            max-width: 320px;
-            width: 95%;
+            font-size: clamp(11px, 3.0vw, 12.2px) !important;
+            line-height: 1.46 !important;
+            letter-spacing: -0.01em !important;
+            margin-bottom: 14px !important;
+            max-width: 98% !important;
+            width: 98% !important;
+            padding: 0 2px !important;
+            text-align: center !important;
           }
           .hero-actions {
-            max-width: 275px;
-            gap: 8px;
+            max-width: 285px;
+            gap: 9px;
           }
           .btn-primary-large {
-            padding: 12px 16px;
+            padding: 13px 18px;
             font-size: 13px;
-            min-height: 44px;
+            min-height: 46px;
           }
           .btn-secondary-large {
-            padding: 10.5px 14px;
-            font-size: 12px;
-            min-height: 40px;
+            padding: 11px 16px;
+            font-size: 12.5px;
+            min-height: 42px;
           }
           .hero-social-proof {
-            margin-top: 10px;
+            margin-top: 12px;
             padding: 3.5px 12px 3.5px 6px;
           }
           .proof-text {
-            font-size: 10.5px;
+            font-size: 11px;
           }
           .hero-scroll-prompt {
             bottom: 8px;
@@ -4515,20 +4536,20 @@
             font-weight: 600;
           }
           .floaty-badge-sanctum {
-            top: clamp(58px, 8vh, 68px);
-            left: 6px;
+            top: clamp(82px, 15.5vh, 118px);
+            left: clamp(10px, 3vw, 16px);
           }
           .floaty-badge-chronos {
-            top: clamp(58px, 8vh, 68px);
-            right: 6px;
+            top: clamp(96px, 18vh, 134px);
+            right: clamp(10px, 3vw, 16px);
           }
           .floaty-badge-tree {
-            bottom: clamp(38px, 5.5vh, 50px);
-            left: 6px;
+            bottom: clamp(74px, 13.5vh, 102px);
+            left: clamp(10px, 3vw, 16px);
           }
           .floaty-badge-tavern {
-            bottom: clamp(38px, 5.5vh, 50px);
-            right: 6px;
+            bottom: clamp(74px, 13.5vh, 102px);
+            right: clamp(10px, 3vw, 16px);
           }
         }
 
@@ -4541,16 +4562,37 @@
             height: 48px;
           }
           .hero-section {
-            padding: 48px 6px 20px 6px;
+            padding: 48px 3px 18px 3px;
           }
+          .clean-game-root .hero-title,
           .hero-title {
-            font-size: 26px;
-            line-height: 1.08;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 6px !important;
+            padding: 0 !important;
+          }
+          .hero-title-main {
+            font-size: clamp(34px, 11.8vw, 40px) !important;
+            letter-spacing: -0.038em !important;
+            white-space: nowrap !important;
+            display: block !important;
+            width: 100% !important;
+            text-align: center !important;
+          }
+          .clean-game-root .hero-title-italic,
+          .hero-title-italic {
+            font-size: 16px !important;
+            display: block !important;
+            white-space: nowrap !important;
+            margin-top: 2px !important;
           }
           .hero-subtitle {
-            font-size: 11.5px;
-            line-height: 1.4;
-            margin-bottom: 11px;
+            font-size: 10.5px !important;
+            line-height: 1.4 !important;
+            margin-bottom: 10px !important;
+            max-width: 98% !important;
+            width: 98% !important;
+            padding: 0 2px !important;
           }
           .hero-actions {
             max-width: 240px;
@@ -4580,19 +4622,19 @@
             display: none;
           }
           .floaty-badge-sanctum {
-            top: clamp(52px, 7vh, 60px);
-            left: 4px;
+            top: clamp(72px, 14vh, 96px);
+            left: 8px;
           }
           .floaty-badge-chronos {
-            top: clamp(52px, 7vh, 60px);
-            right: 4px;
+            top: clamp(84px, 16.5vh, 112px);
+            right: 8px;
           }
           .floaty-badge-tree {
-            bottom: clamp(32px, 4.5vh, 42px);
-            left: 4px;
+            bottom: clamp(64px, 12.5vh, 88px);
+            left: 8px;
           }
           .floaty-badge-tavern {
-            bottom: clamp(32px, 4.5vh, 42px);
-            right: 4px;
+            bottom: clamp(64px, 12.5vh, 88px);
+            right: 8px;
           }
         }

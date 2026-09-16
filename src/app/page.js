@@ -2003,7 +2003,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              Level up in real life.
+              <span className="hero-title-main">Level up in real life.</span>
               <span className="hero-title-italic">The character is you.</span>
             </motion.h1>
 
